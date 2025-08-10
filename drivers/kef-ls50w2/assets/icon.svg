@@ -1,0 +1,15 @@
+<!-- assets/kef-ls50w2.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title>KEF LS50 Wireless II</title>
+  <desc>Minimal dual bookshelf speakers with pronounced Uni-Q drivers</desc>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left speaker -->
+    <rect x="6" y="16" width="38" height="68" rx="10" />
+    <circle cx="25" cy="50" r="13" />
+    <circle cx="25" cy="50" r="5" />
+    <!-- Right speaker -->
+    <rect x="56" y="16" width="38" height="68" rx="10" />
+    <circle cx="75" cy="50" r="13" />
+    <circle cx="75" cy="50" r="5" />
+  </g>
+</svg>

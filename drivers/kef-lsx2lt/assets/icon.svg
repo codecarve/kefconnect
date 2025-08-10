@@ -1,0 +1,17 @@
+<!-- assets/kef-lsx2lt.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title>KEF LSX II LT</title>
+  <desc>Minimal dual compact speaker outline with subtle LT accent</desc>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left speaker -->
+    <rect x="8" y="20" width="34" height="60" rx="8" />
+    <circle cx="25" cy="50" r="11" />
+    <circle cx="25" cy="50" r="4" />
+    <!-- Right speaker -->
+    <rect x="58" y="20" width="34" height="60" rx="8" />
+    <circle cx="75" cy="50" r="11" />
+    <circle cx="75" cy="50" r="4" />
+    <!-- LT accent (small notch/label at top-right) -->
+    <path d="M86 18h6v6" />
+  </g>
+</svg>

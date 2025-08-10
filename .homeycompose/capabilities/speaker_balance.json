@@ -1,0 +1,24 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Balance",
+    "nl": "Balans",
+    "fr": "Balance",
+    "de": "Balance",
+    "es": "Balance"
+  },
+  "min": -100,
+  "max": 100,
+  "step": 1,
+  "units": {
+    "en": "%",
+    "nl": "%",
+    "fr": "%",
+    "de": "%",
+    "es": "%"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": null,
+  "icon": "/assets/capability_balance.svg"
+}

@@ -1,0 +1,63 @@
+{
+  "pair": {
+    "manual_ip": {
+      "title": "KEF-Lautsprecher hinzufügen",
+      "instruction": "Geben Sie die IP-Adresse Ihres KEF-Lautsprechers ein. Sie finden diese in der KEF Connect App auf Ihrem Telefon.",
+      "ip": "IP-Adresse",
+      "ip_placeholder": "192.168.1.100",
+      "port": "Port (optional)",
+      "port_placeholder": "80",
+      "name": "Gerätename",
+      "name_placeholder": "Wohnzimmer-Lautsprecher",
+      "hide_from_speakers": "In Homey-Lautsprecherbereich ausblenden",
+      "hide_from_speakers_hint": "Wenn aktiviert, erscheint dieses Gerät nicht im Lautsprecherbereich von Homey, kann aber weiterhin über die Geräteseite und Flows gesteuert werden",
+      "test_button": "Verbindung testen",
+      "speaker_detected": "Lautsprecher gefunden!",
+      "model_warning": "⚠️ Modell-Übereinstimmungswarnung",
+      "duplicate_warning": "❌ Gerät existiert bereits",
+      "add_device_button": "Gerät hinzufügen",
+      "test_first_hint": "Testen Sie zuerst die Verbindung, um das Hinzufügen des Geräts zu ermöglichen"
+    }
+  },
+  "repair": {
+    "repair_ip": {
+      "title": "KEF-Lautsprecherverbindung reparieren",
+      "warning_title": "Geräteverbindung verloren",
+      "warning_text": "Ihr KEF-Lautsprecher kann unter seiner aktuellen IP-Adresse nicht erreicht werden. Dies geschieht normalerweise, wenn der Lautsprecher eine neue IP-Adresse von Ihrem Router (DHCP) erhält.",
+      "current_settings": "Aktuelle Einstellungen",
+      "current_ip": "Aktuelle IP",
+      "current_port": "Aktueller Port",
+      "instructions": "Geben Sie die neue IP-Adresse Ihres KEF-Lautsprechers ein. Sie finden diese in der Geräteliste Ihres Routers oder verwenden Sie eine Netzwerk-Scanner-App.",
+      "new_ip": "Neue IP-Adresse",
+      "ip_placeholder": "192.168.1.100",
+      "ip_hint": "Geben Sie die neue IP-Adresse Ihres KEF-Lautsprechers ein",
+      "port": "Port (optional)",
+      "port_placeholder": "80",
+      "port_hint": "Normalerweise 80, ändern Sie nur, wenn Sie es geändert haben",
+      "test_button": "Verbindung testen",
+      "testing": "Teste...",
+      "speaker_found": "Lautsprecher gefunden!",
+      "model": "Modell",
+      "name": "Name",
+      "firmware": "Firmware",
+      "repair_button": "IP-Adresse aktualisieren",
+      "updating": "Aktualisiere...",
+      "repair_hint": "Testen Sie zuerst die Verbindung, um diese Schaltfläche zu aktivieren",
+      "connection_verified": "Verbindung verifiziert",
+      "success_connection": "Verbindung erfolgreich!",
+      "success_updated": "IP-Adresse erfolgreich aktualisiert!",
+      "error_no_ip": "Bitte geben Sie eine IP-Adresse ein",
+      "error_invalid_ip": "Ungültiges IP-Adressformat",
+      "error_same_ip": "Dies ist dieselbe IP-Adresse, die derzeit konfiguriert ist",
+      "error_connection_failed": "Verbindung fehlgeschlagen",
+      "error_test_first": "Bitte testen Sie zuerst die Verbindung",
+      "error_update_failed": "Fehler beim Aktualisieren der Geräteeinstellungen"
+    }
+  },
+  "errors": {
+    "connection_failed": "Verbindung zum KEF-Lautsprecher fehlgeschlagen",
+    "invalid_ip": "Bitte geben Sie eine gültige IP-Adresse ein",
+    "command_failed": "Befehl konnte nicht ausgeführt werden",
+    "device_unavailable": "KEF-Lautsprecher ist nicht verfügbar"
+  }
+}

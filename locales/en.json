@@ -1,0 +1,63 @@
+{
+  "pair": {
+    "manual_ip": {
+      "title": "Add KEF Speaker",
+      "instruction": "Enter the IP address of your KEF speaker. You can find this in the KEF Connect app on your phone.",
+      "ip": "IP Address",
+      "ip_placeholder": "192.168.1.100",
+      "port": "Port (optional)",
+      "port_placeholder": "80",
+      "name": "Device Name",
+      "name_placeholder": "Living Room Speaker",
+      "hide_from_speakers": "Hide from Homey speakers section",
+      "hide_from_speakers_hint": "When enabled, this device won't appear in Homey's speakers section but can still be controlled via device page and flows",
+      "test_button": "Test Connection",
+      "speaker_detected": "Speaker Detected!",
+      "model_warning": "⚠️ Model Mismatch Warning",
+      "duplicate_warning": "❌ Device Already Exists",
+      "add_device_button": "Add Device",
+      "test_first_hint": "Test the connection first to enable adding the device"
+    }
+  },
+  "repair": {
+    "repair_ip": {
+      "title": "Repair KEF Speaker Connection",
+      "warning_title": "Device Connection Lost",
+      "warning_text": "Your KEF speaker cannot be reached at its current IP address. This usually happens when the speaker gets a new IP address from your router (DHCP).",
+      "current_settings": "Current Settings",
+      "current_ip": "Current IP",
+      "current_port": "Current Port",
+      "instructions": "Enter the new IP address of your KEF speaker. You can find this in your router's device list or use a network scanner app.",
+      "new_ip": "New IP Address",
+      "ip_placeholder": "192.168.1.100",
+      "ip_hint": "Enter the new IP address of your KEF speaker",
+      "port": "Port (optional)",
+      "port_placeholder": "80",
+      "port_hint": "Usually 80, change only if you modified it",
+      "test_button": "Test Connection",
+      "testing": "Testing...",
+      "speaker_found": "Speaker Found!",
+      "model": "Model",
+      "name": "Name",
+      "firmware": "Firmware",
+      "repair_button": "Update IP Address",
+      "updating": "Updating...",
+      "repair_hint": "Test the connection first to enable this button",
+      "connection_verified": "Connection Verified",
+      "success_connection": "Connection successful!",
+      "success_updated": "IP address updated successfully!",
+      "error_no_ip": "Please enter an IP address",
+      "error_invalid_ip": "Invalid IP address format",
+      "error_same_ip": "This is the same IP address that's currently configured",
+      "error_connection_failed": "Connection failed",
+      "error_test_first": "Please test the connection first",
+      "error_update_failed": "Failed to update device settings"
+    }
+  },
+  "errors": {
+    "connection_failed": "Failed to connect to KEF speaker",
+    "invalid_ip": "Please enter a valid IP address",
+    "command_failed": "Failed to execute command",
+    "device_unavailable": "KEF speaker is not available"
+  }
+}

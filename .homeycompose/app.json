@@ -1,0 +1,124 @@
+{
+  "id": "nl.codecarve.kefconnect",
+  "version": "0.1.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "KEF Connect",
+    "nl": "KEF Connect",
+    "fr": "KEF Connect",
+    "de": "KEF Connect",
+    "es": "KEF Connect"
+  },
+  "description": {
+    "en": "Control your KEF wireless speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) from Homey",
+    "nl": "Bedien uw KEF draadloze speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) vanuit Homey",
+    "fr": "Contrôlez vos haut-parleurs sans fil KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) depuis Homey",
+    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) von Homey aus",
+    "es": "Controla tus altavoces inalámbricos KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) desde Homey"
+  },
+  "category": [
+    "music"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "CodeCarve",
+    "email": "hello@codecarve.nl"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "CodeCarve"
+      }
+    ]
+  },
+  "brandColor": "#003DA5",
+  "tags": {
+    "en": [
+      "kef",
+      "speaker",
+      "audio",
+      "wireless",
+      "hifi",
+      "music",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "soundbar"
+    ],
+    "nl": [
+      "kef",
+      "speaker",
+      "audio",
+      "draadloos",
+      "hifi",
+      "muziek",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "soundbar"
+    ],
+    "fr": [
+      "kef",
+      "haut-parleur",
+      "audio",
+      "sans fil",
+      "hifi",
+      "musique",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "barre de son"
+    ],
+    "de": [
+      "kef",
+      "lautsprecher",
+      "audio",
+      "kabellos",
+      "hifi",
+      "musik",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "soundbar"
+    ],
+    "es": [
+      "kef",
+      "altavoz",
+      "audio",
+      "inalámbrico",
+      "hifi",
+      "música",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "barra de sonido"
+    ]
+  },
+  "source": "https://github.com/codecarve/kefconnect",
+  "bugs": {
+    "url": "https://github.com/codecarve/kefconnect/issues"
+  },
+  "support": "mailto:hello@codecarve.nl",
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "codecarve"
+      }
+    }
+  },
+  "homeyCommunityTopicId": 119818
+}

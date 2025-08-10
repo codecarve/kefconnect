@@ -1,0 +1,14 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Desk Mode",
+    "nl": "Bureau modus",
+    "fr": "Mode bureau",
+    "de": "Schreibtischmodus",
+    "es": "Modo escritorio"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": null,
+  "icon": "/assets/capability_desk.svg"
+}

@@ -1,0 +1,63 @@
+{
+  "pair": {
+    "manual_ip": {
+      "title": "Añadir altavoz KEF",
+      "instruction": "Introduzca la dirección IP de su altavoz KEF. Puede encontrarla en la aplicación KEF Connect de su teléfono.",
+      "ip": "Dirección IP",
+      "ip_placeholder": "192.168.1.100",
+      "port": "Puerto (opcional)",
+      "port_placeholder": "80",
+      "name": "Nombre del dispositivo",
+      "name_placeholder": "Altavoz del salón",
+      "hide_from_speakers": "Ocultar en la sección de altavoces de Homey",
+      "hide_from_speakers_hint": "Si está habilitado, este dispositivo no aparecerá en la sección de altavoces de Homey pero aún podrá controlarse a través de la página del dispositivo y los flujos",
+      "test_button": "Probar conexión",
+      "speaker_detected": "¡Altavoz detectado!",
+      "model_warning": "⚠️ Advertencia de modelo no coincidente",
+      "duplicate_warning": "❌ El dispositivo ya existe",
+      "add_device_button": "Añadir dispositivo",
+      "test_first_hint": "Pruebe primero la conexión para habilitar la adición del dispositivo"
+    }
+  },
+  "repair": {
+    "repair_ip": {
+      "title": "Reparar conexión del altavoz KEF",
+      "warning_title": "Conexión del dispositivo perdida",
+      "warning_text": "Su altavoz KEF no se puede alcanzar en su dirección IP actual. Esto generalmente ocurre cuando el altavoz obtiene una nueva dirección IP de su enrutador (DHCP).",
+      "current_settings": "Configuración actual",
+      "current_ip": "IP actual",
+      "current_port": "Puerto actual",
+      "instructions": "Ingrese la nueva dirección IP de su altavoz KEF. Puede encontrarla en la lista de dispositivos de su enrutador o usar una aplicación de escáner de red.",
+      "new_ip": "Nueva dirección IP",
+      "ip_placeholder": "192.168.1.100",
+      "ip_hint": "Ingrese la nueva dirección IP de su altavoz KEF",
+      "port": "Puerto (opcional)",
+      "port_placeholder": "80",
+      "port_hint": "Generalmente 80, cambie solo si lo ha modificado",
+      "test_button": "Probar conexión",
+      "testing": "Probando...",
+      "speaker_found": "¡Altavoz encontrado!",
+      "model": "Modelo",
+      "name": "Nombre",
+      "firmware": "Firmware",
+      "repair_button": "Actualizar dirección IP",
+      "updating": "Actualizando...",
+      "repair_hint": "Pruebe primero la conexión para activar este botón",
+      "connection_verified": "Conexión verificada",
+      "success_connection": "¡Conexión exitosa!",
+      "success_updated": "¡Dirección IP actualizada con éxito!",
+      "error_no_ip": "Por favor ingrese una dirección IP",
+      "error_invalid_ip": "Formato de dirección IP inválido",
+      "error_same_ip": "Esta es la misma dirección IP que está configurada actualmente",
+      "error_connection_failed": "La conexión falló",
+      "error_test_first": "Por favor pruebe primero la conexión",
+      "error_update_failed": "Error al actualizar la configuración del dispositivo"
+    }
+  },
+  "errors": {
+    "connection_failed": "No se pudo conectar al altavoz KEF",
+    "invalid_ip": "Por favor, introduzca una dirección IP válida",
+    "command_failed": "No se pudo ejecutar el comando",
+    "device_unavailable": "El altavoz KEF no está disponible"
+  }
+}

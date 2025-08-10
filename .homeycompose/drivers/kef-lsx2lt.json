@@ -1,0 +1,203 @@
+{
+  "id": "kef-lsx2lt",
+  "name": {
+    "en": "KEF LSX II LT",
+    "nl": "KEF LSX II LT",
+    "fr": "KEF LSX II LT",
+    "de": "KEF LSX II LT",
+    "es": "KEF LSX II LT"
+  },
+  "class": "speaker",
+  "capabilities": [
+    "onoff",
+    "volume_set",
+    "volume_mute",
+    "source_input"
+  ],
+  "energy": {
+    "approximation": {
+      "usageOn": 100,
+      "usageOff": 5
+    }
+  },
+  "images": {
+    "small": "/drivers/kef-lsx2lt/assets/images/small.png",
+    "large": "/drivers/kef-lsx2lt/assets/images/large.png"
+  },
+  "pair": [
+    {
+      "id": "manual_ip",
+      "options": {
+        "title": {
+          "en": "Add KEF LSX II LT",
+          "nl": "KEF LSX II LT toevoegen",
+          "fr": "Ajouter KEF LSX II LT",
+          "de": "KEF LSX II LT hinzufügen",
+          "es": "Añadir KEF LSX II LT"
+        }
+      }
+    }
+  ],
+  "repair": [
+    {
+      "id": "repair_ip",
+      "options": {
+        "title": {
+          "en": "Repair KEF LSX II LT Connection",
+          "nl": "KEF LSX II LT Verbinding Herstellen",
+          "fr": "Réparer la connexion KEF LSX II LT",
+          "de": "KEF LSX II LT Verbindung reparieren",
+          "es": "Reparar conexión KEF LSX II LT"
+        }
+      }
+    }
+  ],
+  "settings": [
+    {
+      "type": "group",
+      "label": {
+        "en": "Device Settings",
+        "nl": "Apparaat Instellingen",
+        "fr": "Paramètres de l'appareil",
+        "de": "Geräteeinstellungen",
+        "es": "Configuración del dispositivo"
+      },
+      "children": [
+        {
+          "id": "ip",
+          "type": "text",
+          "label": {
+            "en": "IP Address",
+            "nl": "IP Adres",
+            "fr": "Adresse IP",
+            "de": "IP-Adresse",
+            "es": "Dirección IP"
+          },
+          "value": "",
+          "hint": {
+            "en": "The IP address of your KEF LSX II LT",
+            "nl": "Het IP-adres van uw KEF LSX II LT",
+            "fr": "L'adresse IP de votre KEF LSX II LT",
+            "de": "Die IP-Adresse Ihres KEF LSX II LT",
+            "es": "La dirección IP de tu KEF LSX II LT"
+          }
+        },
+        {
+          "id": "port",
+          "type": "number",
+          "label": {
+            "en": "Port",
+            "nl": "Poort",
+            "fr": "Port",
+            "de": "Port",
+            "es": "Puerto"
+          },
+          "value": 80,
+          "min": 1,
+          "max": 65535,
+          "hint": {
+            "en": "TCP port for KEF communication (default: 80)",
+            "nl": "TCP-poort voor KEF-communicatie (standaard: 80)",
+            "fr": "Port TCP pour la communication KEF (par défaut: 80)",
+            "de": "TCP-Port für KEF-Kommunikation (Standard: 80)",
+            "es": "Puerto TCP para comunicación KEF (por defecto: 80)"
+          }
+        },
+        {
+          "id": "polling_interval",
+          "type": "number",
+          "label": {
+            "en": "Polling Interval (seconds)",
+            "nl": "Polling Interval (seconden)",
+            "fr": "Intervalle de polling (secondes)",
+            "de": "Abfrageintervall (Sekunden)",
+            "es": "Intervalo de sondeo (segundos)"
+          },
+          "value": 5,
+          "min": 1,
+          "max": 60,
+          "hint": {
+            "en": "How often to check the speaker's status",
+            "nl": "Hoe vaak de status van de speaker wordt gecontroleerd",
+            "fr": "Fréquence de vérification du statut du haut-parleur",
+            "de": "Wie oft der Status des Lautsprechers überprüft wird",
+            "es": "Con qué frecuencia comprobar el estado del altavoz"
+          }
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "Device Information",
+        "nl": "Apparaat Informatie",
+        "fr": "Informations sur l'appareil",
+        "de": "Geräteinformationen",
+        "es": "Información del dispositivo"
+      },
+      "children": [
+        {
+          "id": "speaker_name",
+          "type": "label",
+          "label": {
+            "en": "Speaker Name",
+            "nl": "Speaker Naam",
+            "fr": "Nom du haut-parleur",
+            "de": "Lautsprechername",
+            "es": "Nombre del altavoz"
+          },
+          "value": "Unknown"
+        },
+        {
+          "id": "speaker_model",
+          "type": "label",
+          "label": {
+            "en": "Model",
+            "nl": "Model",
+            "fr": "Modèle",
+            "de": "Modell",
+            "es": "Modelo"
+          },
+          "value": "KEF LSX II LT"
+        },
+        {
+          "id": "firmware_version",
+          "type": "label",
+          "label": {
+            "en": "Firmware Version",
+            "nl": "Firmware Versie",
+            "fr": "Version du firmware",
+            "de": "Firmware-Version",
+            "es": "Versión del firmware"
+          },
+          "value": "Unknown"
+        },
+        {
+          "id": "serial_number",
+          "type": "label",
+          "label": {
+            "en": "Serial Number",
+            "nl": "Serienummer",
+            "fr": "Numéro de série",
+            "de": "Seriennummer",
+            "es": "Número de serie"
+          },
+          "value": "Unknown"
+        },
+        {
+          "id": "last_connected",
+          "type": "label",
+          "label": {
+            "en": "Last Connected",
+            "nl": "Laatst Verbonden",
+            "fr": "Dernière connexion",
+            "de": "Zuletzt verbunden",
+            "es": "Última conexión"
+          },
+          "value": "Never"
+        }
+      ]
+    }
+  ],
+  "icon": "/drivers/kef-lsx2lt/assets/icon.svg"
+}

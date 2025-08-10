@@ -1,0 +1,63 @@
+{
+  "pair": {
+    "manual_ip": {
+      "title": "Ajouter un haut-parleur KEF",
+      "instruction": "Entrez l'adresse IP de votre haut-parleur KEF. Vous pouvez la trouver dans l'application KEF Connect sur votre téléphone.",
+      "ip": "Adresse IP",
+      "ip_placeholder": "192.168.1.100",
+      "port": "Port (optionnel)",
+      "port_placeholder": "80",
+      "name": "Nom de l'appareil",
+      "name_placeholder": "Haut-parleur du salon",
+      "hide_from_speakers": "Masquer dans la section haut-parleurs de Homey",
+      "hide_from_speakers_hint": "Si activé, cet appareil n'apparaîtra pas dans la section haut-parleurs de Homey mais pourra toujours être contrôlé via la page de l'appareil et les flows",
+      "test_button": "Tester la connexion",
+      "speaker_detected": "Haut-parleur détecté!",
+      "model_warning": "⚠️ Avertissement de modèle incompatible",
+      "duplicate_warning": "❌ L'appareil existe déjà",
+      "add_device_button": "Ajouter l'appareil",
+      "test_first_hint": "Testez d'abord la connexion pour activer l'ajout de l'appareil"
+    }
+  },
+  "repair": {
+    "repair_ip": {
+      "title": "Réparer la connexion du haut-parleur KEF",
+      "warning_title": "Connexion de l'appareil perdue",
+      "warning_text": "Votre haut-parleur KEF ne peut pas être atteint à son adresse IP actuelle. Cela se produit généralement lorsque le haut-parleur obtient une nouvelle adresse IP de votre routeur (DHCP).",
+      "current_settings": "Paramètres actuels",
+      "current_ip": "IP actuelle",
+      "current_port": "Port actuel",
+      "instructions": "Entrez la nouvelle adresse IP de votre haut-parleur KEF. Vous pouvez la trouver dans la liste des appareils de votre routeur ou utiliser une application de scanner réseau.",
+      "new_ip": "Nouvelle adresse IP",
+      "ip_placeholder": "192.168.1.100",
+      "ip_hint": "Entrez la nouvelle adresse IP de votre haut-parleur KEF",
+      "port": "Port (optionnel)",
+      "port_placeholder": "80",
+      "port_hint": "Généralement 80, ne changez que si vous l'avez modifié",
+      "test_button": "Tester la connexion",
+      "testing": "Test en cours...",
+      "speaker_found": "Haut-parleur trouvé!",
+      "model": "Modèle",
+      "name": "Nom",
+      "firmware": "Firmware",
+      "repair_button": "Mettre à jour l'adresse IP",
+      "updating": "Mise à jour...",
+      "repair_hint": "Testez d'abord la connexion pour activer ce bouton",
+      "connection_verified": "Connexion vérifiée",
+      "success_connection": "Connexion réussie!",
+      "success_updated": "Adresse IP mise à jour avec succès!",
+      "error_no_ip": "Veuillez entrer une adresse IP",
+      "error_invalid_ip": "Format d'adresse IP invalide",
+      "error_same_ip": "C'est la même adresse IP qui est actuellement configurée",
+      "error_connection_failed": "La connexion a échoué",
+      "error_test_first": "Veuillez d'abord tester la connexion",
+      "error_update_failed": "Échec de la mise à jour des paramètres de l'appareil"
+    }
+  },
+  "errors": {
+    "connection_failed": "Impossible de se connecter au haut-parleur KEF",
+    "invalid_ip": "Veuillez entrer une adresse IP valide",
+    "command_failed": "Impossible d'exécuter la commande",
+    "device_unavailable": "Le haut-parleur KEF n'est pas disponible"
+  }
+}

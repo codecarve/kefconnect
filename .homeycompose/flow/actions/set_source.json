@@ -1,0 +1,114 @@
+{
+  "id": "set_source",
+  "title": {
+    "en": "Set source to",
+    "nl": "Stel bron in op",
+    "fr": "Définir la source sur",
+    "de": "Quelle einstellen auf",
+    "es": "Establecer fuente en"
+  },
+  "titleFormatted": {
+    "en": "Set source to [[source]]",
+    "nl": "Stel bron in op [[source]]",
+    "fr": "Définir la source sur [[source]]",
+    "de": "Quelle einstellen auf [[source]]",
+    "es": "Establecer fuente en [[source]]"
+  },
+  "hint": {
+    "en": "Change the input source of the KEF speaker",
+    "nl": "Wijzig de invoerbron van de KEF speaker",
+    "fr": "Changer la source d'entrée du haut-parleur KEF",
+    "de": "Ändern Sie die Eingangsquelle des KEF-Lautsprechers",
+    "es": "Cambiar la fuente de entrada del altavoz KEF"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+    },
+    {
+      "type": "dropdown",
+      "name": "source",
+      "title": {
+        "en": "Source",
+        "nl": "Bron",
+        "fr": "Source",
+        "de": "Quelle",
+        "es": "Fuente"
+      },
+      "values": [
+        {
+          "id": "wifi",
+          "label": {
+            "en": "WiFi",
+            "nl": "WiFi",
+            "fr": "WiFi",
+            "de": "WiFi",
+            "es": "WiFi"
+          }
+        },
+        {
+          "id": "bluetooth",
+          "label": {
+            "en": "Bluetooth",
+            "nl": "Bluetooth",
+            "fr": "Bluetooth",
+            "de": "Bluetooth",
+            "es": "Bluetooth"
+          }
+        },
+        {
+          "id": "optical",
+          "label": {
+            "en": "Optical",
+            "nl": "Optisch",
+            "fr": "Optique",
+            "de": "Optisch",
+            "es": "Óptico"
+          }
+        },
+        {
+          "id": "coaxial",
+          "label": {
+            "en": "Coaxial",
+            "nl": "Coaxiaal",
+            "fr": "Coaxial",
+            "de": "Koaxial",
+            "es": "Coaxial"
+          }
+        },
+        {
+          "id": "analog",
+          "label": {
+            "en": "Analog",
+            "nl": "Analoog",
+            "fr": "Analogique",
+            "de": "Analog",
+            "es": "Analógico"
+          }
+        },
+        {
+          "id": "tv",
+          "label": {
+            "en": "TV",
+            "nl": "TV",
+            "fr": "TV",
+            "de": "TV",
+            "es": "TV"
+          }
+        },
+        {
+          "id": "usb",
+          "label": {
+            "en": "USB",
+            "nl": "USB",
+            "fr": "USB",
+            "de": "USB",
+            "es": "USB"
+          }
+        }
+      ]
+    }
+  ]
+}

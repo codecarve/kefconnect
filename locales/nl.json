@@ -1,0 +1,63 @@
+{
+  "pair": {
+    "manual_ip": {
+      "title": "KEF Speaker toevoegen",
+      "instruction": "Voer het IP-adres van uw KEF speaker in. U kunt dit vinden in de KEF Connect app op uw telefoon.",
+      "ip": "IP-adres",
+      "ip_placeholder": "192.168.1.100",
+      "port": "Poort (optioneel)",
+      "port_placeholder": "80",
+      "name": "Apparaatnaam",
+      "name_placeholder": "Woonkamer Speaker",
+      "hide_from_speakers": "Verberg in Homey speakers sectie",
+      "hide_from_speakers_hint": "Indien ingeschakeld, verschijnt dit apparaat niet in de speakers sectie van Homey maar kan nog steeds worden bediend via de apparaatpagina en flows",
+      "test_button": "Test Verbinding",
+      "speaker_detected": "Speaker Gevonden!",
+      "model_warning": "⚠️ Model Komt Niet Overeen",
+      "duplicate_warning": "❌ Apparaat Bestaat Al",
+      "add_device_button": "Apparaat Toevoegen",
+      "test_first_hint": "Test eerst de verbinding om het toevoegen van het apparaat mogelijk te maken"
+    }
+  },
+  "repair": {
+    "repair_ip": {
+      "title": "KEF Speaker Verbinding Herstellen",
+      "warning_title": "Apparaat Verbinding Verloren",
+      "warning_text": "Uw KEF speaker is niet bereikbaar op het huidige IP-adres. Dit gebeurt meestal wanneer de speaker een nieuw IP-adres krijgt van uw router (DHCP).",
+      "current_settings": "Huidige Instellingen",
+      "current_ip": "Huidig IP",
+      "current_port": "Huidige Poort",
+      "instructions": "Voer het nieuwe IP-adres van uw KEF speaker in. U kunt dit vinden in de apparatenlijst van uw router of gebruik een netwerk scanner app.",
+      "new_ip": "Nieuw IP-adres",
+      "ip_placeholder": "192.168.1.100",
+      "ip_hint": "Voer het nieuwe IP-adres van uw KEF speaker in",
+      "port": "Poort (optioneel)",
+      "port_placeholder": "80",
+      "port_hint": "Meestal 80, wijzig alleen als u dit heeft aangepast",
+      "test_button": "Test Verbinding",
+      "testing": "Testen...",
+      "speaker_found": "Speaker Gevonden!",
+      "model": "Model",
+      "name": "Naam",
+      "firmware": "Firmware",
+      "repair_button": "IP-adres Bijwerken",
+      "updating": "Bijwerken...",
+      "repair_hint": "Test eerst de verbinding om deze knop te activeren",
+      "connection_verified": "Verbinding Geverifieerd",
+      "success_connection": "Verbinding succesvol!",
+      "success_updated": "IP-adres succesvol bijgewerkt!",
+      "error_no_ip": "Voer een IP-adres in",
+      "error_invalid_ip": "Ongeldig IP-adres formaat",
+      "error_same_ip": "Dit is hetzelfde IP-adres dat momenteel is geconfigureerd",
+      "error_connection_failed": "Verbinding mislukt",
+      "error_test_first": "Test eerst de verbinding",
+      "error_update_failed": "Apparaatinstellingen bijwerken mislukt"
+    }
+  },
+  "errors": {
+    "connection_failed": "Kan geen verbinding maken met KEF speaker",
+    "invalid_ip": "Voer een geldig IP-adres in",
+    "command_failed": "Kan opdracht niet uitvoeren",
+    "device_unavailable": "KEF speaker is niet beschikbaar"
+  }
+}

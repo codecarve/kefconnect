@@ -1,0 +1,1491 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "nl.codecarve.kefconnect",
+  "version": "0.1.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "KEF Connect",
+    "nl": "KEF Connect",
+    "fr": "KEF Connect",
+    "de": "KEF Connect",
+    "es": "KEF Connect"
+  },
+  "description": {
+    "en": "Control your KEF wireless speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) from Homey",
+    "nl": "Bedien uw KEF draadloze speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) vanuit Homey",
+    "fr": "Contrôlez vos haut-parleurs sans fil KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) depuis Homey",
+    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) von Homey aus",
+    "es": "Controla tus altavoces inalámbricos KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) desde Homey"
+  },
+  "category": [
+    "music"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "CodeCarve",
+    "email": "hello@codecarve.nl"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "CodeCarve"
+      }
+    ]
+  },
+  "brandColor": "#003DA5",
+  "tags": {
+    "en": [
+      "kef",
+      "speaker",
+      "audio",
+      "wireless",
+      "hifi",
+      "music",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "soundbar"
+    ],
+    "nl": [
+      "kef",
+      "speaker",
+      "audio",
+      "draadloos",
+      "hifi",
+      "muziek",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "soundbar"
+    ],
+    "fr": [
+      "kef",
+      "haut-parleur",
+      "audio",
+      "sans fil",
+      "hifi",
+      "musique",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "barre de son"
+    ],
+    "de": [
+      "kef",
+      "lautsprecher",
+      "audio",
+      "kabellos",
+      "hifi",
+      "musik",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "soundbar"
+    ],
+    "es": [
+      "kef",
+      "altavoz",
+      "audio",
+      "inalámbrico",
+      "hifi",
+      "música",
+      "ls50",
+      "ls60",
+      "lsx",
+      "xio",
+      "barra de sonido"
+    ]
+  },
+  "source": "https://github.com/codecarve/kefconnect",
+  "bugs": {
+    "url": "https://github.com/codecarve/kefconnect/issues"
+  },
+  "support": "mailto:hello@codecarve.nl",
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "codecarve"
+      }
+    }
+  },
+  "homeyCommunityTopicId": 119818,
+  "flow": {
+    "actions": [
+      {
+        "id": "set_source",
+        "title": {
+          "en": "Set source to",
+          "nl": "Stel bron in op",
+          "fr": "Définir la source sur",
+          "de": "Quelle einstellen auf",
+          "es": "Establecer fuente en"
+        },
+        "titleFormatted": {
+          "en": "Set source to [[source]]",
+          "nl": "Stel bron in op [[source]]",
+          "fr": "Définir la source sur [[source]]",
+          "de": "Quelle einstellen auf [[source]]",
+          "es": "Establecer fuente en [[source]]"
+        },
+        "hint": {
+          "en": "Change the input source of the KEF speaker",
+          "nl": "Wijzig de invoerbron van de KEF speaker",
+          "fr": "Changer la source d'entrée du haut-parleur KEF",
+          "de": "Ändern Sie die Eingangsquelle des KEF-Lautsprechers",
+          "es": "Cambiar la fuente de entrada del altavoz KEF"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+          },
+          {
+            "type": "dropdown",
+            "name": "source",
+            "title": {
+              "en": "Source",
+              "nl": "Bron",
+              "fr": "Source",
+              "de": "Quelle",
+              "es": "Fuente"
+            },
+            "values": [
+              {
+                "id": "wifi",
+                "label": {
+                  "en": "WiFi",
+                  "nl": "WiFi",
+                  "fr": "WiFi",
+                  "de": "WiFi",
+                  "es": "WiFi"
+                }
+              },
+              {
+                "id": "bluetooth",
+                "label": {
+                  "en": "Bluetooth",
+                  "nl": "Bluetooth",
+                  "fr": "Bluetooth",
+                  "de": "Bluetooth",
+                  "es": "Bluetooth"
+                }
+              },
+              {
+                "id": "optical",
+                "label": {
+                  "en": "Optical",
+                  "nl": "Optisch",
+                  "fr": "Optique",
+                  "de": "Optisch",
+                  "es": "Óptico"
+                }
+              },
+              {
+                "id": "coaxial",
+                "label": {
+                  "en": "Coaxial",
+                  "nl": "Coaxiaal",
+                  "fr": "Coaxial",
+                  "de": "Koaxial",
+                  "es": "Coaxial"
+                }
+              },
+              {
+                "id": "analog",
+                "label": {
+                  "en": "Analog",
+                  "nl": "Analoog",
+                  "fr": "Analogique",
+                  "de": "Analog",
+                  "es": "Analógico"
+                }
+              },
+              {
+                "id": "tv",
+                "label": {
+                  "en": "TV",
+                  "nl": "TV",
+                  "fr": "TV",
+                  "de": "TV",
+                  "es": "TV"
+                }
+              },
+              {
+                "id": "usb",
+                "label": {
+                  "en": "USB",
+                  "nl": "USB",
+                  "fr": "USB",
+                  "de": "USB",
+                  "es": "USB"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "id": "kef-ls50w2",
+      "name": {
+        "en": "KEF LS50 Wireless II",
+        "nl": "KEF LS50 Wireless II",
+        "fr": "KEF LS50 Wireless II",
+        "de": "KEF LS50 Wireless II",
+        "es": "KEF LS50 Wireless II"
+      },
+      "class": "speaker",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "onoff",
+        "volume_set",
+        "volume_mute",
+        "source_input",
+        "bass_extension",
+        "desk_mode",
+        "wall_mode",
+        "speaker_balance"
+      ],
+      "energy": {
+        "approximation": {
+          "usageOn": 190,
+          "usageOff": 5
+        }
+      },
+      "images": {
+        "small": "/drivers/kef-ls50w2/assets/images/small.png",
+        "large": "/drivers/kef-ls50w2/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "manual_ip",
+          "options": {
+            "title": {
+              "en": "Add KEF LS50 Wireless II",
+              "nl": "KEF LS50 Wireless II toevoegen",
+              "fr": "Ajouter KEF LS50 Wireless II",
+              "de": "KEF LS50 Wireless II hinzufügen",
+              "es": "Añadir KEF LS50 Wireless II"
+            }
+          }
+        }
+      ],
+      "repair": [
+        {
+          "id": "repair_ip",
+          "options": {
+            "title": {
+              "en": "Repair KEF LS50 Wireless II Connection",
+              "nl": "KEF LS50 Wireless II Verbinding Herstellen",
+              "fr": "Réparer la connexion KEF LS50 Wireless II",
+              "de": "KEF LS50 Wireless II Verbindung reparieren",
+              "es": "Reparar conexión KEF LS50 Wireless II"
+            }
+          }
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Settings",
+            "nl": "Apparaat Instellingen",
+            "fr": "Paramètres de l'appareil",
+            "de": "Geräteeinstellungen",
+            "es": "Configuración del dispositivo"
+          },
+          "children": [
+            {
+              "id": "ip",
+              "type": "text",
+              "label": {
+                "en": "IP Address",
+                "nl": "IP Adres",
+                "fr": "Adresse IP",
+                "de": "IP-Adresse",
+                "es": "Dirección IP"
+              },
+              "value": "",
+              "hint": {
+                "en": "The IP address of your KEF LS50 Wireless II",
+                "nl": "Het IP-adres van uw KEF LS50 Wireless II",
+                "fr": "L'adresse IP de votre KEF LS50 Wireless II",
+                "de": "Die IP-Adresse Ihres KEF LS50 Wireless II",
+                "es": "La dirección IP de tu KEF LS50 Wireless II"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "Port",
+                "nl": "Poort",
+                "fr": "Port",
+                "de": "Port",
+                "es": "Puerto"
+              },
+              "value": 80,
+              "min": 1,
+              "max": 65535,
+              "hint": {
+                "en": "TCP port for KEF communication (default: 80)",
+                "nl": "TCP-poort voor KEF-communicatie (standaard: 80)",
+                "fr": "Port TCP pour la communication KEF (par défaut: 80)",
+                "de": "TCP-Port für KEF-Kommunikation (Standard: 80)",
+                "es": "Puerto TCP para comunicación KEF (por defecto: 80)"
+              }
+            },
+            {
+              "id": "polling_interval",
+              "type": "number",
+              "label": {
+                "en": "Polling Interval (seconds)",
+                "nl": "Polling Interval (seconden)",
+                "fr": "Intervalle de polling (secondes)",
+                "de": "Abfrageintervall (Sekunden)",
+                "es": "Intervalo de sondeo (segundos)"
+              },
+              "value": 5,
+              "min": 1,
+              "max": 60,
+              "hint": {
+                "en": "How often to check the speaker's status",
+                "nl": "Hoe vaak de status van de speaker wordt gecontroleerd",
+                "fr": "Fréquence de vérification du statut du haut-parleur",
+                "de": "Wie oft der Status des Lautsprechers überprüft wird",
+                "es": "Con qué frecuencia comprobar el estado del altavoz"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Information",
+            "nl": "Apparaat Informatie",
+            "fr": "Informations sur l'appareil",
+            "de": "Geräteinformationen",
+            "es": "Información del dispositivo"
+          },
+          "children": [
+            {
+              "id": "speaker_name",
+              "type": "label",
+              "label": {
+                "en": "Speaker Name",
+                "nl": "Speaker Naam",
+                "fr": "Nom du haut-parleur",
+                "de": "Lautsprechername",
+                "es": "Nombre del altavoz"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "speaker_model",
+              "type": "label",
+              "label": {
+                "en": "Model",
+                "nl": "Model",
+                "fr": "Modèle",
+                "de": "Modell",
+                "es": "Modelo"
+              },
+              "value": "KEF LS50 Wireless II"
+            },
+            {
+              "id": "firmware_version",
+              "type": "label",
+              "label": {
+                "en": "Firmware Version",
+                "nl": "Firmware Versie",
+                "fr": "Version du firmware",
+                "de": "Firmware-Version",
+                "es": "Versión del firmware"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "serial_number",
+              "type": "label",
+              "label": {
+                "en": "Serial Number",
+                "nl": "Serienummer",
+                "fr": "Numéro de série",
+                "de": "Seriennummer",
+                "es": "Número de serie"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "last_connected",
+              "type": "label",
+              "label": {
+                "en": "Last Connected",
+                "nl": "Laatst Verbonden",
+                "fr": "Dernière connexion",
+                "de": "Zuletzt verbunden",
+                "es": "Última conexión"
+              },
+              "value": "Never"
+            }
+          ]
+        }
+      ],
+      "icon": "/drivers/kef-ls50w2/assets/icon.svg"
+    },
+    {
+      "id": "kef-ls60",
+      "name": {
+        "en": "KEF LS60 Wireless",
+        "nl": "KEF LS60 Wireless",
+        "fr": "KEF LS60 Wireless",
+        "de": "KEF LS60 Wireless",
+        "es": "KEF LS60 Wireless"
+      },
+      "class": "speaker",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "onoff",
+        "volume_set",
+        "volume_mute",
+        "source_input",
+        "bass_extension",
+        "desk_mode",
+        "wall_mode",
+        "speaker_balance"
+      ],
+      "energy": {
+        "approximation": {
+          "usageOn": 450,
+          "usageOff": 2
+        }
+      },
+      "images": {
+        "small": "/drivers/kef-ls60/assets/images/small.png",
+        "large": "/drivers/kef-ls60/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "manual_ip",
+          "options": {
+            "title": {
+              "en": "Add KEF LS60 Wireless",
+              "nl": "KEF LS60 Wireless toevoegen",
+              "fr": "Ajouter KEF LS60 Wireless",
+              "de": "KEF LS60 Wireless hinzufügen",
+              "es": "Añadir KEF LS60 Wireless"
+            }
+          }
+        }
+      ],
+      "repair": [
+        {
+          "id": "repair_ip",
+          "options": {
+            "title": {
+              "en": "Repair KEF LS60 Wireless Connection",
+              "nl": "KEF LS60 Wireless Verbinding Herstellen",
+              "fr": "Réparer la connexion KEF LS60 Wireless",
+              "de": "KEF LS60 Wireless Verbindung reparieren",
+              "es": "Reparar conexión KEF LS60 Wireless"
+            }
+          }
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Settings",
+            "nl": "Apparaat Instellingen",
+            "fr": "Paramètres de l'appareil",
+            "de": "Geräteeinstellungen",
+            "es": "Configuración del dispositivo"
+          },
+          "children": [
+            {
+              "id": "ip",
+              "type": "text",
+              "label": {
+                "en": "IP Address",
+                "nl": "IP Adres",
+                "fr": "Adresse IP",
+                "de": "IP-Adresse",
+                "es": "Dirección IP"
+              },
+              "value": "",
+              "hint": {
+                "en": "The IP address of your KEF LS60 Wireless",
+                "nl": "Het IP-adres van uw KEF LS60 Wireless",
+                "fr": "L'adresse IP de votre KEF LS60 Wireless",
+                "de": "Die IP-Adresse Ihres KEF LS60 Wireless",
+                "es": "La dirección IP de tu KEF LS60 Wireless"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "Port",
+                "nl": "Poort",
+                "fr": "Port",
+                "de": "Port",
+                "es": "Puerto"
+              },
+              "value": 80,
+              "min": 1,
+              "max": 65535,
+              "hint": {
+                "en": "TCP port for KEF communication (default: 80)",
+                "nl": "TCP-poort voor KEF-communicatie (standaard: 80)",
+                "fr": "Port TCP pour la communication KEF (par défaut: 80)",
+                "de": "TCP-Port für KEF-Kommunikation (Standard: 80)",
+                "es": "Puerto TCP para comunicación KEF (por defecto: 80)"
+              }
+            },
+            {
+              "id": "polling_interval",
+              "type": "number",
+              "label": {
+                "en": "Polling Interval (seconds)",
+                "nl": "Polling Interval (seconden)",
+                "fr": "Intervalle de polling (secondes)",
+                "de": "Abfrageintervall (Sekunden)",
+                "es": "Intervalo de sondeo (segundos)"
+              },
+              "value": 5,
+              "min": 1,
+              "max": 60,
+              "hint": {
+                "en": "How often to check the speaker's status",
+                "nl": "Hoe vaak de status van de speaker wordt gecontroleerd",
+                "fr": "Fréquence de vérification du statut du haut-parleur",
+                "de": "Wie oft der Status des Lautsprechers überprüft wird",
+                "es": "Con qué frecuencia comprobar el estado del altavoz"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Information",
+            "nl": "Apparaat Informatie",
+            "fr": "Informations sur l'appareil",
+            "de": "Geräteinformationen",
+            "es": "Información del dispositivo"
+          },
+          "children": [
+            {
+              "id": "speaker_name",
+              "type": "label",
+              "label": {
+                "en": "Speaker Name",
+                "nl": "Speaker Naam",
+                "fr": "Nom du haut-parleur",
+                "de": "Lautsprechername",
+                "es": "Nombre del altavoz"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "speaker_model",
+              "type": "label",
+              "label": {
+                "en": "Model",
+                "nl": "Model",
+                "fr": "Modèle",
+                "de": "Modell",
+                "es": "Modelo"
+              },
+              "value": "KEF LS60 Wireless"
+            },
+            {
+              "id": "firmware_version",
+              "type": "label",
+              "label": {
+                "en": "Firmware Version",
+                "nl": "Firmware Versie",
+                "fr": "Version du firmware",
+                "de": "Firmware-Version",
+                "es": "Versión del firmware"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "serial_number",
+              "type": "label",
+              "label": {
+                "en": "Serial Number",
+                "nl": "Serienummer",
+                "fr": "Numéro de série",
+                "de": "Seriennummer",
+                "es": "Número de serie"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "last_connected",
+              "type": "label",
+              "label": {
+                "en": "Last Connected",
+                "nl": "Laatst Verbonden",
+                "fr": "Dernière connexion",
+                "de": "Zuletzt verbunden",
+                "es": "Última conexión"
+              },
+              "value": "Never"
+            }
+          ]
+        }
+      ],
+      "icon": "/drivers/kef-ls60/assets/icon.svg"
+    },
+    {
+      "id": "kef-lsx2",
+      "name": {
+        "en": "KEF LSX II",
+        "nl": "KEF LSX II",
+        "fr": "KEF LSX II",
+        "de": "KEF LSX II",
+        "es": "KEF LSX II"
+      },
+      "class": "speaker",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "onoff",
+        "volume_set",
+        "volume_mute",
+        "source_input"
+      ],
+      "energy": {
+        "approximation": {
+          "usageOn": 100,
+          "usageOff": 5
+        }
+      },
+      "images": {
+        "small": "/drivers/kef-lsx2/assets/images/small.png",
+        "large": "/drivers/kef-lsx2/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "manual_ip",
+          "options": {
+            "title": {
+              "en": "Add KEF LSX II",
+              "nl": "KEF LSX II toevoegen",
+              "fr": "Ajouter KEF LSX II",
+              "de": "KEF LSX II hinzufügen",
+              "es": "Añadir KEF LSX II"
+            }
+          }
+        }
+      ],
+      "repair": [
+        {
+          "id": "repair_ip",
+          "options": {
+            "title": {
+              "en": "Repair KEF LSX II Connection",
+              "nl": "KEF LSX II Verbinding Herstellen",
+              "fr": "Réparer la connexion KEF LSX II",
+              "de": "KEF LSX II Verbindung reparieren",
+              "es": "Reparar conexión KEF LSX II"
+            }
+          }
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Settings",
+            "nl": "Apparaat Instellingen",
+            "fr": "Paramètres de l'appareil",
+            "de": "Geräteeinstellungen",
+            "es": "Configuración del dispositivo"
+          },
+          "children": [
+            {
+              "id": "ip",
+              "type": "text",
+              "label": {
+                "en": "IP Address",
+                "nl": "IP Adres",
+                "fr": "Adresse IP",
+                "de": "IP-Adresse",
+                "es": "Dirección IP"
+              },
+              "value": "",
+              "hint": {
+                "en": "The IP address of your KEF LSX II",
+                "nl": "Het IP-adres van uw KEF LSX II",
+                "fr": "L'adresse IP de votre KEF LSX II",
+                "de": "Die IP-Adresse Ihres KEF LSX II",
+                "es": "La dirección IP de tu KEF LSX II"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "Port",
+                "nl": "Poort",
+                "fr": "Port",
+                "de": "Port",
+                "es": "Puerto"
+              },
+              "value": 80,
+              "min": 1,
+              "max": 65535,
+              "hint": {
+                "en": "TCP port for KEF communication (default: 80)",
+                "nl": "TCP-poort voor KEF-communicatie (standaard: 80)",
+                "fr": "Port TCP pour la communication KEF (par défaut: 80)",
+                "de": "TCP-Port für KEF-Kommunikation (Standard: 80)",
+                "es": "Puerto TCP para comunicación KEF (por defecto: 80)"
+              }
+            },
+            {
+              "id": "polling_interval",
+              "type": "number",
+              "label": {
+                "en": "Polling Interval (seconds)",
+                "nl": "Polling Interval (seconden)",
+                "fr": "Intervalle de polling (secondes)",
+                "de": "Abfrageintervall (Sekunden)",
+                "es": "Intervalo de sondeo (segundos)"
+              },
+              "value": 5,
+              "min": 1,
+              "max": 60,
+              "hint": {
+                "en": "How often to check the speaker's status",
+                "nl": "Hoe vaak de status van de speaker wordt gecontroleerd",
+                "fr": "Fréquence de vérification du statut du haut-parleur",
+                "de": "Wie oft der Status des Lautsprechers überprüft wird",
+                "es": "Con qué frecuencia comprobar el estado del altavoz"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Information",
+            "nl": "Apparaat Informatie",
+            "fr": "Informations sur l'appareil",
+            "de": "Geräteinformationen",
+            "es": "Información del dispositivo"
+          },
+          "children": [
+            {
+              "id": "speaker_name",
+              "type": "label",
+              "label": {
+                "en": "Speaker Name",
+                "nl": "Speaker Naam",
+                "fr": "Nom du haut-parleur",
+                "de": "Lautsprechername",
+                "es": "Nombre del altavoz"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "speaker_model",
+              "type": "label",
+              "label": {
+                "en": "Model",
+                "nl": "Model",
+                "fr": "Modèle",
+                "de": "Modell",
+                "es": "Modelo"
+              },
+              "value": "KEF LSX II"
+            },
+            {
+              "id": "firmware_version",
+              "type": "label",
+              "label": {
+                "en": "Firmware Version",
+                "nl": "Firmware Versie",
+                "fr": "Version du firmware",
+                "de": "Firmware-Version",
+                "es": "Versión del firmware"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "serial_number",
+              "type": "label",
+              "label": {
+                "en": "Serial Number",
+                "nl": "Serienummer",
+                "fr": "Numéro de série",
+                "de": "Seriennummer",
+                "es": "Número de serie"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "last_connected",
+              "type": "label",
+              "label": {
+                "en": "Last Connected",
+                "nl": "Laatst Verbonden",
+                "fr": "Dernière connexion",
+                "de": "Zuletzt verbunden",
+                "es": "Última conexión"
+              },
+              "value": "Never"
+            }
+          ]
+        }
+      ],
+      "icon": "/drivers/kef-lsx2/assets/icon.svg"
+    },
+    {
+      "id": "kef-lsx2lt",
+      "name": {
+        "en": "KEF LSX II LT",
+        "nl": "KEF LSX II LT",
+        "fr": "KEF LSX II LT",
+        "de": "KEF LSX II LT",
+        "es": "KEF LSX II LT"
+      },
+      "class": "speaker",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "onoff",
+        "volume_set",
+        "volume_mute",
+        "source_input"
+      ],
+      "energy": {
+        "approximation": {
+          "usageOn": 100,
+          "usageOff": 5
+        }
+      },
+      "images": {
+        "small": "/drivers/kef-lsx2lt/assets/images/small.png",
+        "large": "/drivers/kef-lsx2lt/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "manual_ip",
+          "options": {
+            "title": {
+              "en": "Add KEF LSX II LT",
+              "nl": "KEF LSX II LT toevoegen",
+              "fr": "Ajouter KEF LSX II LT",
+              "de": "KEF LSX II LT hinzufügen",
+              "es": "Añadir KEF LSX II LT"
+            }
+          }
+        }
+      ],
+      "repair": [
+        {
+          "id": "repair_ip",
+          "options": {
+            "title": {
+              "en": "Repair KEF LSX II LT Connection",
+              "nl": "KEF LSX II LT Verbinding Herstellen",
+              "fr": "Réparer la connexion KEF LSX II LT",
+              "de": "KEF LSX II LT Verbindung reparieren",
+              "es": "Reparar conexión KEF LSX II LT"
+            }
+          }
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Settings",
+            "nl": "Apparaat Instellingen",
+            "fr": "Paramètres de l'appareil",
+            "de": "Geräteeinstellungen",
+            "es": "Configuración del dispositivo"
+          },
+          "children": [
+            {
+              "id": "ip",
+              "type": "text",
+              "label": {
+                "en": "IP Address",
+                "nl": "IP Adres",
+                "fr": "Adresse IP",
+                "de": "IP-Adresse",
+                "es": "Dirección IP"
+              },
+              "value": "",
+              "hint": {
+                "en": "The IP address of your KEF LSX II LT",
+                "nl": "Het IP-adres van uw KEF LSX II LT",
+                "fr": "L'adresse IP de votre KEF LSX II LT",
+                "de": "Die IP-Adresse Ihres KEF LSX II LT",
+                "es": "La dirección IP de tu KEF LSX II LT"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "Port",
+                "nl": "Poort",
+                "fr": "Port",
+                "de": "Port",
+                "es": "Puerto"
+              },
+              "value": 80,
+              "min": 1,
+              "max": 65535,
+              "hint": {
+                "en": "TCP port for KEF communication (default: 80)",
+                "nl": "TCP-poort voor KEF-communicatie (standaard: 80)",
+                "fr": "Port TCP pour la communication KEF (par défaut: 80)",
+                "de": "TCP-Port für KEF-Kommunikation (Standard: 80)",
+                "es": "Puerto TCP para comunicación KEF (por defecto: 80)"
+              }
+            },
+            {
+              "id": "polling_interval",
+              "type": "number",
+              "label": {
+                "en": "Polling Interval (seconds)",
+                "nl": "Polling Interval (seconden)",
+                "fr": "Intervalle de polling (secondes)",
+                "de": "Abfrageintervall (Sekunden)",
+                "es": "Intervalo de sondeo (segundos)"
+              },
+              "value": 5,
+              "min": 1,
+              "max": 60,
+              "hint": {
+                "en": "How often to check the speaker's status",
+                "nl": "Hoe vaak de status van de speaker wordt gecontroleerd",
+                "fr": "Fréquence de vérification du statut du haut-parleur",
+                "de": "Wie oft der Status des Lautsprechers überprüft wird",
+                "es": "Con qué frecuencia comprobar el estado del altavoz"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Information",
+            "nl": "Apparaat Informatie",
+            "fr": "Informations sur l'appareil",
+            "de": "Geräteinformationen",
+            "es": "Información del dispositivo"
+          },
+          "children": [
+            {
+              "id": "speaker_name",
+              "type": "label",
+              "label": {
+                "en": "Speaker Name",
+                "nl": "Speaker Naam",
+                "fr": "Nom du haut-parleur",
+                "de": "Lautsprechername",
+                "es": "Nombre del altavoz"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "speaker_model",
+              "type": "label",
+              "label": {
+                "en": "Model",
+                "nl": "Model",
+                "fr": "Modèle",
+                "de": "Modell",
+                "es": "Modelo"
+              },
+              "value": "KEF LSX II LT"
+            },
+            {
+              "id": "firmware_version",
+              "type": "label",
+              "label": {
+                "en": "Firmware Version",
+                "nl": "Firmware Versie",
+                "fr": "Version du firmware",
+                "de": "Firmware-Version",
+                "es": "Versión del firmware"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "serial_number",
+              "type": "label",
+              "label": {
+                "en": "Serial Number",
+                "nl": "Serienummer",
+                "fr": "Numéro de série",
+                "de": "Seriennummer",
+                "es": "Número de serie"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "last_connected",
+              "type": "label",
+              "label": {
+                "en": "Last Connected",
+                "nl": "Laatst Verbonden",
+                "fr": "Dernière connexion",
+                "de": "Zuletzt verbunden",
+                "es": "Última conexión"
+              },
+              "value": "Never"
+            }
+          ]
+        }
+      ],
+      "icon": "/drivers/kef-lsx2lt/assets/icon.svg"
+    },
+    {
+      "id": "kef-xio",
+      "name": {
+        "en": "KEF XIO",
+        "nl": "KEF XIO",
+        "fr": "KEF XIO",
+        "de": "KEF XIO",
+        "es": "KEF XIO"
+      },
+      "class": "speaker",
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "capabilities": [
+        "onoff",
+        "volume_set",
+        "volume_mute",
+        "source_input"
+      ],
+      "energy": {
+        "approximation": {
+          "usageOn": 200,
+          "usageOff": 5
+        }
+      },
+      "images": {
+        "small": "/drivers/kef-xio/assets/images/small.png",
+        "large": "/drivers/kef-xio/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "manual_ip",
+          "options": {
+            "title": {
+              "en": "Add KEF XIO",
+              "nl": "KEF XIO toevoegen",
+              "fr": "Ajouter KEF XIO",
+              "de": "KEF XIO hinzufügen",
+              "es": "Añadir KEF XIO"
+            }
+          }
+        }
+      ],
+      "repair": [
+        {
+          "id": "repair_ip",
+          "options": {
+            "title": {
+              "en": "Repair KEF XIO Connection",
+              "nl": "KEF XIO Verbinding Herstellen",
+              "fr": "Réparer la connexion KEF XIO",
+              "de": "KEF XIO Verbindung reparieren",
+              "es": "Reparar conexión KEF XIO"
+            }
+          }
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Settings",
+            "nl": "Apparaat Instellingen",
+            "fr": "Paramètres de l'appareil",
+            "de": "Geräteeinstellungen",
+            "es": "Configuración del dispositivo"
+          },
+          "children": [
+            {
+              "id": "ip",
+              "type": "text",
+              "label": {
+                "en": "IP Address",
+                "nl": "IP Adres",
+                "fr": "Adresse IP",
+                "de": "IP-Adresse",
+                "es": "Dirección IP"
+              },
+              "value": "",
+              "hint": {
+                "en": "The IP address of your KEF XIO",
+                "nl": "Het IP-adres van uw KEF XIO",
+                "fr": "L'adresse IP de votre KEF XIO",
+                "de": "Die IP-Adresse Ihres KEF XIO",
+                "es": "La dirección IP de tu KEF XIO"
+              }
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "Port",
+                "nl": "Poort",
+                "fr": "Port",
+                "de": "Port",
+                "es": "Puerto"
+              },
+              "value": 80,
+              "min": 1,
+              "max": 65535,
+              "hint": {
+                "en": "TCP port for KEF communication (default: 80)",
+                "nl": "TCP-poort voor KEF-communicatie (standaard: 80)",
+                "fr": "Port TCP pour la communication KEF (par défaut: 80)",
+                "de": "TCP-Port für KEF-Kommunikation (Standard: 80)",
+                "es": "Puerto TCP para comunicación KEF (por defecto: 80)"
+              }
+            },
+            {
+              "id": "polling_interval",
+              "type": "number",
+              "label": {
+                "en": "Polling Interval (seconds)",
+                "nl": "Polling Interval (seconden)",
+                "fr": "Intervalle de polling (secondes)",
+                "de": "Abfrageintervall (Sekunden)",
+                "es": "Intervalo de sondeo (segundos)"
+              },
+              "value": 5,
+              "min": 1,
+              "max": 60,
+              "hint": {
+                "en": "How often to check the speaker's status",
+                "nl": "Hoe vaak de status van de speaker wordt gecontroleerd",
+                "fr": "Fréquence de vérification du statut du haut-parleur",
+                "de": "Wie oft der Status des Lautsprechers überprüft wird",
+                "es": "Con qué frecuencia comprobar el estado del altavoz"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device Information",
+            "nl": "Apparaat Informatie",
+            "fr": "Informations sur l'appareil",
+            "de": "Geräteinformationen",
+            "es": "Información del dispositivo"
+          },
+          "children": [
+            {
+              "id": "speaker_name",
+              "type": "label",
+              "label": {
+                "en": "Speaker Name",
+                "nl": "Speaker Naam",
+                "fr": "Nom du haut-parleur",
+                "de": "Lautsprechername",
+                "es": "Nombre del altavoz"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "speaker_model",
+              "type": "label",
+              "label": {
+                "en": "Model",
+                "nl": "Model",
+                "fr": "Modèle",
+                "de": "Modell",
+                "es": "Modelo"
+              },
+              "value": "KEF XIO"
+            },
+            {
+              "id": "firmware_version",
+              "type": "label",
+              "label": {
+                "en": "Firmware Version",
+                "nl": "Firmware Versie",
+                "fr": "Version du firmware",
+                "de": "Firmware-Version",
+                "es": "Versión del firmware"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "serial_number",
+              "type": "label",
+              "label": {
+                "en": "Serial Number",
+                "nl": "Serienummer",
+                "fr": "Numéro de série",
+                "de": "Seriennummer",
+                "es": "Número de serie"
+              },
+              "value": "Unknown"
+            },
+            {
+              "id": "last_connected",
+              "type": "label",
+              "label": {
+                "en": "Last Connected",
+                "nl": "Laatst Verbonden",
+                "fr": "Dernière connexion",
+                "de": "Zuletzt verbunden",
+                "es": "Última conexión"
+              },
+              "value": "Never"
+            }
+          ]
+        }
+      ],
+      "icon": "/drivers/kef-xio/assets/icon.svg"
+    }
+  ],
+  "capabilities": {
+    "bass_extension": {
+      "type": "enum",
+      "title": {
+        "en": "Bass Extension",
+        "nl": "Basverlenging",
+        "fr": "Extension des basses",
+        "de": "Basserweiterung",
+        "es": "Extensión de graves"
+      },
+      "values": [
+        {
+          "id": "less",
+          "title": {
+            "en": "Less",
+            "nl": "Minder",
+            "fr": "Moins",
+            "de": "Weniger",
+            "es": "Menos"
+          }
+        },
+        {
+          "id": "standard",
+          "title": {
+            "en": "Standard",
+            "nl": "Standaard",
+            "fr": "Standard",
+            "de": "Standard",
+            "es": "Estándar"
+          }
+        },
+        {
+          "id": "extra",
+          "title": {
+            "en": "Extra",
+            "nl": "Extra",
+            "fr": "Extra",
+            "de": "Extra",
+            "es": "Extra"
+          }
+        }
+      ],
+      "getable": true,
+      "setable": true,
+      "uiComponent": null,
+      "icon": "/assets/capability_bass.svg"
+    },
+    "desk_mode": {
+      "type": "boolean",
+      "title": {
+        "en": "Desk Mode",
+        "nl": "Bureau modus",
+        "fr": "Mode bureau",
+        "de": "Schreibtischmodus",
+        "es": "Modo escritorio"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": null,
+      "icon": "/assets/capability_desk.svg"
+    },
+    "source_input": {
+      "type": "enum",
+      "title": {
+        "en": "Source Input",
+        "nl": "Bron Ingang",
+        "fr": "Source d'entrée",
+        "de": "Eingangsquelle",
+        "es": "Fuente de entrada"
+      },
+      "desc": {
+        "en": "Select the audio input source",
+        "nl": "Selecteer de audio-invoerbron",
+        "fr": "Sélectionner la source d'entrée audio",
+        "de": "Wählen Sie die Audio-Eingangsquelle",
+        "es": "Seleccionar la fuente de entrada de audio"
+      },
+      "uiComponent": "picker",
+      "getable": true,
+      "setable": true,
+      "values": [
+        {
+          "id": "wifi",
+          "title": {
+            "en": "WiFi",
+            "nl": "WiFi",
+            "fr": "WiFi",
+            "de": "WiFi",
+            "es": "WiFi"
+          }
+        },
+        {
+          "id": "bluetooth",
+          "title": {
+            "en": "Bluetooth",
+            "nl": "Bluetooth",
+            "fr": "Bluetooth",
+            "de": "Bluetooth",
+            "es": "Bluetooth"
+          }
+        },
+        {
+          "id": "optical",
+          "title": {
+            "en": "Optical",
+            "nl": "Optisch",
+            "fr": "Optique",
+            "de": "Optisch",
+            "es": "Óptico"
+          }
+        },
+        {
+          "id": "coaxial",
+          "title": {
+            "en": "Coaxial",
+            "nl": "Coaxiaal",
+            "fr": "Coaxial",
+            "de": "Koaxial",
+            "es": "Coaxial"
+          }
+        },
+        {
+          "id": "analog",
+          "title": {
+            "en": "Analog",
+            "nl": "Analoog",
+            "fr": "Analogique",
+            "de": "Analog",
+            "es": "Analógico"
+          }
+        },
+        {
+          "id": "tv",
+          "title": {
+            "en": "TV",
+            "nl": "TV",
+            "fr": "TV",
+            "de": "TV",
+            "es": "TV"
+          }
+        },
+        {
+          "id": "usb",
+          "title": {
+            "en": "USB",
+            "nl": "USB",
+            "fr": "USB",
+            "de": "USB",
+            "es": "USB"
+          }
+        }
+      ],
+      "icon": "/assets/capability_source.svg"
+    },
+    "speaker_balance": {
+      "type": "number",
+      "title": {
+        "en": "Balance",
+        "nl": "Balans",
+        "fr": "Balance",
+        "de": "Balance",
+        "es": "Balance"
+      },
+      "min": -100,
+      "max": 100,
+      "step": 1,
+      "units": {
+        "en": "%",
+        "nl": "%",
+        "fr": "%",
+        "de": "%",
+        "es": "%"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": null,
+      "icon": "/assets/capability_balance.svg"
+    },
+    "wall_mode": {
+      "type": "boolean",
+      "title": {
+        "en": "Wall Mode",
+        "nl": "Muur modus",
+        "fr": "Mode mural",
+        "de": "Wandmodus",
+        "es": "Modo pared"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": null,
+      "icon": "/assets/capability_wall.svg"
+    }
+  }
+}

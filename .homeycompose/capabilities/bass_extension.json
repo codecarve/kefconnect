@@ -1,0 +1,46 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Bass Extension",
+    "nl": "Basverlenging",
+    "fr": "Extension des basses",
+    "de": "Basserweiterung",
+    "es": "Extensión de graves"
+  },
+  "values": [
+    {
+      "id": "less",
+      "title": {
+        "en": "Less",
+        "nl": "Minder",
+        "fr": "Moins",
+        "de": "Weniger",
+        "es": "Menos"
+      }
+    },
+    {
+      "id": "standard",
+      "title": {
+        "en": "Standard",
+        "nl": "Standaard",
+        "fr": "Standard",
+        "de": "Standard",
+        "es": "Estándar"
+      }
+    },
+    {
+      "id": "extra",
+      "title": {
+        "en": "Extra",
+        "nl": "Extra",
+        "fr": "Extra",
+        "de": "Extra",
+        "es": "Extra"
+      }
+    }
+  ],
+  "getable": true,
+  "setable": true,
+  "uiComponent": null,
+  "icon": "/assets/capability_bass.svg"
+}

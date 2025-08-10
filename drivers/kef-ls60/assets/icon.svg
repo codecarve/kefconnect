@@ -1,0 +1,19 @@
+<!-- assets/kef-ls60.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-labelledby="title desc">
+  <title>KEF LS60 Wireless</title>
+  <desc>Minimal dual slim floor-standing speakers with Uni-Q drivers</desc>
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left tower -->
+    <rect x="14" y="8" width="20" height="84" rx="4" />
+    <circle cx="24" cy="40" r="8" />
+    <circle cx="24" cy="40" r="3" />
+    <!-- Plinth -->
+    <path d="M10 94h28" />
+    <!-- Right tower -->
+    <rect x="66" y="8" width="20" height="84" rx="4" />
+    <circle cx="76" cy="40" r="8" />
+    <circle cx="76" cy="40" r="3" />
+    <!-- Plinth -->
+    <path d="M62 94h28" />
+  </g>
+</svg>

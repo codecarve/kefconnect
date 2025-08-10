@@ -1,0 +1,93 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Source Input",
+    "nl": "Bron Ingang",
+    "fr": "Source d'entrée",
+    "de": "Eingangsquelle",
+    "es": "Fuente de entrada"
+  },
+  "desc": {
+    "en": "Select the audio input source",
+    "nl": "Selecteer de audio-invoerbron",
+    "fr": "Sélectionner la source d'entrée audio",
+    "de": "Wählen Sie die Audio-Eingangsquelle",
+    "es": "Seleccionar la fuente de entrada de audio"
+  },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "values": [
+    {
+      "id": "wifi",
+      "title": {
+        "en": "WiFi",
+        "nl": "WiFi",
+        "fr": "WiFi",
+        "de": "WiFi",
+        "es": "WiFi"
+      }
+    },
+    {
+      "id": "bluetooth",
+      "title": {
+        "en": "Bluetooth",
+        "nl": "Bluetooth",
+        "fr": "Bluetooth",
+        "de": "Bluetooth",
+        "es": "Bluetooth"
+      }
+    },
+    {
+      "id": "optical",
+      "title": {
+        "en": "Optical",
+        "nl": "Optisch",
+        "fr": "Optique",
+        "de": "Optisch",
+        "es": "Óptico"
+      }
+    },
+    {
+      "id": "coaxial",
+      "title": {
+        "en": "Coaxial",
+        "nl": "Coaxiaal",
+        "fr": "Coaxial",
+        "de": "Koaxial",
+        "es": "Coaxial"
+      }
+    },
+    {
+      "id": "analog",
+      "title": {
+        "en": "Analog",
+        "nl": "Analoog",
+        "fr": "Analogique",
+        "de": "Analog",
+        "es": "Analógico"
+      }
+    },
+    {
+      "id": "tv",
+      "title": {
+        "en": "TV",
+        "nl": "TV",
+        "fr": "TV",
+        "de": "TV",
+        "es": "TV"
+      }
+    },
+    {
+      "id": "usb",
+      "title": {
+        "en": "USB",
+        "nl": "USB",
+        "fr": "USB",
+        "de": "USB",
+        "es": "USB"
+      }
+    }
+  ],
+  "icon": "/assets/capability_source.svg"
+}
