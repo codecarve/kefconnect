@@ -58,6 +58,12 @@
     "connection_failed": "No se pudo conectar al altavoz KEF",
     "invalid_ip": "Por favor, introduzca una dirección IP válida",
     "command_failed": "No se pudo ejecutar el comando",
-    "device_unavailable": "El altavoz KEF no está disponible"
+    "device_unavailable": "El altavoz KEF no está disponible",
+    "track_control_not_supported_on_source": "El control de pistas no es compatible con la entrada __source__. Cambie a WiFi o Bluetooth para controlar la reproducción.",
+    "playback_control_not_supported_on_source": "El control de reproducción no es compatible con la entrada __source__. Cambie a WiFi o Bluetooth para controlar la reproducción.",
+    "operation_not_supported": "Esta operación no es compatible con el modo de reproducción actual. Intente cambiar a otra fuente o asegúrese de que se estén reproduciendo medios.",
+    "source_not_supported": "La entrada __source__ no es compatible con este modelo de altavoz.",
+    "source_change_failed": "No se pudo cambiar la fuente de entrada. Verifique si el altavoz está en línea e intente nuevamente.",
+    "volume_control_failed": "No se pudo ajustar el volumen. Verifique si el altavoz está en línea e intente nuevamente."
   }
 }

@@ -58,6 +58,12 @@
     "connection_failed": "Impossible de se connecter au haut-parleur KEF",
     "invalid_ip": "Veuillez entrer une adresse IP valide",
     "command_failed": "Impossible d'exécuter la commande",
-    "device_unavailable": "Le haut-parleur KEF n'est pas disponible"
+    "device_unavailable": "Le haut-parleur KEF n'est pas disponible",
+    "track_control_not_supported_on_source": "Le contrôle des pistes n'est pas pris en charge sur l'entrée __source__. Veuillez passer à WiFi ou Bluetooth pour contrôler la lecture.",
+    "playback_control_not_supported_on_source": "Le contrôle de lecture n'est pas pris en charge sur l'entrée __source__. Veuillez passer à WiFi ou Bluetooth pour contrôler la lecture.",
+    "operation_not_supported": "Cette opération n'est pas prise en charge dans le mode de lecture actuel. Essayez de passer à une autre source ou assurez-vous que le média est en cours de lecture.",
+    "source_not_supported": "L'entrée __source__ n'est pas prise en charge par ce modèle de haut-parleur.",
+    "source_change_failed": "Impossible de changer la source d'entrée. Veuillez vérifier si le haut-parleur est en ligne et réessayer.",
+    "volume_control_failed": "Impossible d'ajuster le volume. Veuillez vérifier si le haut-parleur est en ligne et réessayer."
   }
 }

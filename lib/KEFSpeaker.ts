@@ -18,6 +18,7 @@ export interface KEFPlaybackInfo {
   duration?: number;
   position?: number;
   source?: string;
+  albumArtUrl?: string;
 }
 
 export interface KEFSettings {
@@ -27,12 +28,8 @@ export interface KEFSettings {
   standby?: boolean;
   subwooferMode?: string;
   subwooferGain?: number;
-  bassExtension?: string;
-  deskMode?: boolean;
-  wallMode?: boolean;
   phase?: string;
   highpass?: boolean;
-  balance?: number;
 }
 
 export type KEFSource =
@@ -48,9 +45,7 @@ export class KEFSpeaker {
   private ip: string;
   private port: number = 80;
   private timeout: number = 5000;
-  private isPolling: boolean = false;
-  private pollInterval?: NodeJS.Timeout;
-  private lastActiveSource: string = "wifi"; // Store last active source
+  private lastActiveSource: KEFSource = "wifi"; // Store last active source
   private logger?: (message: string) => void;
 
   constructor(ip: string, port: number = 80, logger?: (message: string) => void) {
@@ -85,6 +80,8 @@ export class KEFSpeaker {
       };
 
       const req = http.request(options, (res) => {
+        // Set encoding to handle special characters properly
+        res.setEncoding('utf8');
         let data = "";
 
         res.on("data", (chunk) => {
@@ -167,24 +164,24 @@ export class KEFSpeaker {
   }
 
   // Source Management
-  async getSource(): Promise<string> {
+  async getSource(): Promise<KEFSource> {
     try {
       const response = await this.getData("settings:/kef/play/physicalSource");
       if (response && response[0] && response[0].kefPhysicalSource) {
         const source = response[0].kefPhysicalSource.toLowerCase();
         // Store last active source (not standby)
         if (source !== "standby") {
-          this.lastActiveSource = source;
+          this.lastActiveSource = source as KEFSource;
         }
-        return source;
+        return source as KEFSource;
       }
-      return "wifi";
+      return "wifi" as KEFSource;
     } catch (error) {
       throw new Error(`Failed to get source: ${error}`);
     }
   }
 
-  async setSource(source: string): Promise<void> {
+  async setSource(source: KEFSource): Promise<void> {
     const value = JSON.stringify({
       type: "kefPhysicalSource",
       kefPhysicalSource: source
@@ -258,17 +255,51 @@ export class KEFSpeaker {
 
   // Playback Control
   async play(): Promise<void> {
-    const value = JSON.stringify({
-      type: "play",
-    });
-    await this.setData("player:/play", value);
+    this.log('[play] Attempting to play');
+    
+    // Based on pykefcontrol library, using the correct format
+    const value = '{"control":"play"}';
+    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
+    this.log(`[play] Sending request to: ${url}`);
+    
+    try {
+      const response = await this.request("GET", url);
+      this.log(`[play] Response: ${JSON.stringify(response)}`);
+      
+      // Check if the API returned an error
+      if (response && response.error) {
+        const errorMessage = response.error.message || 'Operation failed';
+        this.log(`[play] API Error: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+    } catch (error: any) {
+      this.log(`[play] Error: ${error.message}`);
+      throw error; // Re-throw to let the flow card handle it
+    }
   }
 
   async pause(): Promise<void> {
-    const value = JSON.stringify({
-      type: "pause",
-    });
-    await this.setData("player:/pause", value);
+    this.log('[pause] Attempting to pause');
+    
+    // Based on pykefcontrol library, using the correct format
+    const value = '{"control":"pause"}';
+    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
+    this.log(`[pause] Sending request to: ${url}`);
+    
+    try {
+      const response = await this.request("GET", url);
+      this.log(`[pause] Response: ${JSON.stringify(response)}`);
+      
+      // Check if the API returned an error
+      if (response && response.error) {
+        const errorMessage = response.error.message || 'Operation failed';
+        this.log(`[pause] API Error: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+    } catch (error: any) {
+      this.log(`[pause] Error: ${error.message}`);
+      throw error; // Re-throw to let the flow card handle it
+    }
   }
 
   async togglePlayPause(): Promise<void> {
@@ -286,17 +317,53 @@ export class KEFSpeaker {
   }
 
   async nextTrack(): Promise<void> {
-    const value = JSON.stringify({
-      type: "next",
-    });
-    await this.setData("player:/next", value);
+    this.log('[nextTrack] Attempting to skip to next track');
+    
+    // Based on pykefcontrol library, this should work on all sources
+    // Using the exact format from the working Python library
+    const value = '{"control":"next"}';
+    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
+    this.log(`[nextTrack] Sending request to: ${url}`);
+    
+    try {
+      const response = await this.request("GET", url);
+      this.log(`[nextTrack] Response: ${JSON.stringify(response)}`);
+      
+      // Check if the API returned an error
+      if (response && response.error) {
+        const errorMessage = response.error.message || 'Operation failed';
+        this.log(`[nextTrack] API Error: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+    } catch (error: any) {
+      this.log(`[nextTrack] Error: ${error.message}`);
+      throw error; // Re-throw to let the flow card handle it
+    }
   }
 
   async previousTrack(): Promise<void> {
-    const value = JSON.stringify({
-      type: "previous",
-    });
-    await this.setData("player:/previous", value);
+    this.log('[previousTrack] Attempting to skip to previous track');
+    
+    // Based on pykefcontrol library, this should work on all sources
+    // Using the exact format from the working Python library
+    const value = '{"control":"previous"}';
+    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
+    this.log(`[previousTrack] Sending request to: ${url}`);
+    
+    try {
+      const response = await this.request("GET", url);
+      this.log(`[previousTrack] Response: ${JSON.stringify(response)}`);
+      
+      // Check if the API returned an error
+      if (response && response.error) {
+        const errorMessage = response.error.message || 'Operation failed';
+        this.log(`[previousTrack] API Error: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+    } catch (error: any) {
+      this.log(`[previousTrack] Error: ${error.message}`);
+      throw error; // Re-throw to let the flow card handle it
+    }
   }
 
   async isPlaying(): Promise<boolean> {
@@ -324,7 +391,7 @@ export class KEFSpeaker {
         if (res.statusCode === 301 || res.statusCode === 302) {
           const redirectPath = res.headers.location || '/index.fcgi';
           this.log(`[getModelFromWebInterface] Following redirect to: ${redirectPath}`);
-          
+
           const redirectOptions: http.RequestOptions = {
             hostname: this.ip,
             port: this.port,
@@ -332,28 +399,28 @@ export class KEFSpeaker {
             method: 'GET',
             timeout: 3000,
           };
-          
+
           const redirectReq = http.request(redirectOptions, (redirectRes) => {
             let data = '';
             redirectRes.on('data', (chunk) => {
               data += chunk;
             });
-            
+
             redirectRes.on('end', () => {
               const result: {model?: string, version?: string} = {};
-              
+
               // First try to parse the title tag for model (most reliable)
               const titleMatch = data.match(/<title>([^<]+)<\/title>/i);
               if (titleMatch && titleMatch[1]) {
                 const title = titleMatch[1];
                 this.log(`[getModelFromWebInterface] Found page title: ${title}`);
-                
+
                 // Parse title format: "KEF | MODEL | Homepage"
                 const titleParts = title.split('|').map(s => s.trim());
                 if (titleParts.length >= 2) {
                   const modelFromTitle = titleParts[1];
                   this.log(`[getModelFromWebInterface] Model from title: ${modelFromTitle}`);
-                  
+
                   // Map the model names to our internal names
                   if (modelFromTitle === 'LS50 Wireless II' || modelFromTitle === 'LS50WII' || modelFromTitle === 'LS50W2') {
                     result.model = 'LS50 Wireless II';
@@ -375,7 +442,7 @@ export class KEFSpeaker {
                   }
                 }
               }
-              
+
               // Fall back to parsing release status if title didn't work
               if (!result.model) {
                 const releaseMatch = data.match(/Release status:\s*([^<\s]+)/);
@@ -383,7 +450,7 @@ export class KEFSpeaker {
                   // Extract model from release status (e.g., "LS50WII_V37165" -> "LS50WII")
                   const modelPart = releaseMatch[1].split('_')[0];
                   this.log(`[getModelFromWebInterface] Found release status: ${releaseMatch[1]}, model: ${modelPart}`);
-                  
+
                   // Map the model codes to friendly names
                   if (modelPart === 'LS50WII' || modelPart === 'LS50W2') {
                     result.model = 'LS50 Wireless II';
@@ -402,23 +469,23 @@ export class KEFSpeaker {
                   }
                 }
               }
-              
+
               // Parse device version
               const versionMatch = data.match(/Device version:\s*([^<\s]+)/);
               if (versionMatch && versionMatch[1]) {
                 result.version = versionMatch[1];
                 this.log(`[getModelFromWebInterface] Found device version: ${versionMatch[1]}`);
               }
-              
+
               resolve(result);
             });
           });
-          
+
           redirectReq.on('error', (error) => {
             this.log('[getModelFromWebInterface] Error fetching redirect: ' + error);
             resolve({});
           });
-          
+
           redirectReq.end();
         } else {
           // Try to parse directly if no redirect
@@ -426,22 +493,22 @@ export class KEFSpeaker {
           res.on('data', (chunk) => {
             data += chunk;
           });
-          
+
           res.on('end', () => {
             const result: {model?: string, version?: string} = {};
-            
+
             // First try to parse the title tag for model (most reliable)
             const titleMatch = data.match(/<title>([^<]+)<\/title>/i);
             if (titleMatch && titleMatch[1]) {
               const title = titleMatch[1];
               this.log(`[getModelFromWebInterface] Found page title: ${title}`);
-              
+
               // Parse title format: "KEF | MODEL | Homepage"
               const titleParts = title.split('|').map(s => s.trim());
               if (titleParts.length >= 2) {
                 const modelFromTitle = titleParts[1];
                 this.log(`[getModelFromWebInterface] Model from title: ${modelFromTitle}`);
-                
+
                 // Map the model names to our internal names
                 if (modelFromTitle === 'LS50 Wireless II' || modelFromTitle === 'LS50WII' || modelFromTitle === 'LS50W2') {
                   result.model = 'LS50 Wireless II';
@@ -463,14 +530,14 @@ export class KEFSpeaker {
                 }
               }
             }
-            
+
             // Fall back to parsing release status if title didn't work
             if (!result.model) {
               const releaseMatch = data.match(/Release status:\s*([^<\s]+)/);
               if (releaseMatch && releaseMatch[1]) {
                 const modelPart = releaseMatch[1].split('_')[0];
                 this.log(`[getModelFromWebInterface] Found release status: ${releaseMatch[1]}, model: ${modelPart}`);
-                
+
                 if (modelPart === 'LS50WII' || modelPart === 'LS50W2') {
                   result.model = 'LS50 Wireless II';
                 } else if (modelPart === 'LS50W') {
@@ -488,14 +555,14 @@ export class KEFSpeaker {
                 }
               }
             }
-            
+
             // Parse device version
             const versionMatch = data.match(/Device version:\s*([^<\s]+)/);
             if (versionMatch && versionMatch[1]) {
               result.version = versionMatch[1];
               this.log(`[getModelFromWebInterface] Found device version: ${versionMatch[1]}`);
             }
-            
+
             resolve(result);
           });
         }
@@ -521,7 +588,7 @@ export class KEFSpeaker {
     const startTime = Date.now();
     this.log("[getSpeakerInfo] ========== Starting to fetch speaker information ==========");
     this.log(`[getSpeakerInfo] Target IP: ${this.ip}, Port: ${this.port}`);
-    
+
     const info: KEFSpeakerInfo = {
       ip: this.ip,
       name: "KEF Speaker",
@@ -531,15 +598,15 @@ export class KEFSpeaker {
     try {
       // Run ALL requests in parallel for maximum efficiency
       this.log("[getSpeakerInfo] Launching all requests in parallel...");
-      
+
       const allPromises: Promise<any>[] = [];
-      
+
       // Web interface promise
       const webPromise = this.getModelFromWebInterface()
         .then(res => ({ type: 'web', data: res }))
         .catch(err => ({ type: 'web', error: err }));
       allPromises.push(webPromise);
-      
+
       // API promises - all paths that might work
       const apiPaths = [
         { path: "settings:/kef/host/serialNumber", type: 'serial' },
@@ -548,23 +615,23 @@ export class KEFSpeaker {
         { path: "settings:/deviceName", type: 'name2' },  // Most successful name path based on logs
         { path: "settings:/system/deviceName", type: 'name3' }
       ];
-      
+
       for (const { path, type } of apiPaths) {
         const promise = this.getData(path)
           .then(res => ({ type, data: res, path }))
           .catch(err => ({ type, error: err, path }));
         allPromises.push(promise);
       }
-      
+
       // Execute all requests in parallel
       this.log(`[getSpeakerInfo] Executing ${allPromises.length} requests in parallel...`);
       const allResults = await Promise.all(allPromises);
       const totalElapsed = Date.now() - startTime;
       this.log(`[getSpeakerInfo] All requests completed in ${totalElapsed}ms`);
-      
+
       // Process results
       let nameFound = false;
-      
+
       for (const result of allResults) {
         if (result.type === 'web') {
           if (!result.error && result.data) {
@@ -580,14 +647,14 @@ export class KEFSpeaker {
             this.log(`[getSpeakerInfo] ✗ Web interface failed: ${result.error}`);
           }
         }
-        
+
         else if (result.type === 'serial') {
           if (!result.error && result.data && result.data[0]) {
             const serialValue = result.data[0].serialNumber || result.data[0].string_;
             if (serialValue) {
               info.serialNumber = serialValue;
               this.log(`[getSpeakerInfo] ✓ Serial number: "${info.serialNumber}"`);
-              
+
               // Model detection from serial if still unknown
               if (info.model === "Unknown" && info.serialNumber) {
                 const serial = info.serialNumber.toUpperCase();
@@ -598,7 +665,7 @@ export class KEFSpeaker {
                   'LSX': 'LSX',
                   'LS60': 'LS60 Wireless'
                 };
-                
+
                 for (const [prefix, model] of Object.entries(modelMap)) {
                   if (serial.startsWith(prefix)) {
                     info.model = model;
@@ -612,7 +679,7 @@ export class KEFSpeaker {
             this.log(`[getSpeakerInfo] ✗ Serial API error`);
           }
         }
-        
+
         else if (result.type === 'firmware') {
           if (!result.error && result.data && result.data[0]) {
             const fwValue = result.data[0].firmwareVersion || result.data[0].string_;
@@ -624,11 +691,11 @@ export class KEFSpeaker {
             this.log(`[getSpeakerInfo] ✗ Firmware API error`);
           }
         }
-        
+
         else if (result.type.startsWith('name') && !nameFound) {
           if (!result.error && result.data && result.data[0]) {
-            const nameValue = result.data[0].speakerName || 
-                            result.data[0].deviceName || 
+            const nameValue = result.data[0].speakerName ||
+                            result.data[0].deviceName ||
                             result.data[0].string_;
             if (nameValue && nameValue !== "KEF Speaker") {
               info.name = nameValue;
@@ -638,7 +705,7 @@ export class KEFSpeaker {
           }
         }
       }
-      
+
     } catch (error) {
       this.log(`[getSpeakerInfo] ✗✗✗ Critical error: ${error}`);
     }
@@ -652,8 +719,27 @@ export class KEFSpeaker {
     this.log(`[getSpeakerInfo] Serial: "${info.serialNumber || 'Not detected'}"`);
     this.log(`[getSpeakerInfo] IP: "${info.ip}"`);
     this.log("[getSpeakerInfo] ========================================");
-    
+
     return info;
+  }
+
+  // Get album art URL
+  async getAlbumArtUrl(): Promise<string | null> {
+    try {
+      const trackResponse = await this.getData("player:/player/data");
+      if (trackResponse && trackResponse[0]) {
+        const track = trackResponse[0];
+        // Album art URL is in trackRoles.icon (as per pykefcontrol)
+        if (track.trackRoles && track.trackRoles.icon) {
+          const albumArtUrl = track.trackRoles.icon;
+          this.log(`[getAlbumArtUrl] Found album art: ${albumArtUrl}`);
+          return albumArtUrl;
+        }
+      }
+    } catch (error) {
+      this.log(`[getAlbumArtUrl] Error fetching album art: ${error}`);
+    }
+    return null;
   }
 
   // Playback Information
@@ -678,6 +764,12 @@ export class KEFSpeaker {
         if (track.album) info.album = track.album;
         if (track.duration) info.duration = track.duration;
         if (track.position) info.position = track.position;
+        
+        // Get album art URL from trackRoles.icon (as discovered in pykefcontrol)
+        if (track.trackRoles && track.trackRoles.icon) {
+          info.albumArtUrl = track.trackRoles.icon;
+          this.log(`[getPlaybackInfo] Found album art URL: ${info.albumArtUrl}`);
+        }
       }
     } catch (error) {
       console.error("Error fetching playback info:", error);
@@ -713,95 +805,6 @@ export class KEFSpeaker {
     await this.setData("settings:/kef/dsp/subwooferGain", value);
   }
 
-  async getBassExtension(): Promise<string> {
-    try {
-      const response = await this.getData("settings:/kef/dsp/bassExtension");
-      if (response && response[0] && response[0].bassExtension) {
-        return response[0].bassExtension;
-      }
-      return "standard";
-    } catch (error) {
-      return "standard";
-    }
-  }
-
-  async setBassExtension(mode: "less" | "standard" | "extra"): Promise<void> {
-    const value = JSON.stringify({
-      type: "bassExtension",
-      bassExtension: mode,
-    });
-    await this.setData("settings:/kef/dsp/bassExtension", value);
-  }
-
-  async getDeskMode(): Promise<boolean> {
-    try {
-      const response = await this.getData("settings:/kef/dsp/deskMode");
-      if (
-        response &&
-        response[0] &&
-        typeof response[0].deskMode === "boolean"
-      ) {
-        return response[0].deskMode;
-      }
-      return false;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async setDeskMode(enabled: boolean): Promise<void> {
-    const value = JSON.stringify({
-      type: "deskMode",
-      deskMode: enabled,
-    });
-    await this.setData("settings:/kef/dsp/deskMode", value);
-  }
-
-  async getWallMode(): Promise<boolean> {
-    try {
-      const response = await this.getData("settings:/kef/dsp/wallMode");
-      if (
-        response &&
-        response[0] &&
-        typeof response[0].wallMode === "boolean"
-      ) {
-        return response[0].wallMode;
-      }
-      return false;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async setWallMode(enabled: boolean): Promise<void> {
-    const value = JSON.stringify({
-      type: "wallMode",
-      wallMode: enabled,
-    });
-    await this.setData("settings:/kef/dsp/wallMode", value);
-  }
-
-  async getBalance(): Promise<number> {
-    try {
-      const response = await this.getData("settings:/kef/dsp/balance");
-      if (response && response[0] && typeof response[0].balance === "number") {
-        return response[0].balance;
-      }
-      return 0;
-    } catch (error) {
-      return 0;
-    }
-  }
-
-  async setBalance(balance: number): Promise<void> {
-    const balanceValue = Math.min(100, Math.max(-100, balance));
-    const value = JSON.stringify({
-      type: "balance",
-      balance: balanceValue,
-    });
-    await this.setData("settings:/kef/dsp/balance", value);
-  }
-
   // Get all current settings
   async getAllSettings(): Promise<KEFSettings> {
     const settings: KEFSettings = {};
@@ -810,10 +813,10 @@ export class KEFSpeaker {
       // First check if speaker is in standby
       const powerState = await this.getPowerState();
       settings.standby = !powerState;
-      
+
       // Get source (this also updates lastActiveSource)
       settings.source = await this.getSource();
-      
+
       // If speaker is in standby, skip other settings as they might fail
       if (!settings.standby && settings.source !== "standby") {
         try {
@@ -823,13 +826,9 @@ export class KEFSpeaker {
           // Volume/mute might fail, continue with other settings
           // Could not get volume/mute
         }
-        
+
         try {
           settings.subwooferGain = await this.getSubwooferGain();
-          settings.bassExtension = await this.getBassExtension();
-          settings.deskMode = await this.getDeskMode();
-          settings.wallMode = await this.getWallMode();
-          settings.balance = await this.getBalance();
         } catch (error) {
           // DSP settings might not be available on all models
           // Could not get DSP settings
@@ -844,33 +843,6 @@ export class KEFSpeaker {
     return settings;
   }
 
-  // Polling for state changes
-  startPolling(
-    callback: (settings: KEFSettings) => void,
-    interval: number = 5000,
-  ): void {
-    if (this.isPolling) {
-      return;
-    }
-
-    this.isPolling = true;
-    this.pollInterval = setInterval(async () => {
-      try {
-        const settings = await this.getAllSettings();
-        callback(settings);
-      } catch (error) {
-        console.error("Polling error:", error);
-      }
-    }, interval);
-  }
-
-  stopPolling(): void {
-    if (this.pollInterval) {
-      clearInterval(this.pollInterval);
-      this.pollInterval = undefined;
-    }
-    this.isPolling = false;
-  }
 
   // Connection test
   async testConnection(): Promise<boolean> {

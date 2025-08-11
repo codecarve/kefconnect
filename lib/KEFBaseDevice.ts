@@ -1,14 +1,11 @@
 import Homey from "homey";
-import { KEFSpeaker, KEFSettings } from "./KEFSpeaker";
-import { getModelConfig, isSourceSupported, getAvailableSources } from "./KEFModels";
+import { KEFSpeaker, KEFSettings, KEFSource } from "./KEFSpeaker";
+import { getModelConfig, isSourceSupported } from "./KEFModels";
 
 export class KEFBaseDevice extends Homey.Device {
   protected speaker!: KEFSpeaker;
   protected pollInterval?: NodeJS.Timeout;
   protected isAvailable: boolean = false;
-  protected reconnectTimer?: NodeJS.Timeout;
-  protected reconnectAttempts: number = 0;
-  protected maxReconnectAttempts: number = 10;
   protected modelId: string = "auto-detect";
   protected modelConfig: any;
 
@@ -103,7 +100,7 @@ export class KEFBaseDevice extends Homey.Device {
     if (this.hasCapability('source_input')) {
       try {
         const supportedSources = this.modelConfig.sources;
-        const sourceOptions = supportedSources.map((source: string) => ({
+        const sourceOptions = supportedSources.map((source: KEFSource) => ({
           id: source,
           title: this.getSourceTitle(source)
         }));
@@ -119,7 +116,7 @@ export class KEFBaseDevice extends Homey.Device {
     }
   }
   
-  private getSourceTitle(source: string): any {
+  private getSourceTitle(source: KEFSource): any {
     // Return localized titles for each source
     const titles: Record<string, any> = {
       wifi: { en: "WiFi", nl: "WiFi", fr: "WiFi", de: "WiFi", es: "WiFi" },
@@ -140,7 +137,6 @@ export class KEFBaseDevice extends Homey.Device {
       if (connected) {
         this.log("Successfully connected to KEF speaker");
         this.isAvailable = true;
-        this.reconnectAttempts = 0;
         await this.setAvailable();
 
         // Get fresh speaker info
@@ -153,8 +149,8 @@ export class KEFBaseDevice extends Homey.Device {
             await this.setSettings({
               speaker_name: info.name,
               speaker_model: info.model,
-              firmware_version: info.firmware || 'Unknown',
               serial_number: info.serialNumber || 'Unknown',
+              firmware_version: info.firmware || 'Unknown',
               last_connected: new Date().toISOString()
             });
             this.log("Updated device info in Homey settings");
@@ -211,34 +207,6 @@ export class KEFBaseDevice extends Homey.Device {
       );
     }
 
-    // DSP Settings (only for models that support them)
-    if (this.hasCapability("bass_extension")) {
-      this.registerCapabilityListener(
-        "bass_extension",
-        this.onCapabilityBassExtension.bind(this),
-      );
-    }
-
-    if (this.hasCapability("desk_mode")) {
-      this.registerCapabilityListener(
-        "desk_mode",
-        this.onCapabilityDeskMode.bind(this),
-      );
-    }
-
-    if (this.hasCapability("wall_mode")) {
-      this.registerCapabilityListener(
-        "wall_mode",
-        this.onCapabilityWallMode.bind(this),
-      );
-    }
-
-    if (this.hasCapability("speaker_balance")) {
-      this.registerCapabilityListener(
-        "speaker_balance",
-        this.onCapabilityBalance.bind(this),
-      );
-    }
   }
 
   // Capability handlers
@@ -279,7 +247,7 @@ export class KEFBaseDevice extends Homey.Device {
         throw new Error(`Source ${value} is not supported by ${this.modelConfig.name}`);
       }
       
-      await this.speaker.setSource(value);
+      await this.speaker.setSource(value as KEFSource);
       this.log("Source set to:", value);
     } catch (error) {
       this.error("Error setting source:", error);
@@ -287,47 +255,6 @@ export class KEFBaseDevice extends Homey.Device {
     }
   }
 
-  async onCapabilityBassExtension(value: string) {
-    try {
-      await this.speaker.setBassExtension(
-        value as "less" | "standard" | "extra",
-      );
-      this.log("Bass extension set to:", value);
-    } catch (error) {
-      this.error("Error setting bass extension:", error);
-      throw new Error("Failed to set bass extension");
-    }
-  }
-
-  async onCapabilityDeskMode(value: boolean) {
-    try {
-      await this.speaker.setDeskMode(value);
-      this.log("Desk mode set to:", value);
-    } catch (error) {
-      this.error("Error setting desk mode:", error);
-      throw new Error("Failed to set desk mode");
-    }
-  }
-
-  async onCapabilityWallMode(value: boolean) {
-    try {
-      await this.speaker.setWallMode(value);
-      this.log("Wall mode set to:", value);
-    } catch (error) {
-      this.error("Error setting wall mode:", error);
-      throw new Error("Failed to set wall mode");
-    }
-  }
-
-  async onCapabilityBalance(value: number) {
-    try {
-      await this.speaker.setBalance(value);
-      this.log("Balance set to:", value);
-    } catch (error) {
-      this.error("Error setting balance:", error);
-      throw new Error("Failed to set balance");
-    }
-  }
 
   // State polling with availability management
   private startPolling() {
@@ -434,45 +361,8 @@ export class KEFBaseDevice extends Homey.Device {
       }
     }
 
-    // Update DSP settings (only if capability exists)
-    if (
-      settings.bassExtension !== undefined &&
-      this.hasCapability("bass_extension")
-    ) {
-      await this.setCapabilityValue(
-        "bass_extension",
-        settings.bassExtension,
-      ).catch(this.error);
-    }
-
-    if (settings.deskMode !== undefined && this.hasCapability("desk_mode")) {
-      await this.setCapabilityValue("desk_mode", settings.deskMode).catch(
-        this.error,
-      );
-    }
-
-    if (settings.wallMode !== undefined && this.hasCapability("wall_mode")) {
-      await this.setCapabilityValue("wall_mode", settings.wallMode).catch(
-        this.error,
-      );
-    }
-
-    if (
-      settings.balance !== undefined &&
-      this.hasCapability("speaker_balance")
-    ) {
-      await this.setCapabilityValue("speaker_balance", settings.balance).catch(
-        this.error,
-      );
-    }
   }
 
-  // Reconnection logic (now handled by polling)
-  private scheduleReconnect() {
-    // With the new polling mechanism, we don't need separate reconnection
-    // The polling will automatically detect when device comes back online
-    this.log("Device connection failed, polling will detect when it comes back online");
-  }
 
   // Flow card actions
   async playPause() {
@@ -495,10 +385,15 @@ export class KEFBaseDevice extends Homey.Device {
     await this.speaker.decreaseVolume(step);
   }
 
-  // Get available sources for this model
-  async getAvailableSources() {
-    return getAvailableSources(this.modelId);
+  async getCurrentSource(): Promise<string> {
+    try {
+      return await this.speaker.getSource();
+    } catch (error) {
+      this.error('Error getting current source:', error);
+      return 'unknown';
+    }
   }
+
 
   // Settings update
   async onSettings({
@@ -518,15 +413,6 @@ export class KEFBaseDevice extends Homey.Device {
         clearInterval(this.pollInterval);
         this.pollInterval = undefined;
       }
-
-      // Clear any pending reconnect timers
-      if (this.reconnectTimer) {
-        clearTimeout(this.reconnectTimer);
-        this.reconnectTimer = undefined;
-      }
-
-      // Reset reconnection attempts
-      this.reconnectAttempts = 0;
 
       // Create new speaker instance with new settings
       this.speaker = new KEFSpeaker(newSettings.ip, newSettings.port || 80, (msg: string) => this.log(msg));
@@ -560,9 +446,6 @@ export class KEFBaseDevice extends Homey.Device {
         this.isAvailable = false;
         await this.setUnavailable("Cannot connect to speaker with new settings").catch(this.error);
         
-        // Schedule reconnection attempts for the new IP
-        this.scheduleReconnect();
-        
         // Still start polling (it will handle connection failures gracefully)
         this.startPolling();
         
@@ -592,11 +475,6 @@ export class KEFBaseDevice extends Homey.Device {
       clearInterval(this.pollInterval);
       this.pollInterval = undefined;
     }
-
-    // Clear timers
-    if (this.reconnectTimer) {
-      clearTimeout(this.reconnectTimer);
-    }
   }
 
   // Device unavailable
@@ -607,11 +485,6 @@ export class KEFBaseDevice extends Homey.Device {
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
       this.pollInterval = undefined;
-    }
-
-    // Clear timers
-    if (this.reconnectTimer) {
-      clearTimeout(this.reconnectTimer);
     }
   }
 }

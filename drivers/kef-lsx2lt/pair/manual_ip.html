@@ -175,6 +175,9 @@
       if (currentIP !== lastTestedIP || currentPort !== lastTestedPort) {
         resetTestStatus();
       }
+      
+      // Update test button state based on IP validity
+      updateTestButtonState();
     });
     
     document.getElementById('port').addEventListener('input', function() {
@@ -184,7 +187,27 @@
       if (currentIP !== lastTestedIP || currentPort !== lastTestedPort) {
         resetTestStatus();
       }
+      
+      // Update test button state based on IP validity
+      updateTestButtonState();
     });
+    
+    function updateTestButtonState() {
+      const ip = document.getElementById('ip').value.trim();
+      const testButton = document.getElementById('test-button');
+      const isValidIP = validateIP(ip);
+      
+      if (!connectionTested) {
+        testButton.disabled = !isValidIP;
+        if (isValidIP) {
+          testButton.style.backgroundColor = '#4CAF50';
+          testButton.style.cursor = 'pointer';
+        } else {
+          testButton.style.backgroundColor = '#cccccc';
+          testButton.style.cursor = 'not-allowed';
+        }
+      }
+    }
     
     function resetTestStatus() {
       connectionTested = false;
@@ -213,17 +236,18 @@
       const connectHint = document.getElementById('connect-hint');
       connectHint.style.display = 'block';
       
-      // Update test button appearance
-      const testButton = document.getElementById('test-button');
-      testButton.style.backgroundColor = '#2196F3';
-      testButton.textContent = 'Test Connection';
+      // Update test button appearance based on IP validity
+      updateTestButtonState();
     }
     
-    // Initially disable the Add Device button
+    // Initially disable buttons and set initial state
     window.addEventListener('load', function() {
       const connectButton = document.getElementById('connect-button');
       connectButton.disabled = true;
       connectButton.style.backgroundColor = '#cccccc';
+      
+      // Set initial test button state
+      updateTestButtonState();
     });
     
     async function testConnection() {
@@ -294,15 +318,15 @@
           
           // Show detected info
           detailsDiv.innerHTML = `
-            <strong>Model:</strong> ${speakerInfo.model || 'Unknown'}<br>
             <strong>Name:</strong> ${speakerInfo.name || 'KEF Speaker'}<br>
-            ${speakerInfo.firmware ? `<strong>Firmware:</strong> ${speakerInfo.firmware}<br>` : ''}
+            <strong>Model:</strong> ${speakerInfo.model || 'Unknown'}<br>
+            <strong>Serial Number:</strong> ${speakerInfo.serialNumber || 'Unknown'}
           `;
           infoDiv.style.display = 'block';
           
           // Check for model mismatch
           const detectedModelName = speakerInfo.model || 'Unknown';
-          if (!(detectedModelName.toLowerCase().includes('lsx') && detectedModelName.toLowerCase().includes('lt'))) {
+          if (!detectedModelName.toLowerCase().includes('lsx') || !detectedModelName.toLowerCase().includes('ii')) {
             // Model mismatch - show warning
             warningText.textContent = `You selected to add a ${EXPECTED_MODEL}, but detected: ${detectedModelName}. You can continue, but the device may not work correctly with this driver.`;
             warningDiv.style.display = 'block';

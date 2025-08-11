@@ -28,7 +28,7 @@
       "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
     },
     {
-      "type": "dropdown",
+      "type": "autocomplete",
       "name": "source",
       "title": {
         "en": "Source",
@@ -36,79 +36,7 @@
         "fr": "Source",
         "de": "Quelle",
         "es": "Fuente"
-      },
-      "values": [
-        {
-          "id": "wifi",
-          "label": {
-            "en": "WiFi",
-            "nl": "WiFi",
-            "fr": "WiFi",
-            "de": "WiFi",
-            "es": "WiFi"
-          }
-        },
-        {
-          "id": "bluetooth",
-          "label": {
-            "en": "Bluetooth",
-            "nl": "Bluetooth",
-            "fr": "Bluetooth",
-            "de": "Bluetooth",
-            "es": "Bluetooth"
-          }
-        },
-        {
-          "id": "optical",
-          "label": {
-            "en": "Optical",
-            "nl": "Optisch",
-            "fr": "Optique",
-            "de": "Optisch",
-            "es": "Óptico"
-          }
-        },
-        {
-          "id": "coaxial",
-          "label": {
-            "en": "Coaxial",
-            "nl": "Coaxiaal",
-            "fr": "Coaxial",
-            "de": "Koaxial",
-            "es": "Coaxial"
-          }
-        },
-        {
-          "id": "analog",
-          "label": {
-            "en": "Analog",
-            "nl": "Analoog",
-            "fr": "Analogique",
-            "de": "Analog",
-            "es": "Analógico"
-          }
-        },
-        {
-          "id": "tv",
-          "label": {
-            "en": "TV",
-            "nl": "TV",
-            "fr": "TV",
-            "de": "TV",
-            "es": "TV"
-          }
-        },
-        {
-          "id": "usb",
-          "label": {
-            "en": "USB",
-            "nl": "USB",
-            "fr": "USB",
-            "de": "USB",
-            "es": "USB"
-          }
-        }
-      ]
+      }
     }
   ]
 }

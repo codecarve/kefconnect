@@ -1,0 +1,31 @@
+{
+  "id": "previous_track",
+  "title": {
+    "en": "Previous track",
+    "nl": "Vorige nummer",
+    "fr": "Piste précédente",
+    "de": "Vorheriger Titel",
+    "es": "Pista anterior"
+  },
+  "titleFormatted": {
+    "en": "Skip to previous track",
+    "nl": "Ga naar vorige nummer",
+    "fr": "Passer à la piste précédente",
+    "de": "Zum vorherigen Titel springen",
+    "es": "Saltar a la pista anterior"
+  },
+  "hint": {
+    "en": "Skip to the previous track",
+    "nl": "Ga naar het vorige nummer",
+    "fr": "Passer à la piste précédente",
+    "de": "Zum vorherigen Titel springen",
+    "es": "Saltar a la pista anterior"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+    }
+  ]
+}

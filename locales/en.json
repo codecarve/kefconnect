@@ -58,6 +58,12 @@
     "connection_failed": "Failed to connect to KEF speaker",
     "invalid_ip": "Please enter a valid IP address",
     "command_failed": "Failed to execute command",
-    "device_unavailable": "KEF speaker is not available"
+    "device_unavailable": "KEF speaker is not available",
+    "track_control_not_supported_on_source": "Track control is not supported on __source__ input. Please switch to WiFi or Bluetooth to control playback.",
+    "playback_control_not_supported_on_source": "Playback control is not supported on __source__ input. Please switch to WiFi or Bluetooth to control playback.",
+    "operation_not_supported": "This operation is not supported in the current playback mode. Try switching to a different source or ensure media is playing.",
+    "source_not_supported": "__source__ input is not supported by this speaker model.",
+    "source_change_failed": "Failed to change the input source. Please check if the speaker is online and try again.",
+    "volume_control_failed": "Failed to adjust volume. Please check if the speaker is online and try again."
   }
 }

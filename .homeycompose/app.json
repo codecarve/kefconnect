@@ -14,11 +14,11 @@
     "es": "KEF Connect"
   },
   "description": {
-    "en": "Control your KEF wireless speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) from Homey",
-    "nl": "Bedien uw KEF draadloze speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) vanuit Homey",
-    "fr": "Contrôlez vos haut-parleurs sans fil KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) depuis Homey",
-    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) von Homey aus",
-    "es": "Controla tus altavoces inalámbricos KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) desde Homey"
+    "en": "Control your KEF wireless speakers",
+    "nl": "Bedien uw KEF draadloze speakers",
+    "fr": "Contrôlez vos haut-parleurs sans fil KEF",
+    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher",
+    "es": "Controla tus altavoces inalámbricos KEF"
   },
   "category": [
     "music"

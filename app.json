@@ -15,11 +15,11 @@
     "es": "KEF Connect"
   },
   "description": {
-    "en": "Control your KEF wireless speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) from Homey",
-    "nl": "Bedien uw KEF draadloze speakers (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) vanuit Homey",
-    "fr": "Contrôlez vos haut-parleurs sans fil KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) depuis Homey",
-    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) von Homey aus",
-    "es": "Controla tus altavoces inalámbricos KEF (LS50 Wireless II, LSX II, LSX II LT, LS60, XIO) desde Homey"
+    "en": "Control your KEF wireless speakers",
+    "nl": "Bedien uw KEF draadloze speakers",
+    "fr": "Contrôlez vos haut-parleurs sans fil KEF",
+    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher",
+    "es": "Controla tus altavoces inalámbricos KEF"
   },
   "category": [
     "music"
@@ -125,6 +125,99 @@
   "flow": {
     "actions": [
       {
+        "id": "next_track",
+        "title": {
+          "en": "Next track",
+          "nl": "Volgende nummer",
+          "fr": "Piste suivante",
+          "de": "Nächster Titel",
+          "es": "Siguiente pista"
+        },
+        "titleFormatted": {
+          "en": "Skip to next track",
+          "nl": "Ga naar volgende nummer",
+          "fr": "Passer à la piste suivante",
+          "de": "Zum nächsten Titel springen",
+          "es": "Saltar a la siguiente pista"
+        },
+        "hint": {
+          "en": "Skip to the next track",
+          "nl": "Ga naar het volgende nummer",
+          "fr": "Passer à la piste suivante",
+          "de": "Zum nächsten Titel springen",
+          "es": "Saltar a la siguiente pista"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+          }
+        ]
+      },
+      {
+        "id": "play_pause",
+        "title": {
+          "en": "Play / Pause",
+          "nl": "Afspelen / Pauzeren",
+          "fr": "Lecture / Pause",
+          "de": "Wiedergabe / Pause",
+          "es": "Reproducir / Pausar"
+        },
+        "titleFormatted": {
+          "en": "Toggle play/pause",
+          "nl": "Schakel afspelen/pauzeren",
+          "fr": "Basculer lecture/pause",
+          "de": "Wiedergabe/Pause umschalten",
+          "es": "Alternar reproducir/pausar"
+        },
+        "hint": {
+          "en": "Toggle between play and pause state",
+          "nl": "Schakel tussen afspelen en pauzeren",
+          "fr": "Basculer entre lecture et pause",
+          "de": "Zwischen Wiedergabe und Pause umschalten",
+          "es": "Alternar entre reproducir y pausar"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+          }
+        ]
+      },
+      {
+        "id": "previous_track",
+        "title": {
+          "en": "Previous track",
+          "nl": "Vorige nummer",
+          "fr": "Piste précédente",
+          "de": "Vorheriger Titel",
+          "es": "Pista anterior"
+        },
+        "titleFormatted": {
+          "en": "Skip to previous track",
+          "nl": "Ga naar vorige nummer",
+          "fr": "Passer à la piste précédente",
+          "de": "Zum vorherigen Titel springen",
+          "es": "Saltar a la pista anterior"
+        },
+        "hint": {
+          "en": "Skip to the previous track",
+          "nl": "Ga naar het vorige nummer",
+          "fr": "Passer à la piste précédente",
+          "de": "Zum vorherigen Titel springen",
+          "es": "Saltar a la pista anterior"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+          }
+        ]
+      },
+      {
         "id": "set_source",
         "title": {
           "en": "Set source to",
@@ -154,7 +247,7 @@
             "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
           },
           {
-            "type": "dropdown",
+            "type": "autocomplete",
             "name": "source",
             "title": {
               "en": "Source",
@@ -162,79 +255,69 @@
               "fr": "Source",
               "de": "Quelle",
               "es": "Fuente"
-            },
-            "values": [
-              {
-                "id": "wifi",
-                "label": {
-                  "en": "WiFi",
-                  "nl": "WiFi",
-                  "fr": "WiFi",
-                  "de": "WiFi",
-                  "es": "WiFi"
-                }
-              },
-              {
-                "id": "bluetooth",
-                "label": {
-                  "en": "Bluetooth",
-                  "nl": "Bluetooth",
-                  "fr": "Bluetooth",
-                  "de": "Bluetooth",
-                  "es": "Bluetooth"
-                }
-              },
-              {
-                "id": "optical",
-                "label": {
-                  "en": "Optical",
-                  "nl": "Optisch",
-                  "fr": "Optique",
-                  "de": "Optisch",
-                  "es": "Óptico"
-                }
-              },
-              {
-                "id": "coaxial",
-                "label": {
-                  "en": "Coaxial",
-                  "nl": "Coaxiaal",
-                  "fr": "Coaxial",
-                  "de": "Koaxial",
-                  "es": "Coaxial"
-                }
-              },
-              {
-                "id": "analog",
-                "label": {
-                  "en": "Analog",
-                  "nl": "Analoog",
-                  "fr": "Analogique",
-                  "de": "Analog",
-                  "es": "Analógico"
-                }
-              },
-              {
-                "id": "tv",
-                "label": {
-                  "en": "TV",
-                  "nl": "TV",
-                  "fr": "TV",
-                  "de": "TV",
-                  "es": "TV"
-                }
-              },
-              {
-                "id": "usb",
-                "label": {
-                  "en": "USB",
-                  "nl": "USB",
-                  "fr": "USB",
-                  "de": "USB",
-                  "es": "USB"
-                }
-              }
-            ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "volume_down",
+        "title": {
+          "en": "Volume down",
+          "nl": "Volume omlaag",
+          "fr": "Diminuer le volume",
+          "de": "Lautstärke verringern",
+          "es": "Bajar volumen"
+        },
+        "titleFormatted": {
+          "en": "Decrease volume by 5%",
+          "nl": "Verlaag volume met 5%",
+          "fr": "Diminuer le volume de 5%",
+          "de": "Lautstärke um 5% verringern",
+          "es": "Disminuir volumen en 5%"
+        },
+        "hint": {
+          "en": "Decrease the volume by 5%",
+          "nl": "Verlaag het volume met 5%",
+          "fr": "Diminuer le volume de 5%",
+          "de": "Lautstärke um 5% verringern",
+          "es": "Disminuir el volumen en 5%"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+          }
+        ]
+      },
+      {
+        "id": "volume_up",
+        "title": {
+          "en": "Volume up",
+          "nl": "Volume omhoog",
+          "fr": "Augmenter le volume",
+          "de": "Lautstärke erhöhen",
+          "es": "Subir volumen"
+        },
+        "titleFormatted": {
+          "en": "Increase volume by 5%",
+          "nl": "Verhoog volume met 5%",
+          "fr": "Augmenter le volume de 5%",
+          "de": "Lautstärke um 5% erhöhen",
+          "es": "Aumentar volumen en 5%"
+        },
+        "hint": {
+          "en": "Increase the volume by 5%",
+          "nl": "Verhoog het volume met 5%",
+          "fr": "Augmenter le volume de 5%",
+          "de": "Lautstärke um 5% erhöhen",
+          "es": "Aumentar el volumen en 5%"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
           }
         ]
       }
@@ -261,11 +344,7 @@
         "onoff",
         "volume_set",
         "volume_mute",
-        "source_input",
-        "bass_extension",
-        "desk_mode",
-        "wall_mode",
-        "speaker_balance"
+        "source_input"
       ],
       "energy": {
         "approximation": {
@@ -474,11 +553,7 @@
         "onoff",
         "volume_set",
         "volume_mute",
-        "source_input",
-        "bass_extension",
-        "desk_mode",
-        "wall_mode",
-        "speaker_balance"
+        "source_input"
       ],
       "energy": {
         "approximation": {
@@ -1296,66 +1371,6 @@
     }
   ],
   "capabilities": {
-    "bass_extension": {
-      "type": "enum",
-      "title": {
-        "en": "Bass Extension",
-        "nl": "Basverlenging",
-        "fr": "Extension des basses",
-        "de": "Basserweiterung",
-        "es": "Extensión de graves"
-      },
-      "values": [
-        {
-          "id": "less",
-          "title": {
-            "en": "Less",
-            "nl": "Minder",
-            "fr": "Moins",
-            "de": "Weniger",
-            "es": "Menos"
-          }
-        },
-        {
-          "id": "standard",
-          "title": {
-            "en": "Standard",
-            "nl": "Standaard",
-            "fr": "Standard",
-            "de": "Standard",
-            "es": "Estándar"
-          }
-        },
-        {
-          "id": "extra",
-          "title": {
-            "en": "Extra",
-            "nl": "Extra",
-            "fr": "Extra",
-            "de": "Extra",
-            "es": "Extra"
-          }
-        }
-      ],
-      "getable": true,
-      "setable": true,
-      "uiComponent": null,
-      "icon": "/assets/capability_bass.svg"
-    },
-    "desk_mode": {
-      "type": "boolean",
-      "title": {
-        "en": "Desk Mode",
-        "nl": "Bureau modus",
-        "fr": "Mode bureau",
-        "de": "Schreibtischmodus",
-        "es": "Modo escritorio"
-      },
-      "getable": true,
-      "setable": true,
-      "uiComponent": null,
-      "icon": "/assets/capability_desk.svg"
-    },
     "source_input": {
       "type": "enum",
       "title": {
@@ -1448,44 +1463,6 @@
         }
       ],
       "icon": "/assets/capability_source.svg"
-    },
-    "speaker_balance": {
-      "type": "number",
-      "title": {
-        "en": "Balance",
-        "nl": "Balans",
-        "fr": "Balance",
-        "de": "Balance",
-        "es": "Balance"
-      },
-      "min": -100,
-      "max": 100,
-      "step": 1,
-      "units": {
-        "en": "%",
-        "nl": "%",
-        "fr": "%",
-        "de": "%",
-        "es": "%"
-      },
-      "getable": true,
-      "setable": true,
-      "uiComponent": null,
-      "icon": "/assets/capability_balance.svg"
-    },
-    "wall_mode": {
-      "type": "boolean",
-      "title": {
-        "en": "Wall Mode",
-        "nl": "Muur modus",
-        "fr": "Mode mural",
-        "de": "Wandmodus",
-        "es": "Modo pared"
-      },
-      "getable": true,
-      "setable": true,
-      "uiComponent": null,
-      "icon": "/assets/capability_wall.svg"
     }
   }
 }

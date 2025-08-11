@@ -58,6 +58,12 @@
     "connection_failed": "Verbindung zum KEF-Lautsprecher fehlgeschlagen",
     "invalid_ip": "Bitte geben Sie eine gültige IP-Adresse ein",
     "command_failed": "Befehl konnte nicht ausgeführt werden",
-    "device_unavailable": "KEF-Lautsprecher ist nicht verfügbar"
+    "device_unavailable": "KEF-Lautsprecher ist nicht verfügbar",
+    "track_control_not_supported_on_source": "Die Titelsteuerung wird bei __source__-Eingang nicht unterstützt. Bitte wechseln Sie zu WiFi oder Bluetooth, um die Wiedergabe zu steuern.",
+    "playback_control_not_supported_on_source": "Die Wiedergabesteuerung wird bei __source__-Eingang nicht unterstützt. Bitte wechseln Sie zu WiFi oder Bluetooth, um die Wiedergabe zu steuern.",
+    "operation_not_supported": "Dieser Vorgang wird im aktuellen Wiedergabemodus nicht unterstützt. Versuchen Sie, zu einer anderen Quelle zu wechseln oder stellen Sie sicher, dass Medien abgespielt werden.",
+    "source_not_supported": "__source__-Eingang wird von diesem Lautsprechermodell nicht unterstützt.",
+    "source_change_failed": "Eingangsquelle konnte nicht geändert werden. Bitte prüfen Sie, ob der Lautsprecher online ist und versuchen Sie es erneut.",
+    "volume_control_failed": "Lautstärke konnte nicht angepasst werden. Bitte prüfen Sie, ob der Lautsprecher online ist und versuchen Sie es erneut."
   }
 }

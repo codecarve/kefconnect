@@ -1,0 +1,31 @@
+{
+  "id": "volume_up",
+  "title": {
+    "en": "Volume up",
+    "nl": "Volume omhoog",
+    "fr": "Augmenter le volume",
+    "de": "Lautstärke erhöhen",
+    "es": "Subir volumen"
+  },
+  "titleFormatted": {
+    "en": "Increase volume by 5%",
+    "nl": "Verhoog volume met 5%",
+    "fr": "Augmenter le volume de 5%",
+    "de": "Lautstärke um 5% erhöhen",
+    "es": "Aumentar volumen en 5%"
+  },
+  "hint": {
+    "en": "Increase the volume by 5%",
+    "nl": "Verhoog het volume met 5%",
+    "fr": "Augmenter le volume de 5%",
+    "de": "Lautstärke um 5% erhöhen",
+    "es": "Aumentar el volumen en 5%"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
+    }
+  ]
+}

@@ -131,6 +131,60 @@
       if (settings.port) {
         document.getElementById('port').value = settings.port;
       }
+      // Update button state after loading settings
+      updateTestButtonState();
+    });
+    
+    // Monitor IP changes to update test button state
+    document.getElementById('ip').addEventListener('input', function() {
+      updateTestButtonState();
+      resetTestStatus();
+    });
+    
+    document.getElementById('port').addEventListener('input', function() {
+      resetTestStatus();
+    });
+    
+    function updateTestButtonState() {
+      const ip = document.getElementById('ip').value.trim();
+      const testButton = document.getElementById('test-button');
+      const isValidIP = validateIP(ip);
+      
+      if (!connectionTested) {
+        testButton.disabled = !isValidIP;
+        if (isValidIP) {
+          testButton.style.backgroundColor = '#4CAF50';
+          testButton.style.cursor = 'pointer';
+        } else {
+          testButton.style.backgroundColor = '#cccccc';
+          testButton.style.cursor = 'not-allowed';
+        }
+      }
+    }
+    
+    function resetTestStatus() {
+      connectionTested = false;
+      speakerInfo = null;
+      
+      // Hide success/error messages
+      const errorEl = document.getElementById('ip-error');
+      errorEl.style.display = 'none';
+      
+      // Hide detected info
+      const infoDiv = document.getElementById('detected-info');
+      infoDiv.style.display = 'none';
+      
+      // Disable repair button
+      const repairButton = document.getElementById('repair-button');
+      repairButton.disabled = true;
+      repairButton.style.backgroundColor = '#cccccc';
+      const repairHint = document.getElementById('repair-hint');
+      repairHint.style.display = 'block';
+    }
+    
+    // Set initial state on load
+    window.addEventListener('load', function() {
+      updateTestButtonState();
     });
     
     async function testConnection() {
@@ -175,7 +229,7 @@
           
           // Check if it's the expected model
           const detectedModelName = speakerInfo.model || 'Unknown';
-          if (!(detectedModelName.toLowerCase().includes('lsx') && detectedModelName.toLowerCase().includes('ii') && !detectedModelName.toLowerCase().includes('lt'))) {
+          if (!detectedModelName.toLowerCase().includes('lsx') || !detectedModelName.toLowerCase().includes('ii')) {
             detailsDiv.innerHTML += `<br><span style="color: #ff9800;">⚠️ Warning: Expected ${EXPECTED_MODEL} but found ${detectedModelName}</span>`;
           }
           
@@ -186,6 +240,7 @@
           // Enable repair button
           const repairButton = document.getElementById('repair-button');
           repairButton.disabled = false;
+          repairButton.style.backgroundColor = '#4CAF50';
           
           // Hide hint
           const repairHint = document.getElementById('repair-hint');

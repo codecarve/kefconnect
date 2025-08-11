@@ -14,11 +14,7 @@
     "onoff",
     "volume_set",
     "volume_mute",
-    "source_input",
-    "bass_extension",
-    "desk_mode",
-    "wall_mode",
-    "speaker_balance"
+    "source_input"
   ],
   "energy": {
     "approximation": {

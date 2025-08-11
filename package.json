@@ -1,10 +1,9 @@
 {
   "name": "nl.codecarve.kefconnect",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint --ext .js,.ts --ignore-path .gitignore .",
-    "artwork:store": "node scripts/create-store-artwork.js"
+    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
   },
   "devDependencies": {
     "@tsconfig/node16": "^16.1.4",

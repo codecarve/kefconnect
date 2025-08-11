@@ -58,6 +58,12 @@
     "connection_failed": "Kan geen verbinding maken met KEF speaker",
     "invalid_ip": "Voer een geldig IP-adres in",
     "command_failed": "Kan opdracht niet uitvoeren",
-    "device_unavailable": "KEF speaker is niet beschikbaar"
+    "device_unavailable": "KEF speaker is niet beschikbaar",
+    "track_control_not_supported_on_source": "Track bediening wordt niet ondersteund op __source__ invoer. Schakel over naar WiFi of Bluetooth om het afspelen te bedienen.",
+    "playback_control_not_supported_on_source": "Afspeelbediening wordt niet ondersteund op __source__ invoer. Schakel over naar WiFi of Bluetooth om het afspelen te bedienen.",
+    "operation_not_supported": "Deze bewerking wordt niet ondersteund in de huidige afspeelmodus. Probeer over te schakelen naar een andere bron of zorg ervoor dat media wordt afgespeeld.",
+    "source_not_supported": "__source__ invoer wordt niet ondersteund door dit speakermodel.",
+    "source_change_failed": "Kan de invoerbron niet wijzigen. Controleer of de speaker online is en probeer het opnieuw.",
+    "volume_control_failed": "Kan het volume niet aanpassen. Controleer of de speaker online is en probeer het opnieuw."
   }
 }

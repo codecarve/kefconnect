@@ -12,17 +12,21 @@
     "onoff",
     "volume_set",
     "volume_mute",
-    "source_input"
+    "source_input",
+    "bass_extension",
+    "desk_mode",
+    "wall_mode",
+    "speaker_balance"
   ],
   "energy": {
     "approximation": {
-      "usageOn": 100,
+      "usageOn": 190,
       "usageOff": 5
     }
   },
   "images": {
-    "small": "/drivers/kef-lsx2/assets/images/small.png",
-    "large": "/drivers/kef-lsx2/assets/images/large.png"
+    "small": "/drivers/kef-ls50w2/assets/images/small.png",
+    "large": "/drivers/kef-ls50w2/assets/images/large.png"
   },
   "pair": [
     {
@@ -158,19 +162,7 @@
             "de": "Modell",
             "es": "Modelo"
           },
-          "value": "KEF LSX II"
-        },
-        {
-          "id": "firmware_version",
-          "type": "label",
-          "label": {
-            "en": "Firmware Version",
-            "nl": "Firmware Versie",
-            "fr": "Version du firmware",
-            "de": "Firmware-Version",
-            "es": "Versión del firmware"
-          },
-          "value": "Unknown"
+          "value": "LSX II"
         },
         {
           "id": "serial_number",
@@ -181,6 +173,18 @@
             "fr": "Numéro de série",
             "de": "Seriennummer",
             "es": "Número de serie"
+          },
+          "value": "Unknown"
+        },
+        {
+          "id": "firmware_version",
+          "type": "label",
+          "label": {
+            "en": "Firmware Version",
+            "nl": "Firmware Versie",
+            "fr": "Version du firmware",
+            "de": "Firmware-Version",
+            "es": "Versión de firmware"
           },
           "value": "Unknown"
         },
@@ -199,5 +203,5 @@
       ]
     }
   ],
-  "icon": "/drivers/kef-lsx2/assets/icon.svg"
+  "icon": "/drivers/kef-ls50w2/assets/icon.svg"
 }
