@@ -8,12 +8,24 @@
     "es": "KEF LS50 Wireless II"
   },
   "class": "speaker",
+  "uiComponent": "media",
   "platforms": ["local"],
   "connectivity": ["lan"],
   "capabilities": [
-    "onoff",
+    "speaker_playing",
+    "speaker_shuffle",
+    "speaker_repeat",
+    "speaker_prev",
+    "speaker_next",
+    "speaker_track",
+    "speaker_artist",
+    "speaker_album",
+    "speaker_duration",
+    "speaker_position",
     "volume_set",
     "volume_mute",
+    "volume_up",
+    "volume_down",
     "source_input"
   ],
   "energy": {

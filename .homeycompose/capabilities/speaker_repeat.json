@@ -1,0 +1,47 @@
+{
+  "title": {
+    "en": "Repeat",
+    "nl": "Herhalen",
+    "de": "Wiederholen",
+    "es": "Repetir",
+    "fr": "Répéter"
+  },
+  "type": "enum",
+  "values": [
+    {
+      "id": "none",
+      "title": {
+        "en": "Off",
+        "nl": "Uit",
+        "de": "Aus",
+        "es": "Apagado",
+        "fr": "Désactivé"
+      }
+    },
+    {
+      "id": "track",
+      "title": {
+        "en": "Repeat Track",
+        "nl": "Nummer herhalen",
+        "de": "Titel wiederholen",
+        "es": "Repetir pista",
+        "fr": "Répéter la piste"
+      }
+    },
+    {
+      "id": "playlist",
+      "title": {
+        "en": "Repeat Playlist",
+        "nl": "Afspeellijst herhalen",
+        "de": "Wiedergabeliste wiederholen",
+        "es": "Repetir lista de reproducción",
+        "fr": "Répéter la playlist"
+      }
+    }
+  ],
+  "getable": true,
+  "setable": true,
+  "uiComponent": null,
+  "insights": false,
+  "icon": "/assets/capability_speaker_repeat.svg"
+}

@@ -1,6 +1,6 @@
 // KEF Speaker Model Definitions
 
-import { KEFSource } from './KEFSpeaker';
+import {KEFSource} from './KEFSpeaker';
 
 export interface KEFModelConfig {
   name: string;
@@ -17,10 +17,17 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LSX II",
     sources: ["wifi", "bluetooth", "tv", "optical", "analog", "usb"],
     capabilities: [
-      "onoff",
       "volume_set",
       "volume_mute",
-      "source_input"
+      "source_input",
+      "speaker_playing",
+      "speaker_next",
+      "speaker_prev",
+      "speaker_track",
+      "speaker_artist",
+      "speaker_album",
+      "speaker_shuffle",
+      "speaker_repeat",
     ],
     energyUsage: {
       usageOn: 100,  // 200W total system / 2 for average usage
@@ -31,10 +38,17 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LSX II LT",
     sources: ["wifi", "bluetooth", "tv", "optical", "usb"],
     capabilities: [
-      "onoff",
       "volume_set",
       "volume_mute",
-      "source_input"
+      "source_input",
+      "speaker_playing",
+      "speaker_next",
+      "speaker_prev",
+      "speaker_track",
+      "speaker_artist",
+      "speaker_album",
+      "speaker_shuffle",
+      "speaker_repeat",
     ],
     energyUsage: {
       usageOn: 100,  // Same 200W total system as LSX II
@@ -45,10 +59,17 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LS50 Wireless II",
     sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     capabilities: [
-      "onoff",
       "volume_set",
       "volume_mute",
-      "source_input"
+      "source_input",
+      "speaker_playing",
+      "speaker_next",
+      "speaker_prev",
+      "speaker_track",
+      "speaker_artist",
+      "speaker_album",
+      "speaker_shuffle",
+      "speaker_repeat",
     ],
     energyUsage: {
       usageOn: 190,  // 380W total per speaker, average usage
@@ -59,10 +80,17 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LS60 Wireless",
     sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     capabilities: [
-      "onoff",
       "volume_set",
       "volume_mute",
-      "source_input"
+      "source_input",
+      "speaker_playing",
+      "speaker_next",
+      "speaker_prev",
+      "speaker_track",
+      "speaker_artist",
+      "speaker_album",
+      "speaker_shuffle",
+      "speaker_repeat",
     ],
     energyUsage: {
       usageOn: 450,  // Actual operating power consumption
@@ -73,10 +101,17 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LSX",
     sources: ["wifi", "bluetooth", "tv", "optical", "analog"],
     capabilities: [
-      "onoff",
       "volume_set",
       "volume_mute",
-      "source_input"
+      "source_input",
+      "speaker_playing",
+      "speaker_next",
+      "speaker_prev",
+      "speaker_track",
+      "speaker_artist",
+      "speaker_album",
+      "speaker_shuffle",
+      "speaker_repeat",
     ],
     energyUsage: {
       usageOn: 100,  // 200W total system / 2 for average usage
@@ -87,35 +122,28 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF XIO Soundbar",
     sources: ["wifi", "bluetooth", "tv", "optical"],
     capabilities: [
-      "onoff",
       "volume_set",
       "volume_mute",
-      "source_input"
+      "source_input",
+      "speaker_playing",
+      "speaker_next",
+      "speaker_prev",
+      "speaker_track",
+      "speaker_artist",
+      "speaker_album",
+      "speaker_shuffle",
+      "speaker_repeat",
     ],
     energyUsage: {
       usageOn: 200,  // 820W peak / 4 for average usage (soundbar)
       usageOff: 5    // Estimated standby
     }
-  },
-  "auto-detect": {
-    name: "Auto-detected KEF Speaker",
-    sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog", "usb"],
-    capabilities: [
-      "onoff",
-      "volume_set",
-      "volume_mute",
-      "source_input"
-    ],
-    energyUsage: {
-      usageOn: 150,  // Average for unknown models
-      usageOff: 5    // Average standby
-    }
   }
 };
 
-// Helper to get model config with fallback to auto-detect
+// Helper to get model config with fallback to LS50 Wireless II
 export function getModelConfig(modelId: string): KEFModelConfig {
-  return KEF_MODELS[modelId] || KEF_MODELS["auto-detect"];
+  return KEF_MODELS[modelId] || KEF_MODELS["kef-ls50w2"];
 }
 
 // Helper to check if a source is supported by a model

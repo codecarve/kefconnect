@@ -41,12 +41,19 @@ export type KEFSource =
   | "analog"
   | "usb";
 
+export type KEFRepeatMode = "none" | "track" | "playlist";
+export type KEFShuffleMode = "none" | "all";
+
 export class KEFSpeaker {
   private ip: string;
   private port: number = 80;
   private timeout: number = 5000;
   private lastActiveSource: KEFSource = "wifi"; // Store last active source
   private logger?: (message: string) => void;
+
+  // Local state for repeat/shuffle (KEF API might not support these natively)
+  private repeatMode: KEFRepeatMode = "none";
+  private shuffleMode: KEFShuffleMode = "none";
 
   constructor(ip: string, port: number = 80, logger?: (message: string) => void) {
     this.ip = ip;
@@ -104,6 +111,7 @@ export class KEFSpeaker {
       });
 
       req.on("error", (error) => {
+        req.destroy(); // Clean up the request on error
         reject(new Error(`Request failed: ${error.message}`));
       });
 
@@ -255,50 +263,80 @@ export class KEFSpeaker {
 
   // Playback Control
   async play(): Promise<void> {
-    this.log('[play] Attempting to play');
-    
-    // Based on pykefcontrol library, using the correct format
-    const value = '{"control":"play"}';
-    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
-    this.log(`[play] Sending request to: ${url}`);
-    
+    this.log('[play] Play requested');
+
     try {
-      const response = await this.request("GET", url);
-      this.log(`[play] Response: ${JSON.stringify(response)}`);
-      
-      // Check if the API returned an error
-      if (response && response.error) {
-        const errorMessage = response.error.message || 'Operation failed';
-        this.log(`[play] API Error: ${errorMessage}`);
-        throw new Error(errorMessage);
+      const response = await this.getData("player:player/data");
+      if (response && response[0]) {
+        const playerData = response[0];
+        this.log(`[play] Current state: ${playerData.state}`);
+
+        if (playerData.state === 'paused' || playerData.state === 'stopped') {
+          // Use pause command as toggle - it works for both paused and stopped states
+          // when using external players like Spotify Connect
+          this.log('[play] Sending pause command to toggle playback');
+          await this.sendPauseCommand();
+        } else if (playerData.state === 'playing') {
+          this.log('[play] Already playing, no action needed');
+        }
       }
-    } catch (error: any) {
-      this.log(`[play] Error: ${error.message}`);
-      throw error; // Re-throw to let the flow card handle it
+    } catch (error) {
+      this.log(`[play] Could not check player state: ${error}`);
+      // Try pause command anyway as it's safe
+      await this.sendPauseCommand();
     }
   }
 
   async pause(): Promise<void> {
-    this.log('[pause] Attempting to pause');
-    
-    // Based on pykefcontrol library, using the correct format
-    const value = '{"control":"pause"}';
+    this.log('[pause] Sending pause command');
+    await this.sendPauseCommand();
+  }
+
+  // Internal method to send actual play command
+  private async sendPlayCommand(): Promise<void> {
+    this.log('[sendPlayCommand] Sending play command');
+
+    const value = '{"control":"play"}';
     const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
-    this.log(`[pause] Sending request to: ${url}`);
-    
+    this.log(`[sendPlayCommand] Sending request to: ${url}`);
+
     try {
       const response = await this.request("GET", url);
-      this.log(`[pause] Response: ${JSON.stringify(response)}`);
-      
+      this.log(`[sendPlayCommand] Response: ${JSON.stringify(response)}`);
+
       // Check if the API returned an error
       if (response && response.error) {
         const errorMessage = response.error.message || 'Operation failed';
-        this.log(`[pause] API Error: ${errorMessage}`);
+        this.log(`[sendPlayCommand] API Error: ${errorMessage}`);
         throw new Error(errorMessage);
       }
     } catch (error: any) {
-      this.log(`[pause] Error: ${error.message}`);
-      throw error; // Re-throw to let the flow card handle it
+      this.log(`[sendPlayCommand] Error: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Internal method to send pause command (used as toggle for external players)
+  private async sendPauseCommand(): Promise<void> {
+    this.log('[sendPauseCommand] Sending pause command (acts as toggle for external players)');
+
+    const value = '{"control":"pause"}';
+    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
+    this.log(`[sendPauseCommand] Sending request to: ${url}`);
+
+    try {
+      const response = await this.request("GET", url);
+      this.log(`[sendPauseCommand] Response: ${JSON.stringify(response)}`);
+
+      // Check if the API returned an error
+      if (response && response.error) {
+        const errorMessage = response.error.message || 'Operation failed';
+        this.log(`[sendPauseCommand] API Error: ${errorMessage}`);
+        throw new Error(errorMessage);
+      }
+    } catch (error: any) {
+      this.log(`[sendPauseCommand] Error: ${error.message}`);
+      throw error;
     }
   }
 
@@ -306,29 +344,28 @@ export class KEFSpeaker {
     try {
       const isPlaying = await this.isPlaying();
       if (isPlaying) {
+        this.log('[togglePlayPause] Currently playing, sending pause');
         await this.pause();
       } else {
+        this.log('[togglePlayPause] Not playing, sending play');
         await this.play();
       }
     } catch (error) {
-      // Try play as fallback
-      await this.play();
+      this.log(`[togglePlayPause] Error in toggle: ${error}`);
     }
   }
 
   async nextTrack(): Promise<void> {
     this.log('[nextTrack] Attempting to skip to next track');
-    
-    // Based on pykefcontrol library, this should work on all sources
-    // Using the exact format from the working Python library
+
     const value = '{"control":"next"}';
     const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
     this.log(`[nextTrack] Sending request to: ${url}`);
-    
+
     try {
       const response = await this.request("GET", url);
       this.log(`[nextTrack] Response: ${JSON.stringify(response)}`);
-      
+
       // Check if the API returned an error
       if (response && response.error) {
         const errorMessage = response.error.message || 'Operation failed';
@@ -343,17 +380,15 @@ export class KEFSpeaker {
 
   async previousTrack(): Promise<void> {
     this.log('[previousTrack] Attempting to skip to previous track');
-    
-    // Based on pykefcontrol library, this should work on all sources
-    // Using the exact format from the working Python library
+
     const value = '{"control":"previous"}';
     const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
     this.log(`[previousTrack] Sending request to: ${url}`);
-    
+
     try {
       const response = await this.request("GET", url);
       this.log(`[previousTrack] Response: ${JSON.stringify(response)}`);
-      
+
       // Check if the API returned an error
       if (response && response.error) {
         const errorMessage = response.error.message || 'Operation failed';
@@ -368,7 +403,9 @@ export class KEFSpeaker {
 
   async isPlaying(): Promise<boolean> {
     try {
-      const response = await this.getData("player:/player/state");
+      // Get the player data which contains the state field
+      const response = await this.getData("player:player/data");
+      // Check if state is "playing" (not "stopped" or "paused")
       return response && response[0] && response[0].state === "playing";
     } catch (error) {
       return false;
@@ -376,7 +413,7 @@ export class KEFSpeaker {
   }
 
   // Helper to get model info from web interface
-  private async getModelFromWebInterface(): Promise<{model?: string, version?: string}> {
+  private async getModelFromWebInterface(): Promise<{ model?: string, version?: string }> {
     return new Promise((resolve) => {
       const options: http.RequestOptions = {
         hostname: this.ip,
@@ -407,7 +444,7 @@ export class KEFSpeaker {
             });
 
             redirectRes.on('end', () => {
-              const result: {model?: string, version?: string} = {};
+              const result: { model?: string, version?: string } = {};
 
               // First try to parse the title tag for model (most reliable)
               const titleMatch = data.match(/<title>([^<]+)<\/title>/i);
@@ -495,7 +532,7 @@ export class KEFSpeaker {
           });
 
           res.on('end', () => {
-            const result: {model?: string, version?: string} = {};
+            const result: { model?: string, version?: string } = {};
 
             // First try to parse the title tag for model (most reliable)
             const titleMatch = data.match(/<title>([^<]+)<\/title>/i);
@@ -603,23 +640,23 @@ export class KEFSpeaker {
 
       // Web interface promise
       const webPromise = this.getModelFromWebInterface()
-        .then(res => ({ type: 'web', data: res }))
-        .catch(err => ({ type: 'web', error: err }));
+        .then(res => ({type: 'web', data: res}))
+        .catch(err => ({type: 'web', error: err}));
       allPromises.push(webPromise);
 
       // API promises - all paths that might work
       const apiPaths = [
-        { path: "settings:/kef/host/serialNumber", type: 'serial' },
-        { path: "settings:/kef/host/firmwareVersion", type: 'firmware' },
-        { path: "settings:/kef/host/speakerName", type: 'name1' },
-        { path: "settings:/deviceName", type: 'name2' },  // Most successful name path based on logs
-        { path: "settings:/system/deviceName", type: 'name3' }
+        {path: "settings:/kef/host/serialNumber", type: 'serial'},
+        {path: "settings:/kef/host/firmwareVersion", type: 'firmware'},
+        {path: "settings:/kef/host/speakerName", type: 'name1'},
+        {path: "settings:/deviceName", type: 'name2'},  // Most successful name path based on logs
+        {path: "settings:/system/deviceName", type: 'name3'}
       ];
 
-      for (const { path, type } of apiPaths) {
+      for (const {path, type} of apiPaths) {
         const promise = this.getData(path)
-          .then(res => ({ type, data: res, path }))
-          .catch(err => ({ type, error: err, path }));
+          .then(res => ({type, data: res, path}))
+          .catch(err => ({type, error: err, path}));
         allPromises.push(promise);
       }
 
@@ -646,9 +683,7 @@ export class KEFSpeaker {
           } else {
             this.log(`[getSpeakerInfo] ✗ Web interface failed: ${result.error}`);
           }
-        }
-
-        else if (result.type === 'serial') {
+        } else if (result.type === 'serial') {
           if (!result.error && result.data && result.data[0]) {
             const serialValue = result.data[0].serialNumber || result.data[0].string_;
             if (serialValue) {
@@ -678,9 +713,7 @@ export class KEFSpeaker {
           } else if (result.error) {
             this.log(`[getSpeakerInfo] ✗ Serial API error`);
           }
-        }
-
-        else if (result.type === 'firmware') {
+        } else if (result.type === 'firmware') {
           if (!result.error && result.data && result.data[0]) {
             const fwValue = result.data[0].firmwareVersion || result.data[0].string_;
             if (fwValue && !info.firmware) {
@@ -690,13 +723,11 @@ export class KEFSpeaker {
           } else if (result.error) {
             this.log(`[getSpeakerInfo] ✗ Firmware API error`);
           }
-        }
-
-        else if (result.type.startsWith('name') && !nameFound) {
+        } else if (result.type.startsWith('name') && !nameFound) {
           if (!result.error && result.data && result.data[0]) {
             const nameValue = result.data[0].speakerName ||
-                            result.data[0].deviceName ||
-                            result.data[0].string_;
+              result.data[0].deviceName ||
+              result.data[0].string_;
             if (nameValue && nameValue !== "KEF Speaker") {
               info.name = nameValue;
               nameFound = true;
@@ -726,16 +757,66 @@ export class KEFSpeaker {
   // Get album art URL
   async getAlbumArtUrl(): Promise<string | null> {
     try {
-      const trackResponse = await this.getData("player:/player/data");
-      if (trackResponse && trackResponse[0]) {
-        const track = trackResponse[0];
-        // Album art URL is in trackRoles.icon (as per pykefcontrol)
-        if (track.trackRoles && track.trackRoles.icon) {
-          const albumArtUrl = track.trackRoles.icon;
-          this.log(`[getAlbumArtUrl] Found album art: ${albumArtUrl}`);
-          return albumArtUrl;
+      const trackResponse = await this.getData("player:player/data");
+
+
+      if (!trackResponse) {
+        return null;
+      }
+
+      // Handle different response formats
+      let playerData = null;
+
+      if (Array.isArray(trackResponse)) {
+        if (trackResponse.length > 0) {
+          playerData = trackResponse[0];
+        } else {
+          return null;
+        }
+      } else {
+        // Check if it's an error response
+        if (trackResponse.error) {
+          return null;
+        }
+
+        if (trackResponse.data) {
+          if (Array.isArray(trackResponse.data)) {
+            if (trackResponse.data.length > 0) {
+              playerData = trackResponse.data[0];
+            }
+          } else {
+            playerData = trackResponse.data;
+          }
+        } else {
+          // Use the response directly
+          playerData = trackResponse;
         }
       }
+
+      if (!playerData) {
+        return null;
+      }
+
+      if (playerData.state === 'stopped') {
+        return null;
+      }
+
+      // Try multiple possible locations for album art URL
+      let albumArtUrl = null;
+
+      if (playerData.trackRoles && playerData.trackRoles.icon) {
+        albumArtUrl = playerData.trackRoles.icon;
+      }
+      // 2. Check icon directly
+      else if (playerData.icon) {
+        albumArtUrl = playerData.icon;
+      }
+      // 3. Check for nested player object
+      else if (playerData.player && playerData.player.trackRoles && playerData.player.trackRoles.icon) {
+        albumArtUrl = playerData.player.trackRoles.icon;
+      }
+
+      return albumArtUrl;
     } catch (error) {
       this.log(`[getAlbumArtUrl] Error fetching album art: ${error}`);
     }
@@ -756,23 +837,94 @@ export class KEFSpeaker {
       info.source = await this.getSource();
 
       // Get track info if available
-      const trackResponse = await this.getData("player:/player/data");
+      const trackResponse = await this.getData("player:player/data");
       if (trackResponse && trackResponse[0]) {
         const track = trackResponse[0];
-        if (track.title) info.title = track.title;
-        if (track.artist) info.artist = track.artist;
-        if (track.album) info.album = track.album;
-        if (track.duration) info.duration = track.duration;
-        if (track.position) info.position = track.position;
-        
-        // Get album art URL from trackRoles.icon (as discovered in pykefcontrol)
-        if (track.trackRoles && track.trackRoles.icon) {
-          info.albumArtUrl = track.trackRoles.icon;
-          this.log(`[getPlaybackInfo] Found album art URL: ${info.albumArtUrl}`);
+
+        // Skip if player is stopped
+        if (track.state === 'stopped') {
+          this.log('[getPlaybackInfo] Player is stopped');
+          return info;
         }
+
+        // Log available fields for debugging
+        const topLevelKeys = Object.keys(track).slice(0, 15);
+
+        // Try multiple paths to extract metadata
+        if (track.trackRoles) {
+
+          // Title is directly in trackRoles
+          if (track.trackRoles.title) {
+            info.title = track.trackRoles.title;
+          }
+
+          // Artist and album are in mediaData.metaData
+          if (track.trackRoles.mediaData && track.trackRoles.mediaData.metaData) {
+            const metaData = track.trackRoles.mediaData.metaData;
+            if (metaData.artist) {
+              info.artist = metaData.artist;
+            }
+            if (metaData.album) {
+              info.album = metaData.album;
+            }
+          }
+
+          // Duration is in mediaData.resources
+          if (track.trackRoles.mediaData && track.trackRoles.mediaData.resources &&
+            track.trackRoles.mediaData.resources[0] && track.trackRoles.mediaData.resources[0].duration) {
+            info.duration = track.trackRoles.mediaData.resources[0].duration;
+          }
+
+          // Album art URL is in trackRoles.icon
+          if (track.trackRoles.icon) {
+            info.albumArtUrl = track.trackRoles.icon;
+          }
+        }
+
+        // Path 2: Direct fields (alternative structure)
+        if (!info.title && track.title) {
+          info.title = track.title;
+        }
+
+        if (!info.artist && track.artist) {
+          info.artist = track.artist;
+        }
+
+        if (!info.album && track.album) {
+          info.album = track.album;
+        }
+
+        // Path 3: Check metadata field directly
+        if (track.metadata) {
+          if (!info.title && track.metadata.title) {
+            info.title = track.metadata.title;
+          }
+          if (!info.artist && track.metadata.artist) {
+            info.artist = track.metadata.artist;
+          }
+          if (!info.album && track.metadata.album) {
+            info.album = track.metadata.album;
+          }
+        }
+
+        // Path 4: Check metaData field (different casing)
+        if (track.metaData) {
+          if (!info.title && track.metaData.title) {
+            info.title = track.metaData.title;
+          }
+          if (!info.artist && track.metaData.artist) {
+            info.artist = track.metaData.artist;
+          }
+          if (!info.album && track.metaData.album) {
+            info.album = track.metaData.album;
+          }
+        }
+
+        // Position might be at top level or elsewhere
+        if (track.position) info.position = track.position;
       }
     } catch (error) {
-      console.error("Error fetching playback info:", error);
+      this.log(`[getPlaybackInfo] Error fetching playback info: ${error}`);
     }
 
     return info;
@@ -796,14 +948,6 @@ export class KEFSpeaker {
     }
   }
 
-  async setSubwooferGain(gain: number): Promise<void> {
-    const gainValue = Math.min(10, Math.max(-10, gain));
-    const value = JSON.stringify({
-      type: "subwooferGain",
-      subwooferGain: gainValue,
-    });
-    await this.setData("settings:/kef/dsp/subwooferGain", value);
-  }
 
   // Get all current settings
   async getAllSettings(): Promise<KEFSettings> {
@@ -835,7 +979,7 @@ export class KEFSpeaker {
         }
       }
     } catch (error) {
-      console.error("Error fetching all settings:", error);
+      this.log(`Error fetching all settings: ${error}`);
       // Return minimal settings on error
       settings.standby = true; // Assume standby if we can't connect
     }
@@ -843,6 +987,38 @@ export class KEFSpeaker {
     return settings;
   }
 
+
+  // Repeat and Shuffle Management
+  // Note: KEF speakers show available playMode options when playing via WiFi/Roon
+  // but don't expose the current state or support setting these values via API.
+  // The actual shuffle/repeat state is managed by the streaming service (Roon, Spotify, etc.)
+
+  async getRepeatMode(): Promise<KEFRepeatMode> {
+    // KEF API only shows available modes, not current state
+    // We maintain local state for UI display purposes only
+    this.log(`[getRepeatMode] Returning local state: ${this.repeatMode}`);
+    return this.repeatMode;
+  }
+
+  async setRepeatMode(mode: KEFRepeatMode): Promise<void> {
+    this.log(`[setRepeatMode] Setting local repeat mode to: ${mode}`);
+    this.repeatMode = mode;
+    // Note: This only updates the local state for display
+    // The actual repeat control must be done through the streaming service app
+  }
+
+  async getShuffleMode(): Promise<KEFShuffleMode> {
+    // KEF API only shows available modes, not current state
+    // We maintain local state for UI display purposes only
+    return this.shuffleMode;
+  }
+
+  async setShuffleMode(mode: KEFShuffleMode): Promise<void> {
+    this.log(`[setShuffleMode] Setting local shuffle mode to: ${mode}`);
+    this.shuffleMode = mode;
+    // Note: This only updates the local state for display
+    // The actual shuffle control must be done through the streaming service app
+  }
 
   // Connection test
   async testConnection(): Promise<boolean> {
