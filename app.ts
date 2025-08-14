@@ -4,6 +4,7 @@ import Homey from 'homey';
 import { KEFSource } from './lib/KEFSpeaker';
 
 module.exports = class KEFConnectApp extends Homey.App {
+  private deviceRegistry: Map<string, any> = new Map();
 
   /**
    * onInit is called when the app is initialized.
@@ -13,6 +14,30 @@ module.exports = class KEFConnectApp extends Homey.App {
 
     // Register flow cards
     this.registerFlowActions();
+  }
+
+  /**
+   * Register a device in the app's device registry
+   */
+  registerDevice(deviceId: string, device: any) {
+    this.deviceRegistry.set(deviceId, device);
+    this.log(`[App] Device registered: ${deviceId}`);
+    this.log(`[App] Registry now has ${this.deviceRegistry.size} devices`);
+  }
+
+  /**
+   * Unregister a device from the app's device registry
+   */
+  unregisterDevice(deviceId: string) {
+    this.deviceRegistry.delete(deviceId);
+    this.log(`[App] Device unregistered: ${deviceId}`);
+  }
+
+  /**
+   * Get a device from the registry by ID
+   */
+  getDevice(deviceId: string): any {
+    return this.deviceRegistry.get(deviceId);
   }
 
   /**
@@ -88,14 +113,14 @@ module.exports = class KEFConnectApp extends Homey.App {
     const playPauseAction = this.homey.flow.getActionCard('play_pause');
     playPauseAction.registerRunListener(async (args: any) => {
       this.log(`[Flow] Toggling play/pause for device ${args.device.getName()}`);
-      
+
       // Check if the current source supports playback control (only WiFi and Bluetooth support it)
       const currentSource = await args.device.getCurrentSource();
       if (currentSource !== 'wifi' && currentSource !== 'bluetooth') {
         const sourceLabel = this.getSourceLabel(currentSource);
         throw new Error(this.homey.__('errors.playback_control_not_supported_on_source').replace('__source__', sourceLabel));
       }
-      
+
       try {
         await args.device.playPause();
         return true;
@@ -114,14 +139,14 @@ module.exports = class KEFConnectApp extends Homey.App {
     const nextTrackAction = this.homey.flow.getActionCard('next_track');
     nextTrackAction.registerRunListener(async (args: any) => {
       this.log(`[Flow] Skipping to next track for device ${args.device.getName()}`);
-      
+
       // Check if the current source supports track control (only WiFi and Bluetooth support it)
       const currentSource = await args.device.getCurrentSource();
       if (currentSource !== 'wifi' && currentSource !== 'bluetooth') {
         const sourceLabel = this.getSourceLabel(currentSource);
         throw new Error(this.homey.__('errors.track_control_not_supported_on_source').replace('__source__', sourceLabel));
       }
-      
+
       try {
         await args.device.nextTrack();
         return true;
@@ -140,14 +165,14 @@ module.exports = class KEFConnectApp extends Homey.App {
     const previousTrackAction = this.homey.flow.getActionCard('previous_track');
     previousTrackAction.registerRunListener(async (args: any) => {
       this.log(`[Flow] Skipping to previous track for device ${args.device.getName()}`);
-      
+
       // Check if the current source supports track control (only WiFi and Bluetooth support it)
       const currentSource = await args.device.getCurrentSource();
       if (currentSource !== 'wifi' && currentSource !== 'bluetooth') {
         const sourceLabel = this.getSourceLabel(currentSource);
         throw new Error(this.homey.__('errors.track_control_not_supported_on_source').replace('__source__', sourceLabel));
       }
-      
+
       try {
         await args.device.previousTrack();
         return true;

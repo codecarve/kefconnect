@@ -15,6 +15,15 @@ export class KEFBaseDevice extends Homey.Device {
   async onInit() {
     this.log("KEF Speaker Device initialized");
 
+    // Register device with the app using Homey's device ID
+    const app = this.homey.app as any;
+    if (app && app.registerDevice) {
+      // Use the Homey system ID (not the data ID)
+      const deviceId = (this as any).__id || (this as any).id || this.getData().id;
+      this.log(`Registering with ID: ${deviceId}`);
+      app.registerDevice(deviceId, this);
+    }
+
     // Get model from device data or settings
     const data = this.getData();
     const settings = this.getSettings();
@@ -230,10 +239,26 @@ export class KEFBaseDevice extends Homey.Device {
     // Music player controls
     if (this.hasCapability("speaker_playing")) {
       this.registerCapabilityListener("speaker_playing", async (value) => {
-        if (value) {
-          await this.speaker.play();
-        } else {
-          await this.speaker.pause();
+        try {
+          this.log(`[speaker_playing] Received command: ${value}`);
+          if (value) {
+            this.log('[speaker_playing] Calling speaker.play()');
+            await this.speaker.play();
+            this.log('[speaker_playing] Play command completed');
+          } else {
+            this.log('[speaker_playing] Calling speaker.pause()');
+            await this.speaker.pause();
+            this.log('[speaker_playing] Pause command completed');
+          }
+        } catch (error: any) {
+          this.error(`[speaker_playing] Error: ${error.message}`);
+          // Check if it's an "Operation not supported" error
+          if (error.message && error.message.includes('Operation not supported')) {
+            this.log('[speaker_playing] Playback control not available for current source');
+            // Don't throw the error, just log it
+          } else {
+            throw error;
+          }
         }
       });
     }
@@ -314,6 +339,9 @@ export class KEFBaseDevice extends Homey.Device {
 
       await this.speaker.setSource(value as KEFSource);
       this.log("Source set to:", value);
+
+      // Immediately update the capability value so widgets see the change right away
+      await this.setCapabilityValue('source_input', value).catch(this.error);
     } catch (error) {
       this.error("Error setting source:", error);
       throw new Error("Failed to set source");
@@ -691,6 +719,13 @@ export class KEFBaseDevice extends Homey.Device {
   // Device deletion
   async onDeleted() {
     this.log("Device deleted");
+    
+    // Unregister device from the app using the same ID
+    const app = this.homey.app as any;
+    if (app && app.unregisterDevice) {
+      const deviceId = (this as any).__id || (this as any).id || this.getData().id;
+      app.unregisterDevice(deviceId);
+    }
 
     // Stop polling
     if (this.pollInterval) {

@@ -62,8 +62,18 @@ export class ImageUtil {
           const client = url.startsWith('https://') ? https : http;
 
           return new Promise((resolve, reject) => {
+            let request: any = null;
+            let responseHandled = false;
+
+            // Helper function to cleanup resources
+            const cleanup = () => {
+              if (request && !request.destroyed) {
+                request.destroy();
+              }
+            };
+
             // Security: Add size limit check via response headers
-            const request = client.get({
+            request = client.get({
               hostname: urlParts.hostname,
               port: urlParts.port || (url.startsWith('https://') ? 443 : 80),
               path: urlParts.pathname + urlParts.search,
@@ -82,17 +92,50 @@ export class ImageUtil {
                   logger(`[ImageUtil.updateAlbumArt] Image too large: ${contentLength} bytes`);
                 }
                 response.destroy();
+                cleanup();
+                responseHandled = true;
                 reject(new Error(`Album art too large: ${contentLength} bytes (max ${maxSize} bytes)`));
                 return;
               }
 
               if (response.statusCode === 200) {
+                // Track bytes received to enforce size limit even without content-length header
+                let bytesReceived = 0;
+                response.on('data', (chunk: Buffer) => {
+                  bytesReceived += chunk.length;
+                  if (bytesReceived > maxSize) {
+                    if (logger) {
+                      logger(`[ImageUtil.updateAlbumArt] Stream exceeded size limit: ${bytesReceived} bytes`);
+                    }
+                    response.destroy();
+                    cleanup();
+                    if (!responseHandled) {
+                      responseHandled = true;
+                      reject(new Error(`Album art stream too large: ${bytesReceived} bytes (max ${maxSize} bytes)`));
+                    }
+                  }
+                });
+
                 response.pipe(stream);
-                resolve(stream);
+                response.on('end', () => {
+                  if (!responseHandled) {
+                    responseHandled = true;
+                    resolve(stream);
+                  }
+                });
+                response.on('error', (err: any) => {
+                  cleanup();
+                  if (!responseHandled) {
+                    responseHandled = true;
+                    reject(err);
+                  }
+                });
               } else {
                 if (logger) {
                   logger(`[ImageUtil.updateAlbumArt] Failed with status: ${response.statusCode}`);
                 }
+                cleanup();
+                responseHandled = true;
                 reject(new Error(`Failed to fetch album art: ${response.statusCode}`));
               }
             });
@@ -101,14 +144,21 @@ export class ImageUtil {
               if (logger) {
                 logger(`[ImageUtil.updateAlbumArt] Request error: ${err}`);
               }
-              reject(err);
+              cleanup();
+              if (!responseHandled) {
+                responseHandled = true;
+                reject(err);
+              }
             });
             request.on('timeout', () => {
               if (logger) {
                 logger('[ImageUtil.updateAlbumArt] Request timeout');
               }
-              request.destroy();
-              reject(new Error('Album art fetch timeout'));
+              cleanup();
+              if (!responseHandled) {
+                responseHandled = true;
+                reject(new Error('Album art fetch timeout'));
+              }
             });
           });
         });

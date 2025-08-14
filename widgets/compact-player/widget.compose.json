@@ -1,0 +1,59 @@
+{
+  "name": {
+    "en": "Compact Player",
+    "nl": "Compacte Speler",
+    "fr": "Lecteur Compact",
+    "de": "Kompakter Player",
+    "es": "Reproductor Compacto"
+  },
+  "devices": {
+    "type": "app",
+    "singular": true,
+    "filter": {
+      "class": "speaker"
+    }
+  },
+  "settings": [
+    {
+      "id": "refresh_interval",
+      "type": "number",
+      "title": {
+        "en": "Refresh interval (seconds)",
+        "nl": "Verversingsinterval (seconden)",
+        "fr": "Intervalle de rafraîchissement (secondes)",
+        "de": "Aktualisierungsintervall (Sekunden)",
+        "es": "Intervalo de actualización (segundos)"
+      },
+      "value": 2,
+      "min": 1,
+      "max": 10
+    },
+    {
+      "id": "show_album_art",
+      "type": "checkbox",
+      "title": {
+        "en": "Show album art",
+        "nl": "Toon albumhoes",
+        "fr": "Afficher la pochette",
+        "de": "Albumcover anzeigen",
+        "es": "Mostrar carátula"
+      },
+      "value": true
+    }
+  ],
+  "height": 160,
+  "api": {
+    "getDeviceState": {
+      "method": "GET",
+      "path": "/device-state"
+    },
+    "sendCommand": {
+      "method": "POST",
+      "path": "/command"
+    },
+    "getAlbumArt": {
+      "method": "GET",
+      "path": "/album-art"
+    }
+  }
+}

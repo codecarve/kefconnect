@@ -996,7 +996,7 @@ export class KEFSpeaker {
   async getRepeatMode(): Promise<KEFRepeatMode> {
     // KEF API only shows available modes, not current state
     // We maintain local state for UI display purposes only
-    this.log(`[getRepeatMode] Returning local state: ${this.repeatMode}`);
+    // this.log(`[getRepeatMode] Returning local state: ${this.repeatMode}`);
     return this.repeatMode;
   }
 

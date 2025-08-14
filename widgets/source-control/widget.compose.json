@@ -1,0 +1,66 @@
+{
+  "name": {
+    "en": "Source Selector",
+    "nl": "Bron Kiezer",
+    "fr": "Sélecteur de Source",
+    "de": "Quellen Auswahl",
+    "es": "Selector de Fuente"
+  },
+  "devices": {
+    "type": "app",
+    "singular": true,
+    "filter": {
+      "class": "speaker"
+    }
+  },
+  "settings": [
+    {
+      "id": "refresh_interval",
+      "type": "number",
+      "title": {
+        "en": "Refresh interval (seconds)",
+        "nl": "Verversingsinterval (seconden)",
+        "fr": "Intervalle de rafraîchissement (secondes)",
+        "de": "Aktualisierungsintervall (Sekunden)",
+        "es": "Intervalo de actualización (segundos)"
+      },
+      "value": 3,
+      "min": 1,
+      "max": 10
+    },
+    {
+      "id": "hide_sources",
+      "type": "text",
+      "title": {
+        "en": "Hide sources (comma-separated)",
+        "nl": "Verberg bronnen (komma-gescheiden)",
+        "fr": "Masquer les sources (séparées par des virgules)",
+        "de": "Quellen ausblenden (kommagetrennt)",
+        "es": "Ocultar fuentes (separadas por comas)"
+      },
+      "hint": {
+        "en": "Example: usb,analog",
+        "nl": "Voorbeeld: usb,analog",
+        "fr": "Exemple: usb,analog",
+        "de": "Beispiel: usb,analog",
+        "es": "Ejemplo: usb,analog"
+      },
+      "value": ""
+    }
+  ],
+  "height": 220,
+  "api": {
+    "getDeviceState": {
+      "method": "GET",
+      "path": "/device-state"
+    },
+    "sendCommand": {
+      "method": "POST",
+      "path": "/command"
+    },
+    "setSource": {
+      "method": "POST",
+      "path": "/source"
+    }
+  }
+}
