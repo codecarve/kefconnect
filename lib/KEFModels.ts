@@ -18,7 +18,6 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     sources: ["wifi", "bluetooth", "tv", "optical", "analog", "usb"],
     capabilities: [
       "volume_set",
-      "volume_mute",
       "source_input",
       "speaker_playing",
       "speaker_next",
@@ -39,7 +38,6 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     sources: ["wifi", "bluetooth", "tv", "optical", "usb"],
     capabilities: [
       "volume_set",
-      "volume_mute",
       "source_input",
       "speaker_playing",
       "speaker_next",
@@ -60,7 +58,6 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     capabilities: [
       "volume_set",
-      "volume_mute",
       "source_input",
       "speaker_playing",
       "speaker_next",
@@ -81,7 +78,6 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     capabilities: [
       "volume_set",
-      "volume_mute",
       "source_input",
       "speaker_playing",
       "speaker_next",
@@ -102,7 +98,6 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     sources: ["wifi", "bluetooth", "tv", "optical", "analog"],
     capabilities: [
       "volume_set",
-      "volume_mute",
       "source_input",
       "speaker_playing",
       "speaker_next",
@@ -123,7 +118,6 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     sources: ["wifi", "bluetooth", "tv", "optical"],
     capabilities: [
       "volume_set",
-      "volume_mute",
       "source_input",
       "speaker_playing",
       "speaker_next",

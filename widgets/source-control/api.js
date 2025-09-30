@@ -49,7 +49,6 @@ module.exports = {
         power: device.getAvailable(),
         playing: device.getCapabilityValue('speaker_playing') || false,
         volume: device.getCapabilityValue('volume_set') || 0,
-        muted: device.getCapabilityValue('volume_mute') || false,
         source: device.getCapabilityValue('source_input') || 'wifi',
         track: device.getCapabilityValue('speaker_track') || '',
         artist: device.getCapabilityValue('speaker_artist') || '',
@@ -148,13 +147,6 @@ module.exports = {
             } else {
               await device.triggerCapabilityListener('volume_set', value / 100)
             }
-          }
-          break
-        case 'mute':
-          if (device.onCapabilityMute) {
-            await device.onCapabilityMute(value || false)
-          } else {
-            await device.triggerCapabilityListener('volume_mute', value || false)
           }
           break
         default:

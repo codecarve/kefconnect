@@ -2,3 +2,5 @@
 /node_modules/
 /.homeybuild/
 package-lock.json
+.idea/
+nul

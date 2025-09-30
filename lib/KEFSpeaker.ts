@@ -23,7 +23,6 @@ export interface KEFPlaybackInfo {
 
 export interface KEFSettings {
   volume?: number;
-  muted?: boolean;
   source?: string;
   standby?: boolean;
   subwooferMode?: string;
@@ -229,37 +228,6 @@ export class KEFSpeaker {
     await this.setVolume(current - step);
   }
 
-  // Mute Control
-  private previousVolume: number = 50;
-  private isMuted: boolean = false;
-
-  async getMuted(): Promise<boolean> {
-    // KEF speakers don't have a dedicated mute endpoint
-    // Mute is implemented by setting volume to 0
-    const volume = await this.getVolume();
-    return volume === 0 && this.isMuted;
-  }
-
-  async setMuted(muted: boolean): Promise<void> {
-    if (muted) {
-      // Store current volume before muting
-      const currentVolume = await this.getVolume();
-      if (currentVolume > 0) {
-        this.previousVolume = currentVolume;
-      }
-      await this.setVolume(0);
-      this.isMuted = true;
-    } else {
-      // Restore previous volume
-      await this.setVolume(this.previousVolume);
-      this.isMuted = false;
-    }
-  }
-
-  async toggleMute(): Promise<void> {
-    const muted = await this.getMuted();
-    await this.setMuted(!muted);
-  }
 
   // Playback Control
   async play(): Promise<void> {
@@ -965,10 +933,8 @@ export class KEFSpeaker {
       if (!settings.standby && settings.source !== "standby") {
         try {
           settings.volume = await this.getVolume();
-          settings.muted = await this.getMuted();
         } catch (error) {
-          // Volume/mute might fail, continue with other settings
-          // Could not get volume/mute
+          // Volume might fail, continue with other settings
         }
 
         try {

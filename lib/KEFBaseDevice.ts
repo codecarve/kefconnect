@@ -108,7 +108,7 @@ export class KEFBaseDevice extends Homey.Device {
     }
 
     // Remove capabilities that the model doesn't support (except core ones)
-    const coreCapabilities = ['volume_set', 'volume_mute', 'source_input'];
+    const coreCapabilities = ['volume_set', 'source_input'];
     for (const capability of currentCapabilities) {
       if (!supportedCapabilities.includes(capability) && !coreCapabilities.includes(capability)) {
         try {
@@ -215,13 +215,6 @@ export class KEFBaseDevice extends Homey.Device {
       );
     }
 
-    // Mute control
-    if (this.hasCapability("volume_mute")) {
-      this.registerCapabilityListener(
-        "volume_mute",
-        this.onCapabilityMute.bind(this),
-      );
-    }
 
     // Volume up/down
     if (this.hasCapability("volume_up")) {
@@ -320,15 +313,6 @@ export class KEFBaseDevice extends Homey.Device {
     }
   }
 
-  async onCapabilityMute(value: boolean) {
-    try {
-      await this.speaker.setMuted(value);
-      this.log("Mute set to:", value);
-    } catch (error) {
-      this.error("Error setting mute:", error);
-      throw new Error("Failed to set mute state");
-    }
-  }
 
   async onCapabilitySource(value: string) {
     try {
@@ -499,12 +483,6 @@ export class KEFBaseDevice extends Homey.Device {
       );
     }
 
-    // Update mute
-    if (settings.muted !== undefined && this.hasCapability("volume_mute")) {
-      await this.setCapabilityValue("volume_mute", settings.muted).catch(
-        this.error,
-      );
-    }
 
     // Update source (filter out 'standby' and unsupported sources)
     if (settings.source !== undefined && this.hasCapability("source_input")) {
