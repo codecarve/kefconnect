@@ -1,6 +1,6 @@
 {
   "id": "nl.codecarve.kefconnect",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "platforms": [
@@ -14,11 +14,11 @@
     "es": "KEF Connect"
   },
   "description": {
-    "en": "Control your KEF wireless speakers",
-    "nl": "Bedien uw KEF draadloze speakers",
-    "fr": "Contrôlez vos haut-parleurs sans fil KEF",
-    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher",
-    "es": "Controla tus altavoces inalámbricos KEF"
+    "en": "Premium wireless audio meets smart home automation",
+    "nl": "Premium draadloze audio ontmoet smart home automatisering",
+    "fr": "L'audio sans fil premium rencontre la domotique intelligente",
+    "de": "Premium-Wireless-Audio trifft auf Smart-Home-Automatisierung",
+    "es": "Audio inalámbrico premium se encuentra con la domótica inteligente"
   },
   "category": [
     "music"

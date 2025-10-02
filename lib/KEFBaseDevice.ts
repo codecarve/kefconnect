@@ -1,7 +1,7 @@
 import Homey from "homey";
-import {KEFSpeaker, KEFSettings, KEFSource} from "./KEFSpeaker";
-import {getModelConfig, isSourceSupported} from "./KEFModels";
-import {ImageUtil} from "./image-util";
+import { KEFSpeaker, KEFSettings, KEFSource } from "./KEFSpeaker";
+import { getModelConfig, isSourceSupported } from "./KEFModels";
+import { ImageUtil } from "./image-util";
 
 export class KEFBaseDevice extends Homey.Device {
   protected speaker!: KEFSpeaker;
@@ -19,7 +19,8 @@ export class KEFBaseDevice extends Homey.Device {
     const app = this.homey.app as any;
     if (app && app.registerDevice) {
       // Use the Homey system ID (not the data ID)
-      const deviceId = (this as any).__id || (this as any).id || this.getData().id;
+      const deviceId =
+        (this as any).__id || (this as any).id || this.getData().id;
       this.log(`Registering with ID: ${deviceId}`);
       app.registerDevice(deviceId, this);
     }
@@ -40,14 +41,20 @@ export class KEFBaseDevice extends Homey.Device {
     if (this.modelConfig.energyUsage) {
       try {
         await this.setEnergy(this.modelConfig.energyUsage);
-        this.log(`Set energy usage - On: ${this.modelConfig.energyUsage.usageOn}W, Off: ${this.modelConfig.energyUsage.usageOff}W`);
+        this.log(
+          `Set energy usage - On: ${this.modelConfig.energyUsage.usageOn}W, Off: ${this.modelConfig.energyUsage.usageOff}W`,
+        );
       } catch (error) {
-        this.log('Could not set energy usage:', error);
+        this.log("Could not set energy usage:", error);
       }
     }
 
     // Initialize speaker connection
-    this.speaker = new KEFSpeaker(settings.ip, settings.port || 80, (msg: string) => this.log(msg));
+    this.speaker = new KEFSpeaker(
+      settings.ip,
+      settings.port || 80,
+      (msg: string) => this.log(msg),
+    );
 
     // Setup capabilities based on model
     await this.setupCapabilities();
@@ -57,13 +64,13 @@ export class KEFBaseDevice extends Homey.Device {
 
     // Initialize album art image
     try {
-      this.log('[onInit] Creating album art image...');
+      this.log("[onInit] Creating album art image...");
       this.albumArtImage = await ImageUtil.createAlbumArtImage(this.homey);
-      this.log('[onInit] Album art image created, setting on device...');
+      this.log("[onInit] Album art image created, setting on device...");
       await this.setAlbumArtImage(this.albumArtImage);
-      this.log('[onInit] Album art image successfully set on device');
+      this.log("[onInit] Album art image successfully set on device");
     } catch (error) {
-      this.error('[onInit] Failed to initialize album art:', error);
+      this.error("[onInit] Failed to initialize album art:", error);
       // Continue without album art if it fails
     }
 
@@ -71,10 +78,12 @@ export class KEFBaseDevice extends Homey.Device {
     try {
       await this.initializeConnection();
     } catch (error) {
-      this.log('Device is offline, will check for availability via polling');
+      this.log("Device is offline, will check for availability via polling");
       // Mark as unavailable but continue
       this.isAvailable = false;
-      await this.setUnavailable("Device is not responding. Will retry connection automatically.").catch(this.error);
+      await this.setUnavailable(
+        "Device is not responding. Will retry connection automatically.",
+      ).catch(this.error);
     }
 
     // Always start polling - it will handle availability
@@ -92,8 +101,10 @@ export class KEFBaseDevice extends Homey.Device {
     const currentCapabilities = this.getCapabilities();
 
     // Log current capabilities for debugging
-    this.log(`Current capabilities: ${currentCapabilities.join(', ')}`);
-    this.log(`Model ${this.modelId} supports: ${supportedCapabilities.join(', ')}`);
+    this.log(`Current capabilities: ${currentCapabilities.join(", ")}`);
+    this.log(
+      `Model ${this.modelId} supports: ${supportedCapabilities.join(", ")}`,
+    );
 
     // Add missing capabilities that the model supports
     for (const capability of supportedCapabilities) {
@@ -108,9 +119,12 @@ export class KEFBaseDevice extends Homey.Device {
     }
 
     // Remove capabilities that the model doesn't support (except core ones)
-    const coreCapabilities = ['volume_set', 'source_input'];
+    const coreCapabilities = ["volume_set", "source_input"];
     for (const capability of currentCapabilities) {
-      if (!supportedCapabilities.includes(capability) && !coreCapabilities.includes(capability)) {
+      if (
+        !supportedCapabilities.includes(capability) &&
+        !coreCapabilities.includes(capability)
+      ) {
         try {
           await this.removeCapability(capability);
           this.log(`Removed unsupported capability: ${capability}`);
@@ -121,21 +135,23 @@ export class KEFBaseDevice extends Homey.Device {
     }
 
     // Update source_input capability options based on model
-    if (this.hasCapability('source_input')) {
+    if (this.hasCapability("source_input")) {
       try {
         const supportedSources = this.modelConfig.sources;
         const sourceOptions = supportedSources.map((source: KEFSource) => ({
           id: source,
-          title: this.getSourceTitle(source)
+          title: this.getSourceTitle(source),
         }));
 
-        await this.setCapabilityOptions('source_input', {
-          values: sourceOptions
+        await this.setCapabilityOptions("source_input", {
+          values: sourceOptions,
         });
 
-        this.log(`Updated source_input options to: ${supportedSources.join(', ')}`);
+        this.log(
+          `Updated source_input options to: ${supportedSources.join(", ")}`,
+        );
       } catch (error) {
-        this.error('Failed to update source_input options:', error);
+        this.error("Failed to update source_input options:", error);
       }
     }
   }
@@ -143,16 +159,40 @@ export class KEFBaseDevice extends Homey.Device {
   private getSourceTitle(source: KEFSource): any {
     // Return localized titles for each source
     const titles: Record<string, any> = {
-      wifi: {en: "WiFi", nl: "WiFi", fr: "WiFi", de: "WiFi", es: "WiFi"},
-      bluetooth: {en: "Bluetooth", nl: "Bluetooth", fr: "Bluetooth", de: "Bluetooth", es: "Bluetooth"},
-      optical: {en: "Optical", nl: "Optisch", fr: "Optique", de: "Optisch", es: "Óptico"},
-      coaxial: {en: "Coaxial", nl: "Coaxiaal", fr: "Coaxial", de: "Koaxial", es: "Coaxial"},
-      analog: {en: "Analog", nl: "Analoog", fr: "Analogique", de: "Analog", es: "Analógico"},
-      tv: {en: "TV", nl: "TV", fr: "TV", de: "TV", es: "TV"},
-      usb: {en: "USB", nl: "USB", fr: "USB", de: "USB", es: "USB"}
+      wifi: { en: "WiFi", nl: "WiFi", fr: "WiFi", de: "WiFi", es: "WiFi" },
+      bluetooth: {
+        en: "Bluetooth",
+        nl: "Bluetooth",
+        fr: "Bluetooth",
+        de: "Bluetooth",
+        es: "Bluetooth",
+      },
+      optical: {
+        en: "Optical",
+        nl: "Optisch",
+        fr: "Optique",
+        de: "Optisch",
+        es: "Óptico",
+      },
+      coaxial: {
+        en: "Coaxial",
+        nl: "Coaxiaal",
+        fr: "Coaxial",
+        de: "Koaxial",
+        es: "Coaxial",
+      },
+      analog: {
+        en: "Analog",
+        nl: "Analoog",
+        fr: "Analogique",
+        de: "Analog",
+        es: "Analógico",
+      },
+      tv: { en: "TV", nl: "TV", fr: "TV", de: "TV", es: "TV" },
+      usb: { en: "USB", nl: "USB", fr: "USB", de: "USB", es: "USB" },
     };
 
-    return titles[source] || {en: source};
+    return titles[source] || { en: source };
   }
 
   private async initializeConnection(skipSettingsUpdate: boolean = false) {
@@ -173,9 +213,9 @@ export class KEFBaseDevice extends Homey.Device {
             await this.setSettings({
               speaker_name: info.name,
               speaker_model: info.model,
-              serial_number: info.serialNumber || 'Unknown',
-              firmware_version: info.firmware || 'Unknown',
-              last_connected: new Date().toISOString()
+              serial_number: info.serialNumber || "Unknown",
+              firmware_version: info.firmware || "Unknown",
+              last_connected: new Date().toISOString(),
             });
             this.log("Updated device info in Homey settings");
           } catch (settingsError) {
@@ -194,7 +234,7 @@ export class KEFBaseDevice extends Homey.Device {
       this.isAvailable = false;
       await this.setUnavailable("Cannot connect to speaker").catch(this.error);
       // Don't schedule reconnect - polling will handle it
-      throw new Error('Device offline'); // Simple error for onInit
+      throw new Error("Device offline"); // Simple error for onInit
     }
   }
 
@@ -215,39 +255,30 @@ export class KEFBaseDevice extends Homey.Device {
       );
     }
 
-
-    // Volume up/down
-    if (this.hasCapability("volume_up")) {
-      this.registerCapabilityListener("volume_up", async () => {
-        await this.volumeUp();
-      });
-    }
-
-    if (this.hasCapability("volume_down")) {
-      this.registerCapabilityListener("volume_down", async () => {
-        await this.volumeDown();
-      });
-    }
-
     // Music player controls
     if (this.hasCapability("speaker_playing")) {
       this.registerCapabilityListener("speaker_playing", async (value) => {
         try {
           this.log(`[speaker_playing] Received command: ${value}`);
           if (value) {
-            this.log('[speaker_playing] Calling speaker.play()');
+            this.log("[speaker_playing] Calling speaker.play()");
             await this.speaker.play();
-            this.log('[speaker_playing] Play command completed');
+            this.log("[speaker_playing] Play command completed");
           } else {
-            this.log('[speaker_playing] Calling speaker.pause()');
+            this.log("[speaker_playing] Calling speaker.pause()");
             await this.speaker.pause();
-            this.log('[speaker_playing] Pause command completed');
+            this.log("[speaker_playing] Pause command completed");
           }
         } catch (error: any) {
           this.error(`[speaker_playing] Error: ${error.message}`);
           // Check if it's an "Operation not supported" error
-          if (error.message && error.message.includes('Operation not supported')) {
-            this.log('[speaker_playing] Playback control not available for current source');
+          if (
+            error.message &&
+            error.message.includes("Operation not supported")
+          ) {
+            this.log(
+              "[speaker_playing] Playback control not available for current source",
+            );
             // Don't throw the error, just log it
           } else {
             throw error;
@@ -289,7 +320,6 @@ export class KEFBaseDevice extends Homey.Device {
         this.onCapabilityRepeat.bind(this),
       );
     }
-
   }
 
   // Capability handlers
@@ -313,19 +343,20 @@ export class KEFBaseDevice extends Homey.Device {
     }
   }
 
-
   async onCapabilitySource(value: string) {
     try {
       // Check if source is supported by this model
       if (!isSourceSupported(this.modelId, value)) {
-        throw new Error(`Source ${value} is not supported by ${this.modelConfig.name}`);
+        throw new Error(
+          `Source ${value} is not supported by ${this.modelConfig.name}`,
+        );
       }
 
       await this.speaker.setSource(value as KEFSource);
       this.log("Source set to:", value);
 
       // Immediately update the capability value so widgets see the change right away
-      await this.setCapabilityValue('source_input', value).catch(this.error);
+      await this.setCapabilityValue("source_input", value).catch(this.error);
     } catch (error) {
       this.error("Error setting source:", error);
       throw new Error("Failed to set source");
@@ -335,8 +366,10 @@ export class KEFBaseDevice extends Homey.Device {
   async onCapabilityShuffle(value: boolean) {
     try {
       // Validate input value
-      if (value === null || value === undefined || typeof value !== 'boolean') {
-        this.error(`Invalid shuffle value received: ${value} (type: ${typeof value})`);
+      if (value === null || value === undefined || typeof value !== "boolean") {
+        this.error(
+          `Invalid shuffle value received: ${value} (type: ${typeof value})`,
+        );
         return;
       }
 
@@ -360,8 +393,10 @@ export class KEFBaseDevice extends Homey.Device {
   async onCapabilityRepeat(value: string) {
     try {
       // Validate input value
-      if (!value || typeof value !== 'string') {
-        this.error(`Invalid repeat value received: ${value} (type: ${typeof value})`);
+      if (!value || typeof value !== "string") {
+        this.error(
+          `Invalid repeat value received: ${value} (type: ${typeof value})`,
+        );
         return;
       }
 
@@ -376,7 +411,9 @@ export class KEFBaseDevice extends Homey.Device {
       // KEF uses: "none" | "track" | "playlist" (same values)
       const validModes = ["none", "track", "playlist"];
       if (!validModes.includes(value)) {
-        this.error(`Invalid repeat mode: ${value}. Expected one of: ${validModes.join(", ")}`);
+        this.error(
+          `Invalid repeat mode: ${value}. Expected one of: ${validModes.join(", ")}`,
+        );
         return;
       }
 
@@ -388,7 +425,6 @@ export class KEFBaseDevice extends Homey.Device {
     }
   }
 
-
   // State polling with availability management
   private startPolling() {
     const settings = this.getSettings();
@@ -399,7 +435,9 @@ export class KEFBaseDevice extends Homey.Device {
     let failureCount = 0;
     const maxFailures = 3; // Mark unavailable after 3 consecutive failures
 
-    this.log(`Starting polling with interval: ${currentInterval}ms (device ${this.isAvailable ? 'available' : 'unavailable'})`);
+    this.log(
+      `Starting polling with interval: ${currentInterval}ms (device ${this.isAvailable ? "available" : "unavailable"})`,
+    );
 
     const poll = async () => {
       try {
@@ -418,7 +456,9 @@ export class KEFBaseDevice extends Homey.Device {
             currentInterval = normalInterval;
             clearInterval(this.pollInterval);
             this.pollInterval = setInterval(poll, currentInterval);
-            this.log(`Switched back to normal polling interval: ${currentInterval}ms`);
+            this.log(
+              `Switched back to normal polling interval: ${currentInterval}ms`,
+            );
           }
         }
 
@@ -432,26 +472,33 @@ export class KEFBaseDevice extends Homey.Device {
         await this.updateAlbumArt();
 
         failureCount = 0; // Reset failure count on success
-
       } catch (error) {
         failureCount++;
 
         // Mark device as unavailable after max failures
         if (failureCount >= maxFailures && this.isAvailable) {
-          this.log(`Device not responding after ${maxFailures} attempts, marking as unavailable`);
+          this.log(
+            `Device not responding after ${maxFailures} attempts, marking as unavailable`,
+          );
           this.isAvailable = false;
-          await this.setUnavailable("Device is not responding. Check if it's powered on and connected to the network.").catch(this.error);
+          await this.setUnavailable(
+            "Device is not responding. Check if it's powered on and connected to the network.",
+          ).catch(this.error);
 
           // Switch to slower retry interval to reduce network traffic
           if (currentInterval !== retryInterval) {
             currentInterval = retryInterval;
             clearInterval(this.pollInterval);
             this.pollInterval = setInterval(poll, currentInterval);
-            this.log(`Switched to retry polling interval: ${currentInterval}ms`);
+            this.log(
+              `Switched to retry polling interval: ${currentInterval}ms`,
+            );
           }
         } else if (!this.isAvailable && failureCount === 1) {
           // Only log once when device is already unavailable
-          this.log(`Device still offline, checking every ${currentInterval / 1000} seconds...`);
+          this.log(
+            `Device still offline, checking every ${currentInterval / 1000} seconds...`,
+          );
         }
       }
     };
@@ -483,27 +530,30 @@ export class KEFBaseDevice extends Homey.Device {
       );
     }
 
-
     // Update source (filter out 'standby' and unsupported sources)
     if (settings.source !== undefined && this.hasCapability("source_input")) {
       // Only update source if it's not 'standby' and is supported by this model
-      if (settings.source !== "standby" && isSourceSupported(this.modelId, settings.source)) {
+      if (
+        settings.source !== "standby" &&
+        isSourceSupported(this.modelId, settings.source)
+      ) {
         await this.setCapabilityValue("source_input", settings.source).catch(
           this.error,
         );
       }
     }
-
   }
 
   private async updateAlbumArt() {
     // Only update album art if the image is initialized and device is available
     if (!this.albumArtImage) {
-      this.log('[updateAlbumArt] Album art image not initialized, skipping update');
+      this.log(
+        "[updateAlbumArt] Album art image not initialized, skipping update",
+      );
       return;
     }
     if (!this.isAvailable) {
-      this.log('[updateAlbumArt] Device not available, skipping update');
+      this.log("[updateAlbumArt] Device not available, skipping update");
       return;
     }
 
@@ -512,7 +562,7 @@ export class KEFBaseDevice extends Homey.Device {
       const currentSource = await this.speaker.getSource();
 
       // Only show album art for streaming sources (WiFi and Bluetooth)
-      if (currentSource === 'wifi' || currentSource === 'bluetooth') {
+      if (currentSource === "wifi" || currentSource === "bluetooth") {
         // Get the album art URL from the speaker
         const albumArtUrl = await this.speaker.getAlbumArtUrl();
 
@@ -521,32 +571,41 @@ export class KEFBaseDevice extends Homey.Device {
           this.currentAlbumArtUrl = albumArtUrl;
 
           try {
-
-            await ImageUtil.updateAlbumArt(this.albumArtImage, albumArtUrl, this.getSettings().ip, this.log.bind(this));
+            await ImageUtil.updateAlbumArt(
+              this.albumArtImage,
+              albumArtUrl,
+              this.getSettings().ip,
+              this.log.bind(this),
+            );
             await this.setAlbumArtImage(this.albumArtImage);
-            this.log('[updateAlbumArt] Album art set on device successfully');
+            this.log("[updateAlbumArt] Album art set on device successfully");
           } catch (error) {
-            this.error('[updateAlbumArt] Failed to update album art:', error);
+            this.error("[updateAlbumArt] Failed to update album art:", error);
           }
         }
       } else {
         // Clear album art when not on a streaming source
         if (this.currentAlbumArtUrl !== null) {
-          this.log(`[updateAlbumArt] Non-streaming source (${currentSource}), clearing album art`);
+          this.log(
+            `[updateAlbumArt] Non-streaming source (${currentSource}), clearing album art`,
+          );
           this.currentAlbumArtUrl = null;
 
           try {
-
-            await ImageUtil.updateAlbumArt(this.albumArtImage, null, this.getSettings().ip, this.log.bind(this));
+            await ImageUtil.updateAlbumArt(
+              this.albumArtImage,
+              null,
+              this.getSettings().ip,
+              this.log.bind(this),
+            );
             await this.setAlbumArtImage(this.albumArtImage);
-
           } catch (error) {
-            this.error('[updateAlbumArt] Failed to clear album art:', error);
+            this.error("[updateAlbumArt] Failed to clear album art:", error);
           }
         }
       }
     } catch (error) {
-      this.error('[updateAlbumArt] Error in album art update process:', error);
+      this.error("[updateAlbumArt] Error in album art update process:", error);
     }
   }
 
@@ -558,46 +617,49 @@ export class KEFBaseDevice extends Homey.Device {
       // Update playing state - ensure it's always a boolean
       if (this.hasCapability("speaker_playing")) {
         const isPlaying = playbackInfo.isPlaying; // Ensure boolean value
-        await this.setCapabilityValue("speaker_playing", isPlaying).catch(this.error);
+        await this.setCapabilityValue("speaker_playing", isPlaying).catch(
+          this.error,
+        );
       }
 
       // Update track metadata
       if (this.hasCapability("speaker_artist")) {
-        const artist = playbackInfo.artist || '';
-        await this.setCapabilityValue("speaker_artist", artist).catch(this.error);
+        const artist = playbackInfo.artist || "";
+        await this.setCapabilityValue("speaker_artist", artist).catch(
+          this.error,
+        );
       }
 
       if (this.hasCapability("speaker_track")) {
-        const title = playbackInfo.title || '';
+        const title = playbackInfo.title || "";
         await this.setCapabilityValue("speaker_track", title).catch(this.error);
       }
 
       if (this.hasCapability("speaker_album")) {
-        const album = playbackInfo.album || '';
+        const album = playbackInfo.album || "";
         await this.setCapabilityValue("speaker_album", album).catch(this.error);
       }
 
       if (this.hasCapability("speaker_repeat")) {
         const repeatMode = await this.speaker.getRepeatMode();
-        await this.setCapabilityValue("speaker_repeat", repeatMode).catch(this.error);
+        await this.setCapabilityValue("speaker_repeat", repeatMode).catch(
+          this.error,
+        );
       }
 
       if (this.hasCapability("speaker_shuffle")) {
         const shuffleMode = await this.speaker.getShuffleMode();
         const shuffleValue = shuffleMode === "all";
-        await this.setCapabilityValue("speaker_shuffle", shuffleValue).catch(this.error);
+        await this.setCapabilityValue("speaker_shuffle", shuffleValue).catch(
+          this.error,
+        );
       }
-
     } catch (error) {
-      this.error('[updateMusicMetadata] Error updating metadata:', error);
+      this.error("[updateMusicMetadata] Error updating metadata:", error);
     }
   }
 
-  // Flow card actions
-  async playPause() {
-    await this.speaker.togglePlayPause();
-  }
-
+  // Speaker control methods (used by capabilities)
   async nextTrack() {
     await this.speaker.nextTrack();
   }
@@ -606,29 +668,21 @@ export class KEFBaseDevice extends Homey.Device {
     await this.speaker.previousTrack();
   }
 
-  async volumeUp(step: number = 5) {
-    await this.speaker.increaseVolume(step);
-  }
-
-  async volumeDown(step: number = 5) {
-    await this.speaker.decreaseVolume(step);
-  }
-
   async getCurrentSource(): Promise<string> {
     try {
       return await this.speaker.getSource();
     } catch (error) {
-      this.error('Error getting current source:', error);
-      return 'unknown';
+      this.error("Error getting current source:", error);
+      return "unknown";
     }
   }
 
   // Settings update
   async onSettings({
-                     oldSettings,
-                     newSettings,
-                     changedKeys,
-                   }: {
+    oldSettings,
+    newSettings,
+    changedKeys,
+  }: {
     oldSettings: any;
     newSettings: any;
     changedKeys: string[];
@@ -643,7 +697,11 @@ export class KEFBaseDevice extends Homey.Device {
       }
 
       // Create new speaker instance with new settings
-      this.speaker = new KEFSpeaker(newSettings.ip, newSettings.port || 80, (msg: string) => this.log(msg));
+      this.speaker = new KEFSpeaker(
+        newSettings.ip,
+        newSettings.port || 80,
+        (msg: string) => this.log(msg),
+      );
 
       // Try to connect with the new settings
       try {
@@ -672,7 +730,9 @@ export class KEFBaseDevice extends Homey.Device {
       } catch (error) {
         this.error("Failed to connect with new settings:", error);
         this.isAvailable = false;
-        await this.setUnavailable("Cannot connect to speaker with new settings").catch(this.error);
+        await this.setUnavailable(
+          "Cannot connect to speaker with new settings",
+        ).catch(this.error);
 
         // Still start polling (it will handle connection failures gracefully)
         this.startPolling();
@@ -697,11 +757,12 @@ export class KEFBaseDevice extends Homey.Device {
   // Device deletion
   async onDeleted() {
     this.log("Device deleted");
-    
+
     // Unregister device from the app using the same ID
     const app = this.homey.app as any;
     if (app && app.unregisterDevice) {
-      const deviceId = (this as any).__id || (this as any).id || this.getData().id;
+      const deviceId =
+        (this as any).__id || (this as any).id || this.getData().id;
       app.unregisterDevice(deviceId);
     }
 

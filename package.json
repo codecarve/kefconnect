@@ -1,6 +1,6 @@
 {
   "name": "nl.codecarve.kefconnect",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "scripts": {
     "build": "tsc",
     "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
@@ -11,6 +11,7 @@
     "@types/node": "^24.2.1",
     "eslint": "^7.32.0",
     "eslint-config-athom": "^3.1.5",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "prettier": "^3.6.2"
   }
 }

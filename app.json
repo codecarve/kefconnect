@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "nl.codecarve.kefconnect",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "platforms": [
@@ -15,11 +15,11 @@
     "es": "KEF Connect"
   },
   "description": {
-    "en": "Control your KEF wireless speakers",
-    "nl": "Bedien uw KEF draadloze speakers",
-    "fr": "Contrôlez vos haut-parleurs sans fil KEF",
-    "de": "Steuern Sie Ihre KEF Wireless-Lautsprecher",
-    "es": "Controla tus altavoces inalámbricos KEF"
+    "en": "Premium wireless audio meets smart home automation",
+    "nl": "Premium draadloze audio ontmoet smart home automatisering",
+    "fr": "L'audio sans fil premium rencontre la domotique intelligente",
+    "de": "Premium-Wireless-Audio trifft auf Smart-Home-Automatisierung",
+    "es": "Audio inalámbrico premium se encuentra con la domótica inteligente"
   },
   "category": [
     "music"
@@ -125,99 +125,6 @@
   "flow": {
     "actions": [
       {
-        "id": "next_track",
-        "title": {
-          "en": "Next track",
-          "nl": "Volgende nummer",
-          "fr": "Piste suivante",
-          "de": "Nächster Titel",
-          "es": "Siguiente pista"
-        },
-        "titleFormatted": {
-          "en": "Skip to next track",
-          "nl": "Ga naar volgende nummer",
-          "fr": "Passer à la piste suivante",
-          "de": "Zum nächsten Titel springen",
-          "es": "Saltar a la siguiente pista"
-        },
-        "hint": {
-          "en": "Skip to the next track",
-          "nl": "Ga naar het volgende nummer",
-          "fr": "Passer à la piste suivante",
-          "de": "Zum nächsten Titel springen",
-          "es": "Saltar a la siguiente pista"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
-          }
-        ]
-      },
-      {
-        "id": "play_pause",
-        "title": {
-          "en": "Play / Pause",
-          "nl": "Afspelen / Pauzeren",
-          "fr": "Lecture / Pause",
-          "de": "Wiedergabe / Pause",
-          "es": "Reproducir / Pausar"
-        },
-        "titleFormatted": {
-          "en": "Toggle play/pause",
-          "nl": "Schakel afspelen/pauzeren",
-          "fr": "Basculer lecture/pause",
-          "de": "Wiedergabe/Pause umschalten",
-          "es": "Alternar reproducir/pausar"
-        },
-        "hint": {
-          "en": "Toggle between play and pause state",
-          "nl": "Schakel tussen afspelen en pauzeren",
-          "fr": "Basculer entre lecture et pause",
-          "de": "Zwischen Wiedergabe und Pause umschalten",
-          "es": "Alternar entre reproducir y pausar"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
-          }
-        ]
-      },
-      {
-        "id": "previous_track",
-        "title": {
-          "en": "Previous track",
-          "nl": "Vorige nummer",
-          "fr": "Piste précédente",
-          "de": "Vorheriger Titel",
-          "es": "Pista anterior"
-        },
-        "titleFormatted": {
-          "en": "Skip to previous track",
-          "nl": "Ga naar vorige nummer",
-          "fr": "Passer à la piste précédente",
-          "de": "Zum vorherigen Titel springen",
-          "es": "Saltar a la pista anterior"
-        },
-        "hint": {
-          "en": "Skip to the previous track",
-          "nl": "Ga naar het vorige nummer",
-          "fr": "Passer à la piste précédente",
-          "de": "Zum vorherigen Titel springen",
-          "es": "Saltar a la pista anterior"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
-          }
-        ]
-      },
-      {
         "id": "set_source",
         "title": {
           "en": "Set source to",
@@ -258,68 +165,6 @@
             }
           }
         ]
-      },
-      {
-        "id": "volume_down",
-        "title": {
-          "en": "Volume down",
-          "nl": "Volume omlaag",
-          "fr": "Diminuer le volume",
-          "de": "Lautstärke verringern",
-          "es": "Bajar volumen"
-        },
-        "titleFormatted": {
-          "en": "Decrease volume by 5%",
-          "nl": "Verlaag volume met 5%",
-          "fr": "Diminuer le volume de 5%",
-          "de": "Lautstärke um 5% verringern",
-          "es": "Disminuir volumen en 5%"
-        },
-        "hint": {
-          "en": "Decrease the volume by 5%",
-          "nl": "Verlaag het volume met 5%",
-          "fr": "Diminuer le volume de 5%",
-          "de": "Lautstärke um 5% verringern",
-          "es": "Disminuir el volumen en 5%"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
-          }
-        ]
-      },
-      {
-        "id": "volume_up",
-        "title": {
-          "en": "Volume up",
-          "nl": "Volume omhoog",
-          "fr": "Augmenter le volume",
-          "de": "Lautstärke erhöhen",
-          "es": "Subir volumen"
-        },
-        "titleFormatted": {
-          "en": "Increase volume by 5%",
-          "nl": "Verhoog volume met 5%",
-          "fr": "Augmenter le volume de 5%",
-          "de": "Lautstärke um 5% erhöhen",
-          "es": "Aumentar volumen en 5%"
-        },
-        "hint": {
-          "en": "Increase the volume by 5%",
-          "nl": "Verhoog het volume met 5%",
-          "fr": "Augmenter le volume de 5%",
-          "de": "Lautstärke um 5% erhöhen",
-          "es": "Aumentar el volumen en 5%"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=kef-ls50w2|kef-lsx2|kef-lsx2lt|kef-ls60|kef-xio"
-          }
-        ]
       }
     ]
   },
@@ -353,8 +198,6 @@
         "speaker_duration",
         "speaker_position",
         "volume_set",
-        "volume_up",
-        "volume_down",
         "source_input"
       ],
       "energy": {
@@ -573,8 +416,6 @@
         "speaker_duration",
         "speaker_position",
         "volume_set",
-        "volume_up",
-        "volume_down",
         "source_input"
       ],
       "energy": {
@@ -793,8 +634,6 @@
         "speaker_duration",
         "speaker_position",
         "volume_set",
-        "volume_up",
-        "volume_down",
         "source_input"
       ],
       "energy": {
@@ -1013,8 +852,6 @@
         "speaker_duration",
         "speaker_position",
         "volume_set",
-        "volume_up",
-        "volume_down",
         "source_input"
       ],
       "energy": {
@@ -1233,8 +1070,6 @@
         "speaker_duration",
         "speaker_position",
         "volume_set",
-        "volume_up",
-        "volume_down",
         "source_input"
       ],
       "energy": {
