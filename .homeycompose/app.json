@@ -1,11 +1,9 @@
 {
   "id": "nl.codecarve.kefconnect",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "compatibility": ">=12.4.0",
   "sdk": 3,
-  "platforms": [
-    "local"
-  ],
+  "platforms": ["local"],
   "name": {
     "en": "KEF Connect",
     "nl": "KEF Connect",
@@ -20,9 +18,7 @@
     "de": "Premium-Wireless-Audio trifft auf Smart-Home-Automatisierung",
     "es": "Audio inalámbrico premium se encuentra con la domótica inteligente"
   },
-  "category": [
-    "music"
-  ],
+  "category": ["music"],
   "permissions": [],
   "images": {
     "small": "/assets/images/small.png",

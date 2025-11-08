@@ -50,13 +50,21 @@ body {
   justify-content: center;
   overflow: hidden;
   position: relative;
-  box-shadow: var(--homey-shadow-medium, 0 4px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1));
+  box-shadow: var(
+    --homey-shadow-medium,
+    0 4px 16px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1)
+  );
 }
 
 @media (prefers-color-scheme: dark) {
   .album-art {
     background: var(--homey-color-background, #2a2a2a);
-    box-shadow: var(--homey-shadow-medium, 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3));
+    box-shadow: var(
+      --homey-shadow-medium,
+      0 4px 16px rgba(0, 0, 0, 0.4),
+      0 2px 4px rgba(0, 0, 0, 0.3)
+    );
   }
 }
 
@@ -133,7 +141,10 @@ body {
 }
 
 .control-btn:hover {
-  background: var(--homey-color-background-interactive-hover, rgba(0, 0, 0, 0.1));
+  background: var(
+    --homey-color-background-interactive-hover,
+    rgba(0, 0, 0, 0.1)
+  );
   transform: scale(1.05);
 }
 
@@ -144,7 +155,7 @@ body {
 .control-btn.play-btn {
   width: 56px;
   height: 56px;
-  background: var(--homey-color-primary, #003DA5);
+  background: var(--homey-color-primary, #003da5);
   color: var(--homey-color-text-on-primary, #ffffff);
 }
 
@@ -154,16 +165,25 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .control-btn {
-    background: var(--homey-color-background-interactive, rgba(255, 255, 255, 0.1));
+    background: var(
+      --homey-color-background-interactive,
+      rgba(255, 255, 255, 0.1)
+    );
     color: var(--homey-color-text-primary, #ffffff);
   }
-  
+
   .control-btn:hover {
-    background: var(--homey-color-background-interactive-hover, rgba(255, 255, 255, 0.2));
+    background: var(
+      --homey-color-background-interactive-hover,
+      rgba(255, 255, 255, 0.2)
+    );
   }
-  
+
   .control-btn:disabled:hover {
-    background: var(--homey-color-background-interactive, rgba(255, 255, 255, 0.1));
+    background: var(
+      --homey-color-background-interactive,
+      rgba(255, 255, 255, 0.1)
+    );
   }
 }
 
@@ -265,7 +285,7 @@ body {
 }
 
 .album-art.loading::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(

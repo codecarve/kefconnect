@@ -54,7 +54,11 @@ export class KEFSpeaker {
   private repeatMode: KEFRepeatMode = "none";
   private shuffleMode: KEFShuffleMode = "none";
 
-  constructor(ip: string, port: number = 80, logger?: (message: string) => void) {
+  constructor(
+    ip: string,
+    port: number = 80,
+    logger?: (message: string) => void,
+  ) {
     this.ip = ip;
     this.port = port;
     this.logger = logger;
@@ -87,7 +91,7 @@ export class KEFSpeaker {
 
       const req = http.request(options, (res) => {
         // Set encoding to handle special characters properly
-        res.setEncoding('utf8');
+        res.setEncoding("utf8");
         let data = "";
 
         res.on("data", (chunk) => {
@@ -164,7 +168,7 @@ export class KEFSpeaker {
       // Send standby command
       const value = JSON.stringify({
         type: "kefPhysicalSource",
-        kefPhysicalSource: "standby"
+        kefPhysicalSource: "standby",
       });
       await this.setData("settings:/kef/play/physicalSource", value);
     }
@@ -191,7 +195,7 @@ export class KEFSpeaker {
   async setSource(source: KEFSource): Promise<void> {
     const value = JSON.stringify({
       type: "kefPhysicalSource",
-      kefPhysicalSource: source
+      kefPhysicalSource: source,
     });
     await this.setData("settings:/kef/play/physicalSource", value);
   }
@@ -213,7 +217,7 @@ export class KEFSpeaker {
     const vol = Math.min(100, Math.max(0, Math.round(volume)));
     const value = JSON.stringify({
       type: "i32_",
-      i32_: vol
+      i32_: vol,
     });
     await this.setData("player:volume", value);
   }
@@ -228,10 +232,9 @@ export class KEFSpeaker {
     await this.setVolume(current - step);
   }
 
-
   // Playback Control
   async play(): Promise<void> {
-    this.log('[play] Play requested');
+    this.log("[play] Play requested");
 
     try {
       const response = await this.getData("player:player/data");
@@ -239,13 +242,13 @@ export class KEFSpeaker {
         const playerData = response[0];
         this.log(`[play] Current state: ${playerData.state}`);
 
-        if (playerData.state === 'paused' || playerData.state === 'stopped') {
+        if (playerData.state === "paused" || playerData.state === "stopped") {
           // Use pause command as toggle - it works for both paused and stopped states
           // when using external players like Spotify Connect
-          this.log('[play] Sending pause command to toggle playback');
+          this.log("[play] Sending pause command to toggle playback");
           await this.sendPauseCommand();
-        } else if (playerData.state === 'playing') {
-          this.log('[play] Already playing, no action needed');
+        } else if (playerData.state === "playing") {
+          this.log("[play] Already playing, no action needed");
         }
       }
     } catch (error) {
@@ -256,13 +259,13 @@ export class KEFSpeaker {
   }
 
   async pause(): Promise<void> {
-    this.log('[pause] Sending pause command');
+    this.log("[pause] Sending pause command");
     await this.sendPauseCommand();
   }
 
   // Internal method to send actual play command
   private async sendPlayCommand(): Promise<void> {
-    this.log('[sendPlayCommand] Sending play command');
+    this.log("[sendPlayCommand] Sending play command");
 
     const value = '{"control":"play"}';
     const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
@@ -274,7 +277,7 @@ export class KEFSpeaker {
 
       // Check if the API returned an error
       if (response && response.error) {
-        const errorMessage = response.error.message || 'Operation failed';
+        const errorMessage = response.error.message || "Operation failed";
         this.log(`[sendPlayCommand] API Error: ${errorMessage}`);
         throw new Error(errorMessage);
       }
@@ -286,7 +289,9 @@ export class KEFSpeaker {
 
   // Internal method to send pause command (used as toggle for external players)
   private async sendPauseCommand(): Promise<void> {
-    this.log('[sendPauseCommand] Sending pause command (acts as toggle for external players)');
+    this.log(
+      "[sendPauseCommand] Sending pause command (acts as toggle for external players)",
+    );
 
     const value = '{"control":"pause"}';
     const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
@@ -298,7 +303,7 @@ export class KEFSpeaker {
 
       // Check if the API returned an error
       if (response && response.error) {
-        const errorMessage = response.error.message || 'Operation failed';
+        const errorMessage = response.error.message || "Operation failed";
         this.log(`[sendPauseCommand] API Error: ${errorMessage}`);
         throw new Error(errorMessage);
       }
@@ -312,10 +317,10 @@ export class KEFSpeaker {
     try {
       const isPlaying = await this.isPlaying();
       if (isPlaying) {
-        this.log('[togglePlayPause] Currently playing, sending pause');
+        this.log("[togglePlayPause] Currently playing, sending pause");
         await this.pause();
       } else {
-        this.log('[togglePlayPause] Not playing, sending play');
+        this.log("[togglePlayPause] Not playing, sending play");
         await this.play();
       }
     } catch (error) {
@@ -324,7 +329,7 @@ export class KEFSpeaker {
   }
 
   async nextTrack(): Promise<void> {
-    this.log('[nextTrack] Attempting to skip to next track');
+    this.log("[nextTrack] Attempting to skip to next track");
 
     const value = '{"control":"next"}';
     const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
@@ -336,7 +341,7 @@ export class KEFSpeaker {
 
       // Check if the API returned an error
       if (response && response.error) {
-        const errorMessage = response.error.message || 'Operation failed';
+        const errorMessage = response.error.message || "Operation failed";
         this.log(`[nextTrack] API Error: ${errorMessage}`);
         throw new Error(errorMessage);
       }
@@ -347,7 +352,7 @@ export class KEFSpeaker {
   }
 
   async previousTrack(): Promise<void> {
-    this.log('[previousTrack] Attempting to skip to previous track');
+    this.log("[previousTrack] Attempting to skip to previous track");
 
     const value = '{"control":"previous"}';
     const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
@@ -359,7 +364,7 @@ export class KEFSpeaker {
 
       // Check if the API returned an error
       if (response && response.error) {
-        const errorMessage = response.error.message || 'Operation failed';
+        const errorMessage = response.error.message || "Operation failed";
         this.log(`[previousTrack] API Error: ${errorMessage}`);
         throw new Error(errorMessage);
       }
@@ -381,66 +386,92 @@ export class KEFSpeaker {
   }
 
   // Helper to get model info from web interface
-  private async getModelFromWebInterface(): Promise<{ model?: string, version?: string }> {
+  private async getModelFromWebInterface(): Promise<{
+    model?: string;
+    version?: string;
+  }> {
     return new Promise((resolve) => {
       const options: http.RequestOptions = {
         hostname: this.ip,
         port: this.port,
-        path: '/',
-        method: 'GET',
+        path: "/",
+        method: "GET",
         timeout: 3000,
       };
 
       const req = http.request(options, (res) => {
         // Follow redirect if needed
         if (res.statusCode === 301 || res.statusCode === 302) {
-          const redirectPath = res.headers.location || '/index.fcgi';
-          this.log(`[getModelFromWebInterface] Following redirect to: ${redirectPath}`);
+          const redirectPath = res.headers.location || "/index.fcgi";
+          this.log(
+            `[getModelFromWebInterface] Following redirect to: ${redirectPath}`,
+          );
 
           const redirectOptions: http.RequestOptions = {
             hostname: this.ip,
             port: this.port,
             path: redirectPath,
-            method: 'GET',
+            method: "GET",
             timeout: 3000,
           };
 
           const redirectReq = http.request(redirectOptions, (redirectRes) => {
-            let data = '';
-            redirectRes.on('data', (chunk) => {
+            let data = "";
+            redirectRes.on("data", (chunk) => {
               data += chunk;
             });
 
-            redirectRes.on('end', () => {
-              const result: { model?: string, version?: string } = {};
+            redirectRes.on("end", () => {
+              const result: { model?: string; version?: string } = {};
 
               // First try to parse the title tag for model (most reliable)
               const titleMatch = data.match(/<title>([^<]+)<\/title>/i);
               if (titleMatch && titleMatch[1]) {
                 const title = titleMatch[1];
-                this.log(`[getModelFromWebInterface] Found page title: ${title}`);
+                this.log(
+                  `[getModelFromWebInterface] Found page title: ${title}`,
+                );
 
                 // Parse title format: "KEF | MODEL | Homepage"
-                const titleParts = title.split('|').map(s => s.trim());
+                const titleParts = title.split("|").map((s) => s.trim());
                 if (titleParts.length >= 2) {
                   const modelFromTitle = titleParts[1];
-                  this.log(`[getModelFromWebInterface] Model from title: ${modelFromTitle}`);
+                  this.log(
+                    `[getModelFromWebInterface] Model from title: ${modelFromTitle}`,
+                  );
 
                   // Map the model names to our internal names
-                  if (modelFromTitle === 'LS50 Wireless II' || modelFromTitle === 'LS50WII' || modelFromTitle === 'LS50W2') {
-                    result.model = 'LS50 Wireless II';
-                  } else if (modelFromTitle === 'LS50 Wireless' || modelFromTitle === 'LS50W') {
-                    result.model = 'LS50 Wireless';
-                  } else if (modelFromTitle === 'LSX II' || modelFromTitle === 'LSX2' || modelFromTitle === 'LSXII') {
-                    result.model = 'LSX II';
-                  } else if (modelFromTitle === 'LSX II LT' || modelFromTitle === 'LSX2LT') {
-                    result.model = 'LSX II LT';
-                  } else if (modelFromTitle === 'LSX') {
-                    result.model = 'LSX';
-                  } else if (modelFromTitle === 'LS60 Wireless' || modelFromTitle === 'LS60') {
-                    result.model = 'LS60 Wireless';
-                  } else if (modelFromTitle === 'XIO') {
-                    result.model = 'XIO';
+                  if (
+                    modelFromTitle === "LS50 Wireless II" ||
+                    modelFromTitle === "LS50WII" ||
+                    modelFromTitle === "LS50W2"
+                  ) {
+                    result.model = "LS50 Wireless II";
+                  } else if (
+                    modelFromTitle === "LS50 Wireless" ||
+                    modelFromTitle === "LS50W"
+                  ) {
+                    result.model = "LS50 Wireless";
+                  } else if (
+                    modelFromTitle === "LSX II" ||
+                    modelFromTitle === "LSX2" ||
+                    modelFromTitle === "LSXII"
+                  ) {
+                    result.model = "LSX II";
+                  } else if (
+                    modelFromTitle === "LSX II LT" ||
+                    modelFromTitle === "LSX2LT"
+                  ) {
+                    result.model = "LSX II LT";
+                  } else if (modelFromTitle === "LSX") {
+                    result.model = "LSX";
+                  } else if (
+                    modelFromTitle === "LS60 Wireless" ||
+                    modelFromTitle === "LS60"
+                  ) {
+                    result.model = "LS60 Wireless";
+                  } else if (modelFromTitle === "XIO") {
+                    result.model = "XIO";
                   } else {
                     // Use the title model as-is if we don't have a mapping
                     result.model = modelFromTitle;
@@ -453,24 +484,26 @@ export class KEFSpeaker {
                 const releaseMatch = data.match(/Release status:\s*([^<\s]+)/);
                 if (releaseMatch && releaseMatch[1]) {
                   // Extract model from release status (e.g., "LS50WII_V37165" -> "LS50WII")
-                  const modelPart = releaseMatch[1].split('_')[0];
-                  this.log(`[getModelFromWebInterface] Found release status: ${releaseMatch[1]}, model: ${modelPart}`);
+                  const modelPart = releaseMatch[1].split("_")[0];
+                  this.log(
+                    `[getModelFromWebInterface] Found release status: ${releaseMatch[1]}, model: ${modelPart}`,
+                  );
 
                   // Map the model codes to friendly names
-                  if (modelPart === 'LS50WII' || modelPart === 'LS50W2') {
-                    result.model = 'LS50 Wireless II';
-                  } else if (modelPart === 'LS50W') {
-                    result.model = 'LS50 Wireless';
-                  } else if (modelPart === 'LSX2' || modelPart === 'LSXII') {
-                    result.model = 'LSX II';
-                  } else if (modelPart === 'LSX2LT') {
-                    result.model = 'LSX II LT';
-                  } else if (modelPart === 'LSX') {
-                    result.model = 'LSX';
-                  } else if (modelPart === 'LS60') {
-                    result.model = 'LS60 Wireless';
-                  } else if (modelPart === 'XIO') {
-                    result.model = 'XIO';
+                  if (modelPart === "LS50WII" || modelPart === "LS50W2") {
+                    result.model = "LS50 Wireless II";
+                  } else if (modelPart === "LS50W") {
+                    result.model = "LS50 Wireless";
+                  } else if (modelPart === "LSX2" || modelPart === "LSXII") {
+                    result.model = "LSX II";
+                  } else if (modelPart === "LSX2LT") {
+                    result.model = "LSX II LT";
+                  } else if (modelPart === "LSX") {
+                    result.model = "LSX";
+                  } else if (modelPart === "LS60") {
+                    result.model = "LS60 Wireless";
+                  } else if (modelPart === "XIO") {
+                    result.model = "XIO";
                   }
                 }
               }
@@ -479,28 +512,32 @@ export class KEFSpeaker {
               const versionMatch = data.match(/Device version:\s*([^<\s]+)/);
               if (versionMatch && versionMatch[1]) {
                 result.version = versionMatch[1];
-                this.log(`[getModelFromWebInterface] Found device version: ${versionMatch[1]}`);
+                this.log(
+                  `[getModelFromWebInterface] Found device version: ${versionMatch[1]}`,
+                );
               }
 
               resolve(result);
             });
           });
 
-          redirectReq.on('error', (error) => {
-            this.log('[getModelFromWebInterface] Error fetching redirect: ' + error);
+          redirectReq.on("error", (error) => {
+            this.log(
+              "[getModelFromWebInterface] Error fetching redirect: " + error,
+            );
             resolve({});
           });
 
           redirectReq.end();
         } else {
           // Try to parse directly if no redirect
-          let data = '';
-          res.on('data', (chunk) => {
+          let data = "";
+          res.on("data", (chunk) => {
             data += chunk;
           });
 
-          res.on('end', () => {
-            const result: { model?: string, version?: string } = {};
+          res.on("end", () => {
+            const result: { model?: string; version?: string } = {};
 
             // First try to parse the title tag for model (most reliable)
             const titleMatch = data.match(/<title>([^<]+)<\/title>/i);
@@ -509,26 +546,45 @@ export class KEFSpeaker {
               this.log(`[getModelFromWebInterface] Found page title: ${title}`);
 
               // Parse title format: "KEF | MODEL | Homepage"
-              const titleParts = title.split('|').map(s => s.trim());
+              const titleParts = title.split("|").map((s) => s.trim());
               if (titleParts.length >= 2) {
                 const modelFromTitle = titleParts[1];
-                this.log(`[getModelFromWebInterface] Model from title: ${modelFromTitle}`);
+                this.log(
+                  `[getModelFromWebInterface] Model from title: ${modelFromTitle}`,
+                );
 
                 // Map the model names to our internal names
-                if (modelFromTitle === 'LS50 Wireless II' || modelFromTitle === 'LS50WII' || modelFromTitle === 'LS50W2') {
-                  result.model = 'LS50 Wireless II';
-                } else if (modelFromTitle === 'LS50 Wireless' || modelFromTitle === 'LS50W') {
-                  result.model = 'LS50 Wireless';
-                } else if (modelFromTitle === 'LSX II' || modelFromTitle === 'LSX2' || modelFromTitle === 'LSXII') {
-                  result.model = 'LSX II';
-                } else if (modelFromTitle === 'LSX II LT' || modelFromTitle === 'LSX2LT') {
-                  result.model = 'LSX II LT';
-                } else if (modelFromTitle === 'LSX') {
-                  result.model = 'LSX';
-                } else if (modelFromTitle === 'LS60 Wireless' || modelFromTitle === 'LS60') {
-                  result.model = 'LS60 Wireless';
-                } else if (modelFromTitle === 'XIO') {
-                  result.model = 'XIO';
+                if (
+                  modelFromTitle === "LS50 Wireless II" ||
+                  modelFromTitle === "LS50WII" ||
+                  modelFromTitle === "LS50W2"
+                ) {
+                  result.model = "LS50 Wireless II";
+                } else if (
+                  modelFromTitle === "LS50 Wireless" ||
+                  modelFromTitle === "LS50W"
+                ) {
+                  result.model = "LS50 Wireless";
+                } else if (
+                  modelFromTitle === "LSX II" ||
+                  modelFromTitle === "LSX2" ||
+                  modelFromTitle === "LSXII"
+                ) {
+                  result.model = "LSX II";
+                } else if (
+                  modelFromTitle === "LSX II LT" ||
+                  modelFromTitle === "LSX2LT"
+                ) {
+                  result.model = "LSX II LT";
+                } else if (modelFromTitle === "LSX") {
+                  result.model = "LSX";
+                } else if (
+                  modelFromTitle === "LS60 Wireless" ||
+                  modelFromTitle === "LS60"
+                ) {
+                  result.model = "LS60 Wireless";
+                } else if (modelFromTitle === "XIO") {
+                  result.model = "XIO";
                 } else {
                   // Use the title model as-is if we don't have a mapping
                   result.model = modelFromTitle;
@@ -540,23 +596,25 @@ export class KEFSpeaker {
             if (!result.model) {
               const releaseMatch = data.match(/Release status:\s*([^<\s]+)/);
               if (releaseMatch && releaseMatch[1]) {
-                const modelPart = releaseMatch[1].split('_')[0];
-                this.log(`[getModelFromWebInterface] Found release status: ${releaseMatch[1]}, model: ${modelPart}`);
+                const modelPart = releaseMatch[1].split("_")[0];
+                this.log(
+                  `[getModelFromWebInterface] Found release status: ${releaseMatch[1]}, model: ${modelPart}`,
+                );
 
-                if (modelPart === 'LS50WII' || modelPart === 'LS50W2') {
-                  result.model = 'LS50 Wireless II';
-                } else if (modelPart === 'LS50W') {
-                  result.model = 'LS50 Wireless';
-                } else if (modelPart === 'LSX2' || modelPart === 'LSXII') {
-                  result.model = 'LSX II';
-                } else if (modelPart === 'LSX2LT') {
-                  result.model = 'LSX II LT';
-                } else if (modelPart === 'LSX') {
-                  result.model = 'LSX';
-                } else if (modelPart === 'LS60') {
-                  result.model = 'LS60 Wireless';
-                } else if (modelPart === 'XIO') {
-                  result.model = 'XIO';
+                if (modelPart === "LS50WII" || modelPart === "LS50W2") {
+                  result.model = "LS50 Wireless II";
+                } else if (modelPart === "LS50W") {
+                  result.model = "LS50 Wireless";
+                } else if (modelPart === "LSX2" || modelPart === "LSXII") {
+                  result.model = "LSX II";
+                } else if (modelPart === "LSX2LT") {
+                  result.model = "LSX II LT";
+                } else if (modelPart === "LSX") {
+                  result.model = "LSX";
+                } else if (modelPart === "LS60") {
+                  result.model = "LS60 Wireless";
+                } else if (modelPart === "XIO") {
+                  result.model = "XIO";
                 }
               }
             }
@@ -565,7 +623,9 @@ export class KEFSpeaker {
             const versionMatch = data.match(/Device version:\s*([^<\s]+)/);
             if (versionMatch && versionMatch[1]) {
               result.version = versionMatch[1];
-              this.log(`[getModelFromWebInterface] Found device version: ${versionMatch[1]}`);
+              this.log(
+                `[getModelFromWebInterface] Found device version: ${versionMatch[1]}`,
+              );
             }
 
             resolve(result);
@@ -573,14 +633,16 @@ export class KEFSpeaker {
         }
       });
 
-      req.on('error', (error) => {
-        this.log('[getModelFromWebInterface] Error fetching web interface: ' + error);
+      req.on("error", (error) => {
+        this.log(
+          "[getModelFromWebInterface] Error fetching web interface: " + error,
+        );
         resolve({});
       });
 
-      req.on('timeout', () => {
+      req.on("timeout", () => {
         req.destroy();
-        this.log('[getModelFromWebInterface] Timeout fetching web interface');
+        this.log("[getModelFromWebInterface] Timeout fetching web interface");
         resolve({});
       });
 
@@ -591,7 +653,9 @@ export class KEFSpeaker {
   // Speaker Information
   async getSpeakerInfo(): Promise<KEFSpeakerInfo> {
     const startTime = Date.now();
-    this.log("[getSpeakerInfo] ========== Starting to fetch speaker information ==========");
+    this.log(
+      "[getSpeakerInfo] ========== Starting to fetch speaker information ==========",
+    );
     this.log(`[getSpeakerInfo] Target IP: ${this.ip}, Port: ${this.port}`);
 
     const info: KEFSpeakerInfo = {
@@ -608,28 +672,30 @@ export class KEFSpeaker {
 
       // Web interface promise
       const webPromise = this.getModelFromWebInterface()
-        .then(res => ({type: 'web', data: res}))
-        .catch(err => ({type: 'web', error: err}));
+        .then((res) => ({ type: "web", data: res }))
+        .catch((err) => ({ type: "web", error: err }));
       allPromises.push(webPromise);
 
       // API promises - all paths that might work
       const apiPaths = [
-        {path: "settings:/kef/host/serialNumber", type: 'serial'},
-        {path: "settings:/kef/host/firmwareVersion", type: 'firmware'},
-        {path: "settings:/kef/host/speakerName", type: 'name1'},
-        {path: "settings:/deviceName", type: 'name2'},  // Most successful name path based on logs
-        {path: "settings:/system/deviceName", type: 'name3'}
+        { path: "settings:/kef/host/serialNumber", type: "serial" },
+        { path: "settings:/kef/host/firmwareVersion", type: "firmware" },
+        { path: "settings:/kef/host/speakerName", type: "name1" },
+        { path: "settings:/deviceName", type: "name2" }, // Most successful name path based on logs
+        { path: "settings:/system/deviceName", type: "name3" },
       ];
 
-      for (const {path, type} of apiPaths) {
+      for (const { path, type } of apiPaths) {
         const promise = this.getData(path)
-          .then(res => ({type, data: res, path}))
-          .catch(err => ({type, error: err, path}));
+          .then((res) => ({ type, data: res, path }))
+          .catch((err) => ({ type, error: err, path }));
         allPromises.push(promise);
       }
 
       // Execute all requests in parallel
-      this.log(`[getSpeakerInfo] Executing ${allPromises.length} requests in parallel...`);
+      this.log(
+        `[getSpeakerInfo] Executing ${allPromises.length} requests in parallel...`,
+      );
       const allResults = await Promise.all(allPromises);
       const totalElapsed = Date.now() - startTime;
       this.log(`[getSpeakerInfo] All requests completed in ${totalElapsed}ms`);
@@ -638,7 +704,7 @@ export class KEFSpeaker {
       let nameFound = false;
 
       for (const result of allResults) {
-        if (result.type === 'web') {
+        if (result.type === "web") {
           if (!result.error && result.data) {
             if (result.data.model) {
               info.model = result.data.model;
@@ -646,33 +712,42 @@ export class KEFSpeaker {
             }
             if (result.data.version) {
               info.firmware = result.data.version;
-              this.log(`[getSpeakerInfo] ✓ Firmware from web: "${info.firmware}"`);
+              this.log(
+                `[getSpeakerInfo] ✓ Firmware from web: "${info.firmware}"`,
+              );
             }
           } else {
-            this.log(`[getSpeakerInfo] ✗ Web interface failed: ${result.error}`);
+            this.log(
+              `[getSpeakerInfo] ✗ Web interface failed: ${result.error}`,
+            );
           }
-        } else if (result.type === 'serial') {
+        } else if (result.type === "serial") {
           if (!result.error && result.data && result.data[0]) {
-            const serialValue = result.data[0].serialNumber || result.data[0].string_;
+            const serialValue =
+              result.data[0].serialNumber || result.data[0].string_;
             if (serialValue) {
               info.serialNumber = serialValue;
-              this.log(`[getSpeakerInfo] ✓ Serial number: "${info.serialNumber}"`);
+              this.log(
+                `[getSpeakerInfo] ✓ Serial number: "${info.serialNumber}"`,
+              );
 
               // Model detection from serial if still unknown
               if (info.model === "Unknown" && info.serialNumber) {
                 const serial = info.serialNumber.toUpperCase();
                 const modelMap: { [key: string]: string } = {
-                  'LSW': 'LS50 Wireless',
-                  'LS50W2': 'LS50 Wireless II',
-                  'LSX2': 'LSX II',
-                  'LSX': 'LSX',
-                  'LS60': 'LS60 Wireless'
+                  LSW: "LS50 Wireless",
+                  LS50W2: "LS50 Wireless II",
+                  LSX2: "LSX II",
+                  LSX: "LSX",
+                  LS60: "LS60 Wireless",
                 };
 
                 for (const [prefix, model] of Object.entries(modelMap)) {
                   if (serial.startsWith(prefix)) {
                     info.model = model;
-                    this.log(`[getSpeakerInfo] ✓ Model from serial: "${info.model}"`);
+                    this.log(
+                      `[getSpeakerInfo] ✓ Model from serial: "${info.model}"`,
+                    );
                     break;
                   }
                 }
@@ -681,30 +756,35 @@ export class KEFSpeaker {
           } else if (result.error) {
             this.log(`[getSpeakerInfo] ✗ Serial API error`);
           }
-        } else if (result.type === 'firmware') {
+        } else if (result.type === "firmware") {
           if (!result.error && result.data && result.data[0]) {
-            const fwValue = result.data[0].firmwareVersion || result.data[0].string_;
+            const fwValue =
+              result.data[0].firmwareVersion || result.data[0].string_;
             if (fwValue && !info.firmware) {
               info.firmware = fwValue;
-              this.log(`[getSpeakerInfo] ✓ Firmware from API: "${info.firmware}"`);
+              this.log(
+                `[getSpeakerInfo] ✓ Firmware from API: "${info.firmware}"`,
+              );
             }
           } else if (result.error) {
             this.log(`[getSpeakerInfo] ✗ Firmware API error`);
           }
-        } else if (result.type.startsWith('name') && !nameFound) {
+        } else if (result.type.startsWith("name") && !nameFound) {
           if (!result.error && result.data && result.data[0]) {
-            const nameValue = result.data[0].speakerName ||
+            const nameValue =
+              result.data[0].speakerName ||
               result.data[0].deviceName ||
               result.data[0].string_;
             if (nameValue && nameValue !== "KEF Speaker") {
               info.name = nameValue;
               nameFound = true;
-              this.log(`[getSpeakerInfo] ✓ Name from ${result.path}: "${info.name}"`);
+              this.log(
+                `[getSpeakerInfo] ✓ Name from ${result.path}: "${info.name}"`,
+              );
             }
           }
         }
       }
-
     } catch (error) {
       this.log(`[getSpeakerInfo] ✗✗✗ Critical error: ${error}`);
     }
@@ -714,8 +794,10 @@ export class KEFSpeaker {
     this.log(`[getSpeakerInfo] Total execution time: ${totalTime}ms`);
     this.log(`[getSpeakerInfo] Name: "${info.name}"`);
     this.log(`[getSpeakerInfo] Model: "${info.model}"`);
-    this.log(`[getSpeakerInfo] Firmware: "${info.firmware || 'Not detected'}"`);
-    this.log(`[getSpeakerInfo] Serial: "${info.serialNumber || 'Not detected'}"`);
+    this.log(`[getSpeakerInfo] Firmware: "${info.firmware || "Not detected"}"`);
+    this.log(
+      `[getSpeakerInfo] Serial: "${info.serialNumber || "Not detected"}"`,
+    );
     this.log(`[getSpeakerInfo] IP: "${info.ip}"`);
     this.log("[getSpeakerInfo] ========================================");
 
@@ -726,7 +808,6 @@ export class KEFSpeaker {
   async getAlbumArtUrl(): Promise<string | null> {
     try {
       const trackResponse = await this.getData("player:player/data");
-
 
       if (!trackResponse) {
         return null;
@@ -765,7 +846,7 @@ export class KEFSpeaker {
         return null;
       }
 
-      if (playerData.state === 'stopped') {
+      if (playerData.state === "stopped") {
         return null;
       }
 
@@ -780,7 +861,11 @@ export class KEFSpeaker {
         albumArtUrl = playerData.icon;
       }
       // 3. Check for nested player object
-      else if (playerData.player && playerData.player.trackRoles && playerData.player.trackRoles.icon) {
+      else if (
+        playerData.player &&
+        playerData.player.trackRoles &&
+        playerData.player.trackRoles.icon
+      ) {
         albumArtUrl = playerData.player.trackRoles.icon;
       }
 
@@ -810,8 +895,8 @@ export class KEFSpeaker {
         const track = trackResponse[0];
 
         // Skip if player is stopped
-        if (track.state === 'stopped') {
-          this.log('[getPlaybackInfo] Player is stopped');
+        if (track.state === "stopped") {
+          this.log("[getPlaybackInfo] Player is stopped");
           return info;
         }
 
@@ -820,14 +905,16 @@ export class KEFSpeaker {
 
         // Try multiple paths to extract metadata
         if (track.trackRoles) {
-
           // Title is directly in trackRoles
           if (track.trackRoles.title) {
             info.title = track.trackRoles.title;
           }
 
           // Artist and album are in mediaData.metaData
-          if (track.trackRoles.mediaData && track.trackRoles.mediaData.metaData) {
+          if (
+            track.trackRoles.mediaData &&
+            track.trackRoles.mediaData.metaData
+          ) {
             const metaData = track.trackRoles.mediaData.metaData;
             if (metaData.artist) {
               info.artist = metaData.artist;
@@ -838,8 +925,12 @@ export class KEFSpeaker {
           }
 
           // Duration is in mediaData.resources
-          if (track.trackRoles.mediaData && track.trackRoles.mediaData.resources &&
-            track.trackRoles.mediaData.resources[0] && track.trackRoles.mediaData.resources[0].duration) {
+          if (
+            track.trackRoles.mediaData &&
+            track.trackRoles.mediaData.resources &&
+            track.trackRoles.mediaData.resources[0] &&
+            track.trackRoles.mediaData.resources[0].duration
+          ) {
             info.duration = track.trackRoles.mediaData.resources[0].duration;
           }
 
@@ -916,7 +1007,6 @@ export class KEFSpeaker {
     }
   }
 
-
   // Get all current settings
   async getAllSettings(): Promise<KEFSettings> {
     const settings: KEFSettings = {};
@@ -952,7 +1042,6 @@ export class KEFSpeaker {
 
     return settings;
   }
-
 
   // Repeat and Shuffle Management
   // Note: KEF speakers show available playMode options when playing via WiFi/Roon

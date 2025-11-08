@@ -240,12 +240,12 @@ export class KEFBaseDevice extends Homey.Device {
 
   private registerCapabilities() {
     // Power control
-    // if (this.hasCapability("onoff")) {
-    //   this.registerCapabilityListener(
-    //     "onoff",
-    //     this.onCapabilityOnoff.bind(this),
-    //   );
-    // }
+    if (this.hasCapability("onoff")) {
+      this.registerCapabilityListener(
+        "onoff",
+        this.onCapabilityOnoff.bind(this),
+      );
+    }
 
     // Volume control
     if (this.hasCapability("volume_set")) {
@@ -323,15 +323,15 @@ export class KEFBaseDevice extends Homey.Device {
   }
 
   // Capability handlers
-  // async onCapabilityOnoff(value: boolean) {
-  //   try {
-  //     await this.speaker.setPowerState(value);
-  //     this.log("Power set to:", value);
-  //   } catch (error) {
-  //     this.error("Error setting power:", error);
-  //     throw new Error("Failed to set power state");
-  //   }
-  // }
+  async onCapabilityOnoff(value: boolean) {
+    try {
+      await this.speaker.setPowerState(value);
+      this.log("Power set to:", value);
+    } catch (error) {
+      this.error("Error setting power:", error);
+      throw new Error("Failed to set power state");
+    }
+  }
 
   async onCapabilityVolume(value: number) {
     try {
@@ -523,6 +523,13 @@ export class KEFBaseDevice extends Homey.Device {
   }
 
   private async updateCapabilities(settings: KEFSettings) {
+    // Update power state
+    if (this.hasCapability("onoff")) {
+      const powerState =
+        settings.standby !== undefined ? !settings.standby : true;
+      await this.setCapabilityValue("onoff", powerState).catch(this.error);
+    }
+
     // Update volume
     if (settings.volume !== undefined && this.hasCapability("volume_set")) {
       await this.setCapabilityValue("volume_set", settings.volume / 100).catch(

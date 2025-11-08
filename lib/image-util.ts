@@ -1,4 +1,4 @@
-import Homey from 'homey';
+import Homey from "homey";
 
 /**
  * Image utility functions for handling album art
@@ -27,7 +27,12 @@ export class ImageUtil {
    * @param logger - Optional: Logger function for debugging
    * @returns Promise that resolves when the image is updated
    */
-  static async updateAlbumArt(image: any, url: string | null, allowedHost?: string, logger?: (message: string) => void): Promise<void> {
+  static async updateAlbumArt(
+    image: any,
+    url: string | null,
+    allowedHost?: string,
+    logger?: (message: string) => void,
+  ): Promise<void> {
     try {
       if (url) {
         if (logger) {
@@ -35,7 +40,7 @@ export class ImageUtil {
         }
 
         // Validate URL format
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
           if (logger) {
             logger(`[ImageUtil.updateAlbumArt] Invalid URL format: ${url}`);
           }
@@ -47,19 +52,23 @@ export class ImageUtil {
           const urlObj = new URL(url);
           if (urlObj.hostname !== allowedHost) {
             if (logger) {
-              logger(`[ImageUtil.updateAlbumArt] Security: URL host ${urlObj.hostname} does not match speaker IP ${allowedHost}`);
+              logger(
+                `[ImageUtil.updateAlbumArt] Security: URL host ${urlObj.hostname} does not match speaker IP ${allowedHost}`,
+              );
             }
-            throw new Error(`Album art URL must be from the speaker at ${allowedHost}`);
+            throw new Error(
+              `Album art URL must be from the speaker at ${allowedHost}`,
+            );
           }
         }
 
         // Use setStream to fetch the image from the KEF speaker
         // This is more reliable for external URLs
         image.setStream(async (stream: any) => {
-          const http = require('http');
-          const https = require('https');
+          const http = require("http");
+          const https = require("https");
           const urlParts = new URL(url);
-          const client = url.startsWith('https://') ? https : http;
+          const client = url.startsWith("https://") ? https : http;
 
           return new Promise((resolve, reject) => {
             let request: any = null;
@@ -73,74 +82,102 @@ export class ImageUtil {
             };
 
             // Security: Add size limit check via response headers
-            request = client.get({
-              hostname: urlParts.hostname,
-              port: urlParts.port || (url.startsWith('https://') ? 443 : 80),
-              path: urlParts.pathname + urlParts.search,
-              timeout: 5000
-            }, (response: any) => {
-              if (logger) {
-                logger(`[ImageUtil.updateAlbumArt] Response status: ${response.statusCode}`);
-                logger(`[ImageUtil.updateAlbumArt] Response headers: ${JSON.stringify(response.headers)}`);
-              }
-
-              // Security: Check content length to prevent excessively large downloads
-              const contentLength = parseInt(response.headers['content-length'] || '0', 10);
-              const maxSize = 5 * 1024 * 1024; // 5MB limit
-              if (contentLength > maxSize) {
+            request = client.get(
+              {
+                hostname: urlParts.hostname,
+                port: urlParts.port || (url.startsWith("https://") ? 443 : 80),
+                path: urlParts.pathname + urlParts.search,
+                timeout: 5000,
+              },
+              (response: any) => {
                 if (logger) {
-                  logger(`[ImageUtil.updateAlbumArt] Image too large: ${contentLength} bytes`);
+                  logger(
+                    `[ImageUtil.updateAlbumArt] Response status: ${response.statusCode}`,
+                  );
+                  logger(
+                    `[ImageUtil.updateAlbumArt] Response headers: ${JSON.stringify(response.headers)}`,
+                  );
                 }
-                response.destroy();
-                cleanup();
-                responseHandled = true;
-                reject(new Error(`Album art too large: ${contentLength} bytes (max ${maxSize} bytes)`));
-                return;
-              }
 
-              if (response.statusCode === 200) {
-                // Track bytes received to enforce size limit even without content-length header
-                let bytesReceived = 0;
-                response.on('data', (chunk: Buffer) => {
-                  bytesReceived += chunk.length;
-                  if (bytesReceived > maxSize) {
-                    if (logger) {
-                      logger(`[ImageUtil.updateAlbumArt] Stream exceeded size limit: ${bytesReceived} bytes`);
+                // Security: Check content length to prevent excessively large downloads
+                const contentLength = parseInt(
+                  response.headers["content-length"] || "0",
+                  10,
+                );
+                const maxSize = 5 * 1024 * 1024; // 5MB limit
+                if (contentLength > maxSize) {
+                  if (logger) {
+                    logger(
+                      `[ImageUtil.updateAlbumArt] Image too large: ${contentLength} bytes`,
+                    );
+                  }
+                  response.destroy();
+                  cleanup();
+                  responseHandled = true;
+                  reject(
+                    new Error(
+                      `Album art too large: ${contentLength} bytes (max ${maxSize} bytes)`,
+                    ),
+                  );
+                  return;
+                }
+
+                if (response.statusCode === 200) {
+                  // Track bytes received to enforce size limit even without content-length header
+                  let bytesReceived = 0;
+                  response.on("data", (chunk: Buffer) => {
+                    bytesReceived += chunk.length;
+                    if (bytesReceived > maxSize) {
+                      if (logger) {
+                        logger(
+                          `[ImageUtil.updateAlbumArt] Stream exceeded size limit: ${bytesReceived} bytes`,
+                        );
+                      }
+                      response.destroy();
+                      cleanup();
+                      if (!responseHandled) {
+                        responseHandled = true;
+                        reject(
+                          new Error(
+                            `Album art stream too large: ${bytesReceived} bytes (max ${maxSize} bytes)`,
+                          ),
+                        );
+                      }
                     }
-                    response.destroy();
+                  });
+
+                  response.pipe(stream);
+                  response.on("end", () => {
+                    if (!responseHandled) {
+                      responseHandled = true;
+                      resolve(stream);
+                    }
+                  });
+                  response.on("error", (err: any) => {
                     cleanup();
                     if (!responseHandled) {
                       responseHandled = true;
-                      reject(new Error(`Album art stream too large: ${bytesReceived} bytes (max ${maxSize} bytes)`));
+                      reject(err);
                     }
+                  });
+                } else {
+                  if (logger) {
+                    logger(
+                      `[ImageUtil.updateAlbumArt] Failed with status: ${response.statusCode}`,
+                    );
                   }
-                });
-
-                response.pipe(stream);
-                response.on('end', () => {
-                  if (!responseHandled) {
-                    responseHandled = true;
-                    resolve(stream);
-                  }
-                });
-                response.on('error', (err: any) => {
                   cleanup();
-                  if (!responseHandled) {
-                    responseHandled = true;
-                    reject(err);
-                  }
-                });
-              } else {
-                if (logger) {
-                  logger(`[ImageUtil.updateAlbumArt] Failed with status: ${response.statusCode}`);
+                  responseHandled = true;
+                  reject(
+                    new Error(
+                      `Failed to fetch album art: ${response.statusCode}`,
+                    ),
+                  );
                 }
-                cleanup();
-                responseHandled = true;
-                reject(new Error(`Failed to fetch album art: ${response.statusCode}`));
-              }
-            });
+              },
+            );
 
-            request.on('error', (err: any) => {
+            request.on("error", (err: any) => {
               if (logger) {
                 logger(`[ImageUtil.updateAlbumArt] Request error: ${err}`);
               }
@@ -150,19 +187,18 @@ export class ImageUtil {
                 reject(err);
               }
             });
-            request.on('timeout', () => {
+            request.on("timeout", () => {
               if (logger) {
-                logger('[ImageUtil.updateAlbumArt] Request timeout');
+                logger("[ImageUtil.updateAlbumArt] Request timeout");
               }
               cleanup();
               if (!responseHandled) {
                 responseHandled = true;
-                reject(new Error('Album art fetch timeout'));
+                reject(new Error("Album art fetch timeout"));
               }
             });
           });
         });
-
       } else {
         // Clear the image by setting to null path
         image.setPath(null);
@@ -170,7 +206,6 @@ export class ImageUtil {
 
       // Trigger update to refresh the UI
       await image.update();
-
     } catch (error) {
       if (logger) {
         logger(`[ImageUtil.updateAlbumArt] Error: ${error}`);
@@ -189,7 +224,7 @@ export class ImageUtil {
 
     try {
       const urlObj = new URL(url);
-      return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+      return urlObj.protocol === "http:" || urlObj.protocol === "https:";
     } catch {
       return false;
     }

@@ -1,4 +1,11 @@
 {
+  "0.1.7": {
+    "en": "Added power control",
+    "nl": "Aan/uit-bediening toegevoegd",
+    "fr": "Contrôle d'alimentation ajouté",
+    "de": "Stromsteuerung hinzugefügt",
+    "es": "Control de encendido añadido"
+  },
   "0.1.6": {
     "en": "🎉 Hello KEF! Premium wireless audio meets smart home automation",
     "nl": "🎉 Hallo KEF! Premium draadloze audio ontmoet smart home automatisering",

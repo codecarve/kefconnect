@@ -9,6 +9,7 @@ KEF Connect for Homey lets you control your KEF speakers directly from your smar
 **Source selection:** Switch between Wi‑Fi, Bluetooth, Optical, Coaxial, Analog, TV, and USB.
 
 **Room tuning (model-dependent):**
+
 - LS50 Wireless II, LS60 Wireless: Bass Extension, Desk Mode, Wall Mode, Balance.
 - LSX II, LSX II LT, XIO: Core controls and source selection.
 

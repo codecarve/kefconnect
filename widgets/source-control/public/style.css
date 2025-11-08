@@ -5,7 +5,16 @@
 }
 
 body {
-  font-family: var(--homey-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  font-family: var(
+    --homey-font-family,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif
+  );
   background: transparent;
   color: var(--homey-color-text-primary, #1a1a1a);
   height: 100vh;
@@ -28,7 +37,7 @@ body {
   body {
     color: var(--homey-color-text-primary, #ffffff);
   }
-  
+
   .widget-container {
     background: var(--homey-color-surface, #1a1a1a);
   }
@@ -81,7 +90,7 @@ body {
 }
 
 .source-btn.active {
-  background: var(--homey-color-primary, #003DA5);
+  background: var(--homey-color-primary, #003da5);
   color: var(--homey-color-text-on-primary, #ffffff);
 }
 
@@ -90,7 +99,8 @@ body {
 }
 
 @keyframes gentle-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
