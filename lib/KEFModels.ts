@@ -17,6 +17,7 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LSX II",
     sources: ["wifi", "bluetooth", "tv", "optical", "analog", "usb"],
     capabilities: [
+      "onoff",
       "volume_set",
       "source_input",
       "speaker_playing",
@@ -37,6 +38,7 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LSX II LT",
     sources: ["wifi", "bluetooth", "tv", "optical", "usb"],
     capabilities: [
+      "onoff",
       "volume_set",
       "source_input",
       "speaker_playing",
@@ -57,6 +59,7 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LS50 Wireless II",
     sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     capabilities: [
+      "onoff",
       "volume_set",
       "source_input",
       "speaker_playing",
@@ -77,6 +80,7 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LS60 Wireless",
     sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     capabilities: [
+      "onoff",
       "volume_set",
       "source_input",
       "speaker_playing",
@@ -97,6 +101,7 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF LSX",
     sources: ["wifi", "bluetooth", "tv", "optical", "analog"],
     capabilities: [
+      "onoff",
       "volume_set",
       "source_input",
       "speaker_playing",
@@ -117,6 +122,7 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
     name: "KEF XIO Soundbar",
     sources: ["wifi", "bluetooth", "tv", "optical"],
     capabilities: [
+      "onoff",
       "volume_set",
       "source_input",
       "speaker_playing",
