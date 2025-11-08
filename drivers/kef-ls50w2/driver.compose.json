@@ -12,6 +12,7 @@
   "platforms": ["local"],
   "connectivity": ["lan"],
   "capabilities": [
+    "onoff",
     "speaker_playing",
     "speaker_shuffle",
     "speaker_repeat",
@@ -25,6 +26,12 @@
     "volume_set",
     "source_input"
   ],
+  "capabilitiesOptions": {
+    "onoff": {
+      "setOnDim": false,
+      "greyout": true
+    }
+  },
   "energy": {
     "approximation": {
       "usageOn": 190,
