@@ -60,7 +60,8 @@ export type KEFSource =
   | "optical"
   | "coaxial"
   | "analog"
-  | "usb";
+  | "usb"
+  | "phono";
 
 export type KEFRepeatMode = "none" | "track" | "playlist";
 export type KEFShuffleMode = "none" | "all";

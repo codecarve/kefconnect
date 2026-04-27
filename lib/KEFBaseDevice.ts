@@ -190,6 +190,13 @@ export class KEFBaseDevice extends Homey.Device {
       },
       tv: { en: "TV", nl: "TV", fr: "TV", de: "TV", es: "TV" },
       usb: { en: "USB", nl: "USB", fr: "USB", de: "USB", es: "USB" },
+      phono: {
+        en: "Phono",
+        nl: "Phono",
+        fr: "Phono",
+        de: "Phono",
+        es: "Phono",
+      },
     };
 
     return titles[source] || { en: source };

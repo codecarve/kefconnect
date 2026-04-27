@@ -78,7 +78,10 @@ export const KEF_MODELS: Record<string, KEFModelConfig> = {
   },
   "kef-ls60": {
     name: "KEF LS60 Wireless",
-    sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
+    // LS60 has a dedicated phono input (MM cartridge) on the rear panel.
+    // Verify in the official KEF Connect app on real LS60 hardware before
+    // exposing more widely; older firmwares may not support the phono path.
+    sources: ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog", "phono"],
     capabilities: [
       "onoff",
       "volume_set",

@@ -87,6 +87,16 @@
         "de": "USB",
         "es": "USB"
       }
+    },
+    {
+      "id": "phono",
+      "title": {
+        "en": "Phono",
+        "nl": "Phono",
+        "fr": "Phono",
+        "de": "Phono",
+        "es": "Phono"
+      }
     }
   ],
   "icon": "/assets/capability_source.svg"
