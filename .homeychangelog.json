@@ -1,4 +1,11 @@
 {
+  "0.1.8": {
+    "en": "Fixes LS50 Wireless II firmware v4.1 control. Adds phono input for LS60 Wireless.",
+    "nl": "Lost besturingsproblemen op met LS50 Wireless II firmware v4.1. Phono-ingang toegevoegd voor LS60 Wireless.",
+    "fr": "Corrige le contrôle du LS50 Wireless II firmware v4.1. Ajoute l'entrée phono pour le LS60 Wireless.",
+    "de": "Behebt Steuerungsprobleme bei LS50 Wireless II Firmware v4.1. Phono-Eingang für LS60 Wireless hinzugefügt.",
+    "es": "Corrige el control del LS50 Wireless II firmware v4.1. Añade entrada phono para LS60 Wireless."
+  },
   "0.1.7": {
     "en": "Added power control",
     "nl": "Aan/uit-bediening toegevoegd",
