@@ -2,9 +2,9 @@
 //
 // Protocol summary (see FIRMWARE_COMPATIBILITY.md for tested firmware matrix):
 //   - Reads:  GET  /api/getData?path=<x>&roles=value
-//   - Writes: POST /api/setData with JSON body { path, roles, value }
+//   - Writes: POST /api/setData with JSON body { path, role, value }
 //
-// Two write rules learned the hard way and verified on live hardware:
+// Three write rules learned the hard way and verified on live hardware:
 //   1. LS50 Wireless II firmware v4.1 (Apr 2026) rejects GET writes with
 //      HTTP 405 "Invalid method!". Older firmwares (e.g. LSX II 2.6) still
 //      accept GET, but POST works on every firmware we tested — so always POST.
@@ -12,9 +12,13 @@
 //      Sending it as a stringified JSON string yields HTTP 200 "true" but is
 //      silently ignored by the speaker on every firmware tested. This silent
 //      failure is why writes appeared to succeed yet had no effect.
+//   3. The body field is `role` (singular) per the official KEF nsdk-api.js
+//      bundled on the speaker itself (`/jsapi/nsdk-api.js`). The plural form
+//      `roles` happens to also be accepted, but `role` matches the SDK contract
+//      and is what we use here.
 //
 // New setData targets must extend KEFValuePayload (or KEFActivatePayload for
-// `roles=activate` controls) so callers stay type-safe.
+// `role=activate` controls) so callers stay type-safe.
 
 import * as http from "http";
 
@@ -179,10 +183,7 @@ export class KEFSpeaker {
     return response;
   }
 
-  // Helper to set data to KEF API.
-  // Firmware v4.1+ requires POST with JSON body containing path, roles and value.
-  // GET-with-querystring writes return HTTP 405. The `value` MUST be an object —
-  // a stringified value yields HTTP 200 "true" but is silently ignored.
+  // Helper to set data to KEF API. See file header for protocol rules.
   private async setData(
     path: string,
     value: KEFValuePayload,
@@ -200,7 +201,7 @@ export class KEFSpeaker {
   ): Promise<unknown> {
     const response = (await this.request("POST", "/api/setData", {
       path,
-      roles: role,
+      role,
       value,
     })) as unknown as KEFErrorResponse | unknown;
     if (this.isError(response)) {
