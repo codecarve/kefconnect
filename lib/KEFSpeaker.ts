@@ -686,6 +686,36 @@ export class KEFSpeaker {
     });
   }
 
+  // Map a raw model identifier (from API or HTML scrape) to the friendly name
+  // we use throughout the app. Accepts both short codes ("LS50WII", "LSX2")
+  // and full names ("LS50 Wireless II"). Returns undefined for unknown input.
+  private mapModelStringToFriendly(raw: string): string | undefined {
+    const v = raw.trim();
+    if (!v) return undefined;
+    if (v === "LS50 Wireless II" || v === "LS50WII" || v === "LS50W2") {
+      return "LS50 Wireless II";
+    }
+    if (v === "LS50 Wireless" || v === "LS50W") {
+      return "LS50 Wireless";
+    }
+    if (v === "LSX II LT" || v === "LSX2LT" || v === "LSXIILT") {
+      return "LSX II LT";
+    }
+    if (v === "LSX II" || v === "LSX2" || v === "LSXII") {
+      return "LSX II";
+    }
+    if (v === "LSX") {
+      return "LSX";
+    }
+    if (v === "LS60 Wireless" || v === "LS60" || v === "LS60W") {
+      return "LS60 Wireless";
+    }
+    if (v === "XIO") {
+      return "XIO";
+    }
+    return undefined;
+  }
+
   // Speaker Information
   async getSpeakerInfo(): Promise<KEFSpeakerInfo> {
     const startTime = Date.now();
@@ -712,11 +742,14 @@ export class KEFSpeaker {
         .catch((err) => ({ type: "web", error: err }));
       allPromises.push(webPromise);
 
-      // API promises - all paths that might work
+      // API promises - all paths that might work.
+      // `modelName` is the canonical KEF/StreamUnlimited path for model
+      // detection; older LSX/LS50W gen1 firmwares lack it, in which case we
+      // fall through to the HTML interface scrape.
       const apiPaths = [
+        { path: "settings:/kef/host/modelName", type: "modelApi" },
         { path: "settings:/kef/host/serialNumber", type: "serial" },
         { path: "settings:/kef/host/firmwareVersion", type: "firmware" },
-        { path: "settings:/kef/host/speakerName", type: "name1" },
         { path: "settings:/deviceName", type: "name2" }, // Most successful name path based on logs
         { path: "settings:/system/deviceName", type: "name3" },
       ];
@@ -742,7 +775,7 @@ export class KEFSpeaker {
       for (const result of allResults) {
         if (result.type === "web") {
           if (!result.error && result.data) {
-            if (result.data.model) {
+            if (result.data.model && info.model === "Unknown") {
               info.model = result.data.model;
               this.log(`[getSpeakerInfo] ✓ Model from web: "${info.model}"`);
             }
@@ -756,6 +789,20 @@ export class KEFSpeaker {
             this.log(
               `[getSpeakerInfo] ✗ Web interface failed: ${result.error}`,
             );
+          }
+        } else if (result.type === "modelApi") {
+          if (!result.error && result.data && result.data[0]) {
+            const raw =
+              result.data[0].modelName || result.data[0].string_;
+            const friendly = raw ? this.mapModelStringToFriendly(raw) : undefined;
+            if (friendly) {
+              info.model = friendly;
+              this.log(`[getSpeakerInfo] ✓ Model from API: "${info.model}"`);
+            } else if (raw) {
+              this.log(
+                `[getSpeakerInfo] modelName API returned unmapped value: "${raw}"`,
+              );
+            }
           }
         } else if (result.type === "serial") {
           if (!result.error && result.data && result.data[0]) {
