@@ -1025,16 +1025,21 @@ export class KEFSpeaker {
     return info;
   }
 
-  // DSP and EQ Settings
+  // DSP and EQ Settings.
+  // Path migrated from `settings:/kef/dsp/subwooferGain` (i16_) to
+  // `settings:/kef/dsp/v2/subwooferGain` (i32_) — the v2 namespace exists on
+  // both LS50 W II v4.1 and LSX II v2.6/v3.0, and the old path was removed in
+  // LSX II v3.0. The previous parser read a `subwooferGain` field that the
+  // speaker never returned, so this function used to silently always return 0.
   async getSubwooferGain(): Promise<number> {
     try {
-      const response = await this.getData("settings:/kef/dsp/subwooferGain");
+      const response = await this.getData("settings:/kef/dsp/v2/subwooferGain");
       if (
         response &&
         response[0] &&
-        typeof response[0].subwooferGain === "number"
+        typeof response[0].i32_ === "number"
       ) {
-        return response[0].subwooferGain;
+        return response[0].i32_;
       }
       return 0;
     } catch (error) {
