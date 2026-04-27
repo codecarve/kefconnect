@@ -43,6 +43,23 @@ export type KEFSource =
 export type KEFRepeatMode = "none" | "track" | "playlist";
 export type KEFShuffleMode = "none" | "all";
 
+// KEF API value payloads. Every /api/setData write carries a value object whose
+// shape is dictated by a `type` discriminator. Any new setData target should
+// add its own variant here so callers stay type-safe.
+export type KEFValuePayload =
+  | { type: "i32_"; i32_: number }
+  | { type: "i16_"; i16_: number }
+  | { type: "string_"; string_: string }
+  | { type: "bool_"; bool_: boolean }
+  | { type: "kefPhysicalSource"; kefPhysicalSource: KEFSource | "standby" };
+
+export type KEFActivatePayload = { control: "play" | "pause" | "next" | "previous" };
+
+// Response shape for /api/getData and /api/setData errors.
+interface KEFErrorResponse {
+  error: { message?: string; name?: string; title?: string; data?: unknown };
+}
+
 export class KEFSpeaker {
   private ip: string;
   private port: number = 80;
@@ -77,15 +94,21 @@ export class KEFSpeaker {
     body?: any,
   ): Promise<any> {
     return new Promise((resolve, reject) => {
+      const bodyString = body !== undefined ? JSON.stringify(body) : undefined;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      };
+      if (bodyString !== undefined) {
+        headers["Content-Length"] = String(Buffer.byteLength(bodyString));
+      }
+
       const options: http.RequestOptions = {
         hostname: this.ip,
         port: this.port,
         path: path,
         method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+        headers,
         timeout: this.timeout,
       };
 
@@ -123,8 +146,8 @@ export class KEFSpeaker {
         reject(new Error("Request timeout"));
       });
 
-      if (body) {
-        req.write(JSON.stringify(body));
+      if (bodyString !== undefined) {
+        req.write(bodyString);
       }
 
       req.end();
@@ -138,10 +161,44 @@ export class KEFSpeaker {
     return response;
   }
 
-  // Helper to set data to KEF API
-  private async setData(path: string, value: string): Promise<void> {
-    const url = `/api/setData?path=${encodeURIComponent(path)}&roles=value&value=${encodeURIComponent(value)}`;
-    await this.request("GET", url);
+  // Helper to set data to KEF API.
+  // Firmware v4.1+ requires POST with JSON body containing path, roles and value.
+  // GET-with-querystring writes return HTTP 405. The `value` MUST be an object —
+  // a stringified value yields HTTP 200 "true" but is silently ignored.
+  private async setData(
+    path: string,
+    value: KEFValuePayload,
+    role?: "value",
+  ): Promise<unknown>;
+  private async setData(
+    path: string,
+    value: KEFActivatePayload,
+    role: "activate",
+  ): Promise<unknown>;
+  private async setData(
+    path: string,
+    value: KEFValuePayload | KEFActivatePayload,
+    role: "value" | "activate" = "value",
+  ): Promise<unknown> {
+    const response = (await this.request("POST", "/api/setData", {
+      path,
+      roles: role,
+      value,
+    })) as unknown as KEFErrorResponse | unknown;
+    if (this.isError(response)) {
+      throw new Error(response.error.message || "Operation failed");
+    }
+    return response;
+  }
+
+  private isError(response: unknown): response is KEFErrorResponse {
+    return (
+      typeof response === "object" &&
+      response !== null &&
+      "error" in response &&
+      (response as { error: unknown }).error !== null &&
+      typeof (response as { error: unknown }).error === "object"
+    );
   }
 
   // Power Control
@@ -165,12 +222,10 @@ export class KEFSpeaker {
       // Use lastActiveSource to avoid setting "standby" as source
       await this.setSource(this.lastActiveSource);
     } else {
-      // Send standby command
-      const value = JSON.stringify({
+      await this.setData("settings:/kef/play/physicalSource", {
         type: "kefPhysicalSource",
         kefPhysicalSource: "standby",
       });
-      await this.setData("settings:/kef/play/physicalSource", value);
     }
   }
 
@@ -193,11 +248,10 @@ export class KEFSpeaker {
   }
 
   async setSource(source: KEFSource): Promise<void> {
-    const value = JSON.stringify({
+    await this.setData("settings:/kef/play/physicalSource", {
       type: "kefPhysicalSource",
       kefPhysicalSource: source,
     });
-    await this.setData("settings:/kef/play/physicalSource", value);
   }
 
   // Volume Control
@@ -215,11 +269,10 @@ export class KEFSpeaker {
 
   async setVolume(volume: number): Promise<void> {
     const vol = Math.min(100, Math.max(0, Math.round(volume)));
-    const value = JSON.stringify({
+    await this.setData("player:volume", {
       type: "i32_",
       i32_: vol,
     });
-    await this.setData("player:volume", value);
   }
 
   async increaseVolume(step: number = 5): Promise<void> {
@@ -266,21 +319,12 @@ export class KEFSpeaker {
   // Internal method to send actual play command
   private async sendPlayCommand(): Promise<void> {
     this.log("[sendPlayCommand] Sending play command");
-
-    const value = '{"control":"play"}';
-    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
-    this.log(`[sendPlayCommand] Sending request to: ${url}`);
-
     try {
-      const response = await this.request("GET", url);
-      this.log(`[sendPlayCommand] Response: ${JSON.stringify(response)}`);
-
-      // Check if the API returned an error
-      if (response && response.error) {
-        const errorMessage = response.error.message || "Operation failed";
-        this.log(`[sendPlayCommand] API Error: ${errorMessage}`);
-        throw new Error(errorMessage);
-      }
+      await this.setData(
+        "player:player/control",
+        { control: "play" },
+        "activate",
+      );
     } catch (error: any) {
       this.log(`[sendPlayCommand] Error: ${error.message}`);
       throw error;
@@ -292,21 +336,12 @@ export class KEFSpeaker {
     this.log(
       "[sendPauseCommand] Sending pause command (acts as toggle for external players)",
     );
-
-    const value = '{"control":"pause"}';
-    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
-    this.log(`[sendPauseCommand] Sending request to: ${url}`);
-
     try {
-      const response = await this.request("GET", url);
-      this.log(`[sendPauseCommand] Response: ${JSON.stringify(response)}`);
-
-      // Check if the API returned an error
-      if (response && response.error) {
-        const errorMessage = response.error.message || "Operation failed";
-        this.log(`[sendPauseCommand] API Error: ${errorMessage}`);
-        throw new Error(errorMessage);
-      }
+      await this.setData(
+        "player:player/control",
+        { control: "pause" },
+        "activate",
+      );
     } catch (error: any) {
       this.log(`[sendPauseCommand] Error: ${error.message}`);
       throw error;
@@ -330,47 +365,29 @@ export class KEFSpeaker {
 
   async nextTrack(): Promise<void> {
     this.log("[nextTrack] Attempting to skip to next track");
-
-    const value = '{"control":"next"}';
-    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
-    this.log(`[nextTrack] Sending request to: ${url}`);
-
     try {
-      const response = await this.request("GET", url);
-      this.log(`[nextTrack] Response: ${JSON.stringify(response)}`);
-
-      // Check if the API returned an error
-      if (response && response.error) {
-        const errorMessage = response.error.message || "Operation failed";
-        this.log(`[nextTrack] API Error: ${errorMessage}`);
-        throw new Error(errorMessage);
-      }
+      await this.setData(
+        "player:player/control",
+        { control: "next" },
+        "activate",
+      );
     } catch (error: any) {
       this.log(`[nextTrack] Error: ${error.message}`);
-      throw error; // Re-throw to let the flow card handle it
+      throw error;
     }
   }
 
   async previousTrack(): Promise<void> {
     this.log("[previousTrack] Attempting to skip to previous track");
-
-    const value = '{"control":"previous"}';
-    const url = `/api/setData?path=${encodeURIComponent("player:player/control")}&roles=activate&value=${encodeURIComponent(value)}`;
-    this.log(`[previousTrack] Sending request to: ${url}`);
-
     try {
-      const response = await this.request("GET", url);
-      this.log(`[previousTrack] Response: ${JSON.stringify(response)}`);
-
-      // Check if the API returned an error
-      if (response && response.error) {
-        const errorMessage = response.error.message || "Operation failed";
-        this.log(`[previousTrack] API Error: ${errorMessage}`);
-        throw new Error(errorMessage);
-      }
+      await this.setData(
+        "player:player/control",
+        { control: "previous" },
+        "activate",
+      );
     } catch (error: any) {
       this.log(`[previousTrack] Error: ${error.message}`);
-      throw error; // Re-throw to let the flow card handle it
+      throw error;
     }
   }
 
